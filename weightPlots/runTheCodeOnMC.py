@@ -5,8 +5,8 @@ import os, subprocess, datetime, tempfile
 d = datetime.datetime.now().strftime("%d%b%y")
 
 inputs = [
-        ['MULTIJET_MC_QCD_HT-500To1000.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_HT-500To1000_09Dec13.list', 32000000, 8426],
-        ['MULTIJET_MC_QCD_HT-1000ToInf.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_HT-1000ToInf_09Dec13.list', 13960000, 204],
+        ['MULTIJET_MC_QCD_HT-500To1000_woPU.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_HT-500To1000_woPU_16Dec13.list', 32000000, 8426],
+        ['MULTIJET_MC_QCD_HT-1000ToInf_woPU.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_HT-1000ToInf_woPU_16Dec13.list', 13960000, 204],
 
         ]
 
@@ -39,7 +39,7 @@ subprocess.call(args)
 ## All is done, merge
 
 print("Merging ...")
-args = ["hadd","-f", "output_rootfile/%s/MC/MULTIJET_MC_QCD_HT_merged_%s.root" % (d,d)]
+args = ["hadd","-f", "output_rootfile/%s/MC/MULTIJET_MC_QCD_HT_merged_woPU_%s.root" % (d,d)]
 path = "output_rootfile/%s/MC" % (d)
 for output in inputs:
   args.append(os.path.join(path,output[0]))

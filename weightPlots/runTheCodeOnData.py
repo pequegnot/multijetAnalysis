@@ -5,10 +5,10 @@ import os, subprocess, datetime, tempfile
 d = datetime.datetime.now().strftime("%d%b%y")
 
 inputs = [
-        ['MULTIJET_Run2012A-22Jan2013.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_Jet_Run2012A-22Jan2013_09Dec.list'],
-        ['MULTIJET_Run2012B-22Jan2013.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_JetHT_Run2012B-22Jan2013_09Dec.list'],
-        ['MULTIJET_Run2012C-22Jan2013.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_JetHT_Run2012C-22Jan2013_09Dec.list'],
-        ['MULTIJET_Run2012D-22Jan2013.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_JetHT_Run2012D-22Jan2013_09Dec.list'],
+        ['MULTIJET_Run2012A-22Jan2013_woPU.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_Jet_Run2012A-22Jan2013_woPU_16Dec.list'],
+        ['MULTIJET_Run2012B-22Jan2013_woPU.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_JetHT_Run2012B-22Jan2013_woPU_16Dec.list'],
+        ['MULTIJET_Run2012C-22Jan2013_woPU.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_JetHT_Run2012C-22Jan2013_woPU_16Dec.list'],
+        ['MULTIJET_Run2012D-22Jan2013_woPU.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_JetHT_Run2012D-22Jan2013_woPU_16Dec.list'],
 
         ]
 
@@ -41,7 +41,7 @@ subprocess.call(args)
 ## All is done, merge
 
 print("Merging ...")
-args = ["hadd","-f", "output_rootfile/%s/data/MULTIJET_Data_merged_2012_%s.root" % (d,d)]
+args = ["hadd","-f", "output_rootfile/%s/data/MULTIJET_Data_merged_2012_woPU_%s.root" % (d,d)]
 path = "output_rootfile/%s/data" % (d)
 for output in inputs:
   args.append(os.path.join(path,output[0]))

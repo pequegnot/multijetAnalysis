@@ -55,7 +55,8 @@ int main (int argc, char** argv)
 	string extension = ".pdf";
 	std::vector<std::string> inputFiles;
 	string outputName;
-	string inputName;		
+	string inputName;
+	bool rmPU = false;		
   	
 
 
@@ -89,6 +90,9 @@ int main (int argc, char** argv)
     TCLAP::SwitchArg mcArg("", "mc", "Is this mc?", false);
 
     cmd.xorAdd(dataArg, mcArg);
+    
+    TCLAP::SwitchArg rmPUArg("", "rmPU", "Do you want to remove PU jets?", false);
+    cmd.add(rmPUArg);
 
     
     // Parse the argv array.
@@ -98,6 +102,11 @@ int main (int argc, char** argv)
     isMC = mcArg.getValue();
     outputName = outputFileArg.getValue();
     inputName = inputFileArg.getValue();
+    rmPU = rmPUArg.getValue();
+    
+    if(rmPU) {
+	extension = "_woPUJets.pdf";    
+    }
     
     if (!isMC) {
       typeName = "_data";
