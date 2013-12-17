@@ -396,6 +396,9 @@ int main (int argc, char** argv)
 	TClonesArray* jetsgen_recoil_4vector = new TClonesArray("TLorentzVector");
 	t_multijet->SetBranchAddress("jetsgen_recoil_4vector",&jetsgen_recoil_4vector);
 	
+	std::vector<int>* goodJetsIndex = NULL;
+    	 t_multijet->SetBranchAddress("goodJetsIndex",&goodJetsIndex);
+	
 	float A;
 	t_multijet->SetBranchAddress("A",&A);
 	
@@ -420,8 +423,11 @@ int main (int argc, char** argv)
 	int n_jets_recoil;
 	t_multijet->SetBranchAddress("n_jets_recoil",&n_jets_recoil);
 	
-	int n_jets;
-	t_multijet->SetBranchAddress("n_jets",&n_jets);
+	int n_goodJets;
+	t_multijet->SetBranchAddress("n_goodJets",&n_goodJets);
+	
+	int n_totJets;
+	t_multijet->SetBranchAddress("n_totJets",&n_totJets);
 
 	int jet_puJetId[100];
 	t_multijet->SetBranchAddress("jet_puJetId",&jet_puJetId);
@@ -500,7 +506,16 @@ int main (int argc, char** argv)
 		if(ievt%10000 == 0) {
 			cout<<"Event # "<<ievt<<", file ended at "<<(ievt*100.)/(nEvents*1.)<<" %"<<endl;
 		} 
-
+		
+// 		if(ievt%100000 == 0) {
+// 			cout<<"Check n_jets_recoil: "<<endl;
+// 			cout<<"n_jets_recoil: "<<n_jets_recoil<<endl;
+// 			cout<<"jets_recoil_4vector->GetSize(): "<<jets_recoil_4vector->GetSize()<<endl;
+// 		} 	
+// 		cout<<"goodJetsIndex->size(): "<<goodJetsIndex->size()<<endl;
+// 		for(int i=0; i<goodJetsIndex->size(); i++) {			
+// 			cout<<"goodJetsIndex->at("<< i <<") :"<< goodJetsIndex->at(i)<<endl;
+// 		}
 	
 //*********************************************************************************************************
 
@@ -604,7 +619,7 @@ int main (int argc, char** argv)
 								hMJB_inclusive->Fill(MJB, weight);
 								hHT->Fill(HT,weight);
 								hNjetsRecoil->Fill(jets_recoil_4vector->GetSize(), weight);
-								hNjetsTotal->Fill(n_jets, weight);
+								hNjetsTotal->Fill(n_totJets, weight);
 						
 								hMet_afterSel->Fill(metpt, weight);
 								hLeadingJetPt_afterSel->Fill(leadingjetpt, weight);
@@ -624,7 +639,7 @@ int main (int argc, char** argv)
 								vMJB_RecoilPt[binRecoilPt]->Fill(MJB, weight);
 								vMPF_RecoilPt[binRecoilPt]->Fill(Rmpf, weight);
 							
-								for(int i=0; i<n_jets; i++) {
+								for(int i=0; i<n_goodJets; i++) {
 									//cout<<"jet_puJetId["<<i<<"] : "<<jet_puJetId[i]<<endl;
 									hNjet_Npv->Fill(n_vertices, weight);
 									if(i == 0) {
@@ -635,7 +650,7 @@ int main (int argc, char** argv)
 										jetsPt = jetsPt + ((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt();
 										hNjet_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
 									}
-									if(jet_puJetId[i] == 1) {
+									if(jet_puJetId[goodJetsIndex->at(i)] == 1) {
 										hNpujet_Npv->Fill(n_vertices, weight);
 										if(i == 0) {
 											puJetsPt = puJetsPt + leadingjetpt;
@@ -654,6 +669,7 @@ int main (int argc, char** argv)
 										vPtRatio_GenPt[binGenPt]->Fill(recoilpt/leadingjetgenpt, weight);							
 										vRtrue_RecoilPt[binRecoilPt]->Fill(Rtrue, weight);								
 										for (int i = 0; i < n_jets_recoil; i++) {
+											if(*((TLorentzVector*)jetsgen_recoil_4vector->At(i)) != TLorentzVector(0.,0.,0.,0.)) break;
 											recoilrecopt = recoilrecopt + ((TLorentzVector*)jets_recoil_4vector->At(i))->Pt();
 											recoilgenpt = recoilgenpt + ((TLorentzVector*)jetsgen_recoil_4vector->At(i))->Pt();
 										}
