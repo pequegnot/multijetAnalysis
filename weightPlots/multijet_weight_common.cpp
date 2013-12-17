@@ -176,6 +176,7 @@ int main (int argc, char** argv)
 	ptBinning myPtBinning;
 	npvBinning myNpvBinning;
 	PUReweighter myPUReweighter;
+	ptBinning myLowPtBinning(true);
 
 	
 //usefull variables
@@ -215,18 +216,24 @@ int main (int argc, char** argv)
 		//recoilpt/firstjetgenpt ratio per firstjetgenpt
 		vector<TH1F*> vPtRatio_GenPt = buildPtVectorH1(myPtBinning,"PtRatio",nbinsx,xlow,xup) ;
 		//Rtrue per recoilpt
-		vector<TH1F*> vRtrue_RecoilPt = buildPtVectorH1(myPtBinning,"Rtrue",nbinsx,xlow,xup) ;
+		vector<TH1F*> vRtrue_leadingJet_RecoilPt = buildPtVectorH1(myPtBinning,"Rtrue_leadingJet",nbinsx,xlow,xup) ;
+		
+		vector<TH1F*> vRtrue_allJets_JetPt = buildPtVectorH1(myLowPtBinning,"Rtrue_allJets",nbinsx,xlow,xup) ;
 	
 		//Rrecoil per recoilpt
 		vector<TH1F*> vRrecoil_RecoilPt = buildPtVectorH1(myPtBinning,"Rrecoil",nbinsx,xlow,xup) ;
 		
 		for(int j=0; j<myPtBinning.getSize(); j++) {
 			vPtRatio_GenPt[j]->Sumw2();
-			vRtrue_RecoilPt[j]->Sumw2();
+			vRtrue_leadingJet_RecoilPt[j]->Sumw2();
+			vRtrue_allJets_JetPt[j]->Sumw2();
 			vRrecoil_RecoilPt[j]->Sumw2();
 			vNjetsRecoil_RecoilPt[j]->Sumw2();
 			vNjetsRecoil_068E_RecoilPt[j]->Sumw2();
 			vNjetsRecoil_095E_RecoilPt[j]->Sumw2();
+		}
+		for(int j=0; j<myLowPtBinning.getSize(); j++) {
+			vRtrue_allJets_JetPt[j]->Sumw2();
 		}		
 
 	
@@ -473,7 +480,8 @@ int main (int argc, char** argv)
 	
 	//Usefull variables
 	int binRecoilPt;//bin en recoilpt	
-	int binGenPt;//bin en firstjetgenpt	
+	int binGenPt;//bin en firstjetgenpt
+	int binJetPt;//bin en pt des jets		
 	float recoilpt;
 	float recoilpx;
 	float recoilpy;
@@ -698,15 +706,25 @@ int main (int argc, char** argv)
 								if(isMC) {
 									if(*leadingjetgen != TLorentzVector(0.,0.,0.,0.)) {//check if a gen jet matches the reco jet
 										vPtRatio_GenPt[binGenPt]->Fill(recoilpt/leadingjetgenpt, weight);							
-										vRtrue_RecoilPt[binRecoilPt]->Fill(Rtrue, weight);								
-										for (int i = 0; i < n_jets_recoil; i++) {
-											if(*((TLorentzVector*)jetsgen_recoil_4vector->At(i)) != TLorentzVector(0.,0.,0.,0.)) break;
-											recoilrecopt = recoilrecopt + ((TLorentzVector*)jets_recoil_4vector->At(i))->Pt();
-											recoilgenpt = recoilgenpt + ((TLorentzVector*)jetsgen_recoil_4vector->At(i))->Pt();
-										}
-										Rrecoil = recoilrecopt/recoilgenpt;
-										vRrecoil_RecoilPt[binRecoilPt]->Fill(Rrecoil, weight);
+										vRtrue_leadingJet_RecoilPt[binRecoilPt]->Fill(Rtrue, weight);
+										binJetPt = myLowPtBinning.getPtBin(leadingjetpt);
+										vRtrue_allJets_JetPt[binJetPt]->Fill(Rtrue, weight);
 									}
+									for (int i = 0; i < n_jets_recoil; i++) {
+										if(*((TLorentzVector*)jetsgen_recoil_4vector->At(i)) != TLorentzVector(0.,0.,0.,0.)) {									
+											binJetPt = myLowPtBinning.getPtBin(((TLorentzVector*)jets_recoil_4vector->At(i))->Pt());
+											if(binJetPt == -1) continue;
+											Rtrue = ((TLorentzVector*)jets_recoil_4vector->At(i))->Pt()/((TLorentzVector*)jetsgen_recoil_4vector->At(i))->Pt();
+											vRtrue_allJets_JetPt[binJetPt]->Fill(Rtrue, weight);
+										}
+									}								
+									for (int i = 0; i < n_jets_recoil; i++) {
+										if(*((TLorentzVector*)jetsgen_recoil_4vector->At(i)) == TLorentzVector(0.,0.,0.,0.)) break;
+										recoilrecopt = recoilrecopt + ((TLorentzVector*)jets_recoil_4vector->At(i))->Pt();
+										recoilgenpt = recoilgenpt + ((TLorentzVector*)jetsgen_recoil_4vector->At(i))->Pt();
+									}
+									Rrecoil = recoilrecopt/recoilgenpt;
+									vRrecoil_RecoilPt[binRecoilPt]->Fill(Rrecoil, weight);									
 								}
 							//}
 						//}
@@ -749,8 +767,11 @@ int main (int argc, char** argv)
 		TDirectory *trueDir = out->mkdir("Rtrue","Rtrue");
 		trueDir->cd();
 		for(int j=0; j<myPtBinning.getSize(); j++) {
-			vRtrue_RecoilPt[j]->Write();
+			vRtrue_leadingJet_RecoilPt[j]->Write();
 			vRrecoil_RecoilPt[j]->Write();
+		}
+		for(int j=0; j<myLowPtBinning.getSize(); j++) {
+			vRtrue_allJets_JetPt[j]->Write();
 		}
 	
 		TDirectory *ptratioDir = out->mkdir("PtRatio","PtRatio");
@@ -834,7 +855,11 @@ int main (int argc, char** argv)
 	
 	if(isMC) {
 		for(int j=0; j<myPtBinning.getSize(); j++) {
-			vRtrue_RecoilPt[j]->Delete();
+			vRtrue_leadingJet_RecoilPt[j]->Delete();
+			vRrecoil_RecoilPt[j]->Delete();
+		}
+		for(int j=0; j<myLowPtBinning.getSize(); j++) {
+			vRtrue_allJets_JetPt[j]->Delete();
 		}
 		for(int j=0; j<myPtBinning.getSize(); j++) {
 			vPtRatio_GenPt[j]->Delete();
