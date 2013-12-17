@@ -216,7 +216,7 @@ int main (int argc, char** argv)
 			vNjetsRecoil_095E_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
 		}
 		
-		for(int j=0; j<myPtBinning.getSize(); j++) {
+		for(int j=0; j<myLowPtBinning.getSize(); j++) {
 			ptBinName = myLowPtBinning.getName(j);
 			vectorName = "Rtrue/Rtrue_allJets_" + ptBinName;
 			vRtrue_allJets_JetPt[j] = (TH1F*)f->Get(vectorName.c_str());
@@ -673,7 +673,7 @@ int main (int argc, char** argv)
 		TCanvas *cRtrue_allJets_JetPt = new TCanvas("cRtrue_allJets_JetPt","cRtrue_allJets_JetPt");
 		cRtrue_allJets_JetPt->cd();
 	
-		gRtrue_allJets_JetPt = new TGraphErrors(numberPtBins,aJetPtBins_Mean, aRtrue_allJets_Mean, aJetPtBins_MeanError, aRtrue_allJets_MeanError);
+		gRtrue_allJets_JetPt = new TGraphErrors(myLowPtBinning.getSize(),aJetPtBins_Mean, aRtrue_allJets_Mean, aJetPtBins_MeanError, aRtrue_allJets_MeanError);
 		gRtrue_allJets_JetPt->SetName("Rtrue");
 		gRtrue_allJets_JetPt->SetTitle("R_{true} as a function of p_{T,reco}^{jet}");
 		gRtrue_allJets_JetPt->GetXaxis()->SetTitle("p_{T,reco}^{jet} (GeV)");
