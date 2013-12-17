@@ -14,8 +14,10 @@ class ptBinning
     public:
 
     ptBinning();
+    ptBinning(bool isLowPtBinning);
     ~ptBinning();
     void fillPtBins();
+    void fillLowPtBins();
     int getPtBin(float pt);
     size_t getSize();
     std::string getName(int bin);
