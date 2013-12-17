@@ -206,6 +206,9 @@ int main (int argc, char** argv)
 	bool isLumiNorm = false;
 	bool isShapeNorm = false;
 	bool inLinScale = false;
+	bool rmPU = false;
+	
+	string extension = ".pdf";	
 	
 	gStyle->SetOptFit(111111);
 	
@@ -257,6 +260,8 @@ int main (int argc, char** argv)
     cmd.add( shapeArg );
     TCLAP::SwitchArg linArg("", "lin", "Do you want linear scale?", false);
     cmd.add( linArg );
+    TCLAP::SwitchArg rmPUArg("", "rmPU", "Do you want to remove PU jets?", false);
+    cmd.add(rmPUArg);
 
     
     // Parse the argv array.
@@ -268,6 +273,12 @@ int main (int argc, char** argv)
     isLumiNorm = lumiArg.getValue();
     isShapeNorm = shapeArg.getValue();
     inLinScale = linArg.getValue();
+    rmPU = rmPUArg.getValue();
+    
+    if(rmPU) {
+	extension = "_woPUJets.pdf";    
+    }
+  
     
   } catch (TCLAP::ArgException &e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
@@ -276,6 +287,8 @@ int main (int argc, char** argv)
   
 	TFile *f_data=TFile::Open(inname_data);
 	TFile *f_mc=TFile::Open(inname_mc);
+	
+	string myHistoName;
 
 //************************************************************************************************************
 //
@@ -349,7 +362,8 @@ int main (int argc, char** argv)
 	gMJB_RecoilPt_ratio->SetMarkerSize(1.0);
 	gMJB_RecoilPt_ratio->Fit("func","","",gMJB_RecoilPt_data->GetXaxis()->GetXmin(),gMJB_RecoilPt_data->GetXaxis()->GetXmax());
 	
-	drawComparisonResponse("r1", mgMJB_RecoilPt, gMJB_RecoilPt_mc, gMJB_RecoilPt_data, gMJB_RecoilPt_ratio,"MC", "images/response/MJB_RecoilPt.pdf");
+	myHistoName = "images/response/MJB_RecoilPt" + extension;	
+	drawComparisonResponse("r1", mgMJB_RecoilPt, gMJB_RecoilPt_mc, gMJB_RecoilPt_data, gMJB_RecoilPt_ratio,"MC", myHistoName.c_str());
 	
 //************************************************************************************************************
 //
@@ -375,7 +389,8 @@ int main (int argc, char** argv)
 	gMJB_Npv_ratio->SetMarkerSize(1.0);
 	gMJB_Npv_ratio->Fit("func","","",gMJB_Npv_data->GetXaxis()->GetXmin(),gMJB_Npv_data->GetXaxis()->GetXmax());
 	
-	drawComparisonResponse("r2", mgMJB_Npv, gMJB_Npv_mc, gMJB_Npv_data, gMJB_Npv_ratio,"MC", "images/response/MJB_Npv.pdf");
+	myHistoName = "images/response/MJB_Npv" + extension;	
+	drawComparisonResponse("r2", mgMJB_Npv, gMJB_Npv_mc, gMJB_Npv_data, gMJB_Npv_ratio,"MC", myHistoName.c_str());
 
 //************************************************************************************************************
 //
@@ -454,7 +469,7 @@ int main (int argc, char** argv)
 		binName = myPtBinning.getName(j);
 		myName = "MJB_{data}/MJB_{MC} for " + binName;
 		myXName = "MJB for " + binName;
-		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_lumi_inLogScale.pdf";
+		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_lumi_inLogScale" + extension;
 		drawDataMcComparison(myName.c_str(), vMJB_RecoilPt_mc_lumi[j], vMJB_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 	
@@ -471,7 +486,7 @@ int main (int argc, char** argv)
 		binName = myNpvBinning.getName(j);
 		myName = "MJB_{data}/MJB_{MC} for " + binName;
 		myXName = "MJB for " + binName;
-		mySaveName = "images/MJBperNpv/MJB_" + binName + "_lumi_inLogScale.pdf";
+		mySaveName = "images/MJBperNpv/MJB_" + binName + "_lumi_inLogScale" + extension;
 		drawDataMcComparison(myName.c_str(), vMJB_Npv_mc_lumi[j], vMJB_Npv_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 
@@ -488,7 +503,8 @@ int main (int argc, char** argv)
 	//rescale the Monte Carlo histogramm with luminosity
 	hMJB_inclusive_mc_lumi->Scale(getLumi());
 	
-	drawDataMcComparison("MJB_inclusive", hMJB_inclusive_mc_lumi, hMJB_inclusive_data_lumi, "MJB", "images/variables/MJB_inclusive_lumi_inLogScale.pdf");
+	myHistoName = "images/variables/MJB_inclusive_lumi_inLogScale" + extension;	
+	drawDataMcComparison("MJB_inclusive", hMJB_inclusive_mc_lumi, hMJB_inclusive_data_lumi, "MJB", myHistoName.c_str());
 		
 	
 	
@@ -505,7 +521,8 @@ int main (int argc, char** argv)
 	//rescale the Monte Carlo histogramm with luminosity
 	hMet_beforeSel_mc_lumi->Scale(getLumi());
 
-	drawDataMcComparison("Met_beforeSel", hMet_beforeSel_mc_lumi, hMet_beforeSel_data_lumi, "MET [GeV/c]", "images/variables/Met_beforeSel_lumi_inLogScale.pdf");
+	myHistoName = "images/variables/Met_beforeSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("Met_beforeSel", hMet_beforeSel_mc_lumi, hMet_beforeSel_data_lumi, "MET [GeV/c]", myHistoName.c_str());
 		
 	
 
@@ -522,7 +539,8 @@ int main (int argc, char** argv)
 	//rescale the Monte Carlo histogramm with luminosity
 	hMet_afterSel_mc_lumi->Scale(getLumi());
 
-	drawDataMcComparison("Met_afterSel", hMet_afterSel_mc_lumi, hMet_afterSel_data_lumi, "MET [GeV/c]", "images/variables/Met_afterSel_lumi_inLogScale.pdf");
+	myHistoName = "images/variables/Met_afterSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("Met_afterSel", hMet_afterSel_mc_lumi, hMet_afterSel_data_lumi, "MET [GeV/c]", myHistoName.c_str());
 		
 	
 	
@@ -538,7 +556,9 @@ int main (int argc, char** argv)
 		
 	//rescale the Monte Carlo histogramm with luminosity
 	hLeadingJetPt_beforeSel_mc_lumi->Scale(getLumi());
-	drawDataMcComparison("LeadingJetPt_beforeSel", hLeadingJetPt_beforeSel_mc_lumi, hLeadingJetPt_beforeSel_data_lumi, "p_{t}^{leading jet} [GeV/c]", "images/variables/LeadingJetPt_beforeSel_lumi_inLogScale.pdf");
+	
+	myHistoName = "images/variables/LeadingJetPt_beforeSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("LeadingJetPt_beforeSel", hLeadingJetPt_beforeSel_mc_lumi, hLeadingJetPt_beforeSel_data_lumi, "p_{t}^{leading jet} [GeV/c]", myHistoName.c_str());
 		
 	
 
@@ -555,7 +575,8 @@ int main (int argc, char** argv)
 		
 	//rescale the Monte Carlo histogramm with luminosity
 	hLeadingJetPt_afterSel_mc_lumi->Scale(getLumi());
-	drawDataMcComparison("LeadingJetPt_afterSel", hLeadingJetPt_afterSel_mc_lumi, hLeadingJetPt_afterSel_data_lumi,"p_{t}^{leading jet} [GeV/c]", "images/variables/LeadingJetPt_afterSel_lumi_inLogScale.pdf");
+	myHistoName = "images/variables/LeadingJetPt_afterSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("LeadingJetPt_afterSel", hLeadingJetPt_afterSel_mc_lumi, hLeadingJetPt_afterSel_data_lumi,"p_{t}^{leading jet} [GeV/c]", myHistoName.c_str());
 		
 	
 
@@ -571,7 +592,9 @@ int main (int argc, char** argv)
 		
 	//rescale the Monte Carlo histogramm with luminosity
 	hRecoilPt_beforeSel_mc_lumi->Scale(getLumi());
-	drawDataMcComparison("RecoilPt_beforeSel", hRecoilPt_beforeSel_mc_lumi, hRecoilPt_beforeSel_data_lumi, "p_{t}^{Recoil} [GeV/c]", "images/variables/RecoilPt_beforeSel_lumi_inLogScale.pdf");
+	
+	myHistoName = "images/variables/RecoilPt_beforeSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("RecoilPt_beforeSel", hRecoilPt_beforeSel_mc_lumi, hRecoilPt_beforeSel_data_lumi, "p_{t}^{Recoil} [GeV/c]", myHistoName.c_str());
 		
 	
 
@@ -587,7 +610,8 @@ int main (int argc, char** argv)
 		
 	//rescale the Monte Carlo histogramm with luminosity
 	hRecoilPt_afterSel_mc_lumi->Scale(getLumi());
-	drawDataMcComparison("RecoilPt_afterSel", hRecoilPt_afterSel_mc_lumi, hRecoilPt_afterSel_data_lumi,"p_{t}^{Recoil} [GeV/c]", "images/variables/RecoilPt_afterSel_lumi_inLogScale.pdf");
+	myHistoName = "images/variables/RecoilPt_afterSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("RecoilPt_afterSel", hRecoilPt_afterSel_mc_lumi, hRecoilPt_afterSel_data_lumi,"p_{t}^{Recoil} [GeV/c]", myHistoName.c_str());
 		
 	
 
@@ -604,7 +628,8 @@ int main (int argc, char** argv)
 	//rescale the Monte Carlo histogramm with luminosity
 	hNpv_beforeSel_mc_lumi->Scale(getLumi());
 	
-	drawDataMcComparison("Npv_beforeSel", hNpv_beforeSel_mc_lumi, hNpv_beforeSel_data_lumi, "N_{PV}", "images/variables/Npv_beforeSel_lumi_inLogScale.pdf");
+	myHistoName = "images/variables/Npv_beforeSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("Npv_beforeSel", hNpv_beforeSel_mc_lumi, hNpv_beforeSel_data_lumi, "N_{PV}", myHistoName.c_str());
 		
 	
 
@@ -620,7 +645,8 @@ int main (int argc, char** argv)
 		
 	//rescale the Monte Carlo histogramm with luminosity
 	hNpv_afterSel_mc_lumi->Scale(getLumi());
-	drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_lumi, hNpv_afterSel_data_lumi, "N_{PV}", "images/variables/Npv_afterSel_lumi_inLogScale.pdf");
+	myHistoName = "images/variables/Npv_afterSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_lumi, hNpv_afterSel_data_lumi, "N_{PV}", myHistoName.c_str());
 		
 	
 
@@ -637,8 +663,9 @@ int main (int argc, char** argv)
 		
 	//rescale the Monte Carlo histogramm with luminosity
 	hAlpha_beforeSel_mc_lumi->Scale(getLumi());
-
-	drawDataMcComparison("Alpha_beforeSel", hAlpha_beforeSel_mc_lumi, hAlpha_beforeSel_data_lumi, "#alpha", "images/variables/Alpha_beforeSel_lumi_inLogScale.pdf");
+	
+	myHistoName = "images/variables/Alpha_beforeSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("Alpha_beforeSel", hAlpha_beforeSel_mc_lumi, hAlpha_beforeSel_data_lumi, "#alpha", myHistoName.c_str());
 		
 	
 
@@ -655,7 +682,8 @@ int main (int argc, char** argv)
 	//rescale the Monte Carlo histogramm with luminosity
 	hAlpha_afterSel_mc_lumi->Scale(getLumi());
 
-	drawDataMcComparison("Alpha_afterSel", hAlpha_afterSel_mc_lumi, hAlpha_afterSel_data_lumi, "#alpha", "images/variables/Alpha_afterSel_lumi_inLogScale.pdf");
+	myHistoName = "images/variables/Alpha_afterSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("Alpha_afterSel", hAlpha_afterSel_mc_lumi, hAlpha_afterSel_data_lumi, "#alpha", myHistoName.c_str());
 		
 	
 
@@ -672,7 +700,9 @@ int main (int argc, char** argv)
 		
 	//rescale the Monte Carlo histogramm with luminosity
 	hBeta_beforeSel_mc_lumi->Scale(getLumi());
-	drawDataMcComparison("Beta_beforeSel", hBeta_beforeSel_mc_lumi, hBeta_beforeSel_data_lumi, "#beta", "images/variables/Beta_beforeSel_lumi_inLogScale.pdf");
+	
+	myHistoName = "images/variables/Beta_beforeSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("Beta_beforeSel", hBeta_beforeSel_mc_lumi, hBeta_beforeSel_data_lumi, "#beta", myHistoName.c_str());
 		
 	
 
@@ -688,7 +718,9 @@ int main (int argc, char** argv)
 		
 	//rescale the Monte Carlo histogramm with luminosity
 	hBeta_afterSel_mc_lumi->Scale(getLumi());
-	drawDataMcComparison("Beta_afterSel", hBeta_afterSel_mc_lumi, hBeta_afterSel_data_lumi, "#beta", "images/variables/Beta_afterSel_lumi_inLogScale.pdf");
+	
+	myHistoName = "images/variables/Beta_afterSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("Beta_afterSel", hBeta_afterSel_mc_lumi, hBeta_afterSel_data_lumi, "#beta", myHistoName.c_str());
 		
 	
 
@@ -705,7 +737,8 @@ int main (int argc, char** argv)
 	//rescale the Monte Carlo histogramm with luminosity
 	hA_beforeSel_mc_lumi->Scale(getLumi());
 
-	drawDataMcComparison("A_beforeSel", hA_beforeSel_mc_lumi, hA_beforeSel_data_lumi, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", "images/variables/A_beforeSel_lumi_inLogScale.pdf");
+	myHistoName = "images/variables/A_beforeSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("A_beforeSel", hA_beforeSel_mc_lumi, hA_beforeSel_data_lumi, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", myHistoName.c_str());
 		
 
 //************************************************************************************************************
@@ -721,39 +754,55 @@ int main (int argc, char** argv)
 	//rescale the Monte Carlo histogramm with luminosity
 	hA_afterSel_mc_lumi->Scale(getLumi());
 
-	drawDataMcComparison("A_afterSel", hA_afterSel_mc_lumi, hA_afterSel_data_lumi, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", "images/variables/A_afterSel_lumi_inLogScale.pdf");
+	myHistoName = "images/variables/A_afterSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("A_afterSel", hA_afterSel_mc_lumi, hA_afterSel_data_lumi, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", myHistoName.c_str());
 		
 
 //*******************************************************************************************************
 
     if(inLinScale) {
-      drawDataMcComparison("MJB_inclusive", hMJB_inclusive_mc_lumi, hMJB_inclusive_data_lumi, "MJB","images/variables/MJB_inclusive_lumi_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("Met_beforeSel", hMet_beforeSel_mc_lumi, hMet_beforeSel_data_lumi, "MET [GeV/c]", "images/variables/Met_beforeSel_lumi_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("Met_afterSel", hMet_afterSel_mc_lumi, hMet_afterSel_data_lumi, "MET [GeV/c]", "images/variables/Met_afterSel_lumi_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("LeadingJetPt_beforeSel", hLeadingJetPt_beforeSel_mc_lumi, hLeadingJetPt_beforeSel_data_lumi, "p_{t}^{leading jet} [GeV/c]", "images/variables/LeadingJetPt_beforeSel_lumi_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("LeadingJetPt_afterSel", hLeadingJetPt_afterSel_mc_lumi, hLeadingJetPt_afterSel_data_lumi, "p_{t}^{leading jet} [GeV/c]", "images/variables/LeadingJetPt_afterSel_lumi_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("RecoilPt_beforeSel", hRecoilPt_beforeSel_mc_lumi, hRecoilPt_beforeSel_data_lumi, "p_{t}^{Recoil} [GeV/c]", "images/variables/RecoilPt_beforeSel_lumi_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("RecoilPt_afterSel", hRecoilPt_afterSel_mc_lumi, hRecoilPt_afterSel_data_lumi, "p_{t}^{Recoil} [GeV/c]", "images/variables/RecoilPt_afterSel_lumi_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("Npv_beforeSel", hNpv_beforeSel_mc_lumi, hNpv_beforeSel_data_lumi,  "N_{PV}", "images/variables/Npv_beforeSel_lumi_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_lumi, hNpv_afterSel_data_lumi,  "N_{PV}", "images/variables/Npv_afterSel_lumi_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("Alpha_beforeSel", hAlpha_beforeSel_mc_lumi, hAlpha_beforeSel_data_lumi,"#alpha", "images/variables/Alpha_beforeSel_lumi_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("Alpha_afterSel", hAlpha_afterSel_mc_lumi, hAlpha_afterSel_data_lumi, "#alpha", "images/variables/Alpha_afterSel_lumi_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("Beta_beforeSel", hBeta_beforeSel_mc_lumi, hBeta_beforeSel_data_lumi, "#beta", "images/variables/Beta_beforeSel_lumi_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("Beta_afterSel", hBeta_afterSel_mc_lumi, hBeta_afterSel_data_lumi, "#beta", "images/variables/Beta_afterSel_lumi_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("A_beforeSel", hA_beforeSel_mc_lumi, hA_beforeSel_data_lumi, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", "images/variables/A_beforeSel_lumi_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("A_afterSel", hA_afterSel_mc_lumi, hA_afterSel_data_lumi, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", "images/variables/A_afterSel_lumi_inLinScale.pdf", inLinScale);
+      myHistoName = "images/variables/MJB_inclusive_lumi_inLinScale" + extension;
+      drawDataMcComparison("MJB_inclusive", hMJB_inclusive_mc_lumi, hMJB_inclusive_data_lumi, "MJB", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Met_beforeSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("Met_beforeSel", hMet_beforeSel_mc_lumi, hMet_beforeSel_data_lumi, "MET [GeV/c]", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Met_afterSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("Met_afterSel", hMet_afterSel_mc_lumi, hMet_afterSel_data_lumi, "MET [GeV/c]", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/LeadingJetPt_beforeSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("LeadingJetPt_beforeSel", hLeadingJetPt_beforeSel_mc_lumi, hLeadingJetPt_beforeSel_data_lumi, "p_{t}^{leading jet} [GeV/c]", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/LeadingJetPt_afterSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("LeadingJetPt_afterSel", hLeadingJetPt_afterSel_mc_lumi, hLeadingJetPt_afterSel_data_lumi, "p_{t}^{leading jet} [GeV/c]", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/RecoilPt_beforeSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("RecoilPt_beforeSel", hRecoilPt_beforeSel_mc_lumi, hRecoilPt_beforeSel_data_lumi, "p_{t}^{Recoil} [GeV/c]", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/RecoilPt_afterSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("RecoilPt_afterSel", hRecoilPt_afterSel_mc_lumi, hRecoilPt_afterSel_data_lumi, "p_{t}^{Recoil} [GeV/c]", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Npv_beforeSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("Npv_beforeSel", hNpv_beforeSel_mc_lumi, hNpv_beforeSel_data_lumi,  "N_{PV}", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Npv_afterSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_lumi, hNpv_afterSel_data_lumi,  "N_{PV}", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Alpha_beforeSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("Alpha_beforeSel", hAlpha_beforeSel_mc_lumi, hAlpha_beforeSel_data_lumi,"#alpha", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Alpha_afterSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("Alpha_afterSel", hAlpha_afterSel_mc_lumi, hAlpha_afterSel_data_lumi, "#alpha", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Beta_beforeSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("Beta_beforeSel", hBeta_beforeSel_mc_lumi, hBeta_beforeSel_data_lumi, "#beta", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Beta_afterSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("Beta_afterSel", hBeta_afterSel_mc_lumi, hBeta_afterSel_data_lumi, "#beta", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/A_beforeSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("A_beforeSel", hA_beforeSel_mc_lumi, hA_beforeSel_data_lumi, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/A_afterSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("A_afterSel", hA_afterSel_mc_lumi, hA_afterSel_data_lumi, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", myHistoName.c_str(), inLinScale);
       for(int j=0; j<myPtBinning.getSize(); j++) {
 		binName = myPtBinning.getName(j);
 		myName = "MJB_{data}/MJB_{MC} for " + binName;
 		myXName = "MJB for " + binName;
-		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_lumi_inLinScale.pdf";
+		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_lumi_inLinScale" + extension;
 		drawDataMcComparison(myName.c_str(), vMJB_RecoilPt_mc_lumi[j], vMJB_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
       }
       for(int j=0; j<myNpvBinning.getSize(); j++) {
 		binName = myNpvBinning.getName(j);
 		myName = "MJB_{data}/MJB_{MC} for " + binName;
 		myXName = "MJB for " + binName;
-		mySaveName = "images/MJBperNpv/MJB_" + binName + "_lumi_inLinScale.pdf";
+		mySaveName = "images/MJBperNpv/MJB_" + binName + "_lumi_inLinScale" + extension;
 		drawDataMcComparison(myName.c_str(), vMJB_Npv_mc_lumi[j], vMJB_Npv_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
       }
     }
@@ -792,7 +841,7 @@ int main (int argc, char** argv)
 		binName = myPtBinning.getName(j);
 		myName = "MJB_{data}/MJB_{MC} for " + binName;
 		myXName = "MJB for " + binName;
-		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_shape_inLogScale.pdf";
+		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_shape_inLogScale" + extension;
 		drawDataMcComparison(myName.c_str(), vMJB_RecoilPt_mc_lumi[j], vMJB_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 	
@@ -815,7 +864,7 @@ int main (int argc, char** argv)
 		binName = myNpvBinning.getName(j);
 		myName = "MJB_{data}/MJB_{MC} for " + binName;
 		myXName = "MJB for " + binName;
-		mySaveName = "images/MJBperNpv/MJB_" + binName + "_shape_inLogScale.pdf";
+		mySaveName = "images/MJBperNpv/MJB_" + binName + "_shape_inLogScale" + extension;
 		drawDataMcComparison(myName.c_str(), vMJB_Npv_mc_lumi[j], vMJB_Npv_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 	
@@ -835,7 +884,8 @@ int main (int argc, char** argv)
 	float Nentries_MJB_inclusive_Data = hMJB_inclusive_data_shape->Integral();	
 	hMJB_inclusive_mc_shape->Scale(Nentries_MJB_inclusive_Data/Nentries_MJB_inclusive_mc);
 
-	drawDataMcComparison("MJB_inclusive", hMJB_inclusive_mc_shape, hMJB_inclusive_data_shape, "MJB", "images/variables/MJB_inclusive_shape_inLogScale.pdf");
+	myHistoName = "images/variables/MJB_inclusive_shape_inLogScale" + extension;
+	drawDataMcComparison("MJB_inclusive", hMJB_inclusive_mc_shape, hMJB_inclusive_data_shape, "MJB", myHistoName.c_str());
 	
 	
 //************************************************************************************************************
@@ -855,7 +905,8 @@ int main (int argc, char** argv)
 	float Nentries_Met_beforeSel_Data = hMet_beforeSel_data_shape->Integral();	
 	hMet_beforeSel_mc_shape->Scale(Nentries_Met_beforeSel_Data/Nentries_Met_beforeSel_mc);
 
-	drawDataMcComparison("Met_beforeSel", hMet_beforeSel_mc_shape, hMet_beforeSel_data_shape, "MET [GeV/c]", "images/variables/Met_beforeSel_shape_inLogScale.pdf");
+	myHistoName = "images/variables/Met_beforeSel_shape_inLogScale" + extension;
+	drawDataMcComparison("Met_beforeSel", hMet_beforeSel_mc_shape, hMet_beforeSel_data_shape, "MET [GeV/c]", myHistoName.c_str());
 	
 //************************************************************************************************************
 //
@@ -874,7 +925,8 @@ int main (int argc, char** argv)
 	float Nentries_Met_afterSel_Data = hMet_afterSel_data_shape->Integral();	
 	hMet_afterSel_mc_shape->Scale(Nentries_Met_afterSel_Data/Nentries_Met_afterSel_mc);
 
-	drawDataMcComparison("Met_afterSel", hMet_afterSel_mc_shape, hMet_afterSel_data_shape, "MET [GeV/c]", "images/variables/Met_afterSel_shape_inLogScale.pdf");
+	myHistoName = "images/variables/Met_afterSel_shape_inLogScale" + extension;
+	drawDataMcComparison("Met_afterSel", hMet_afterSel_mc_shape, hMet_afterSel_data_shape, "MET [GeV/c]", myHistoName.c_str());
 	
 //************************************************************************************************************
 //
@@ -892,7 +944,9 @@ int main (int argc, char** argv)
 	float Nentries_LeadingJetPt_beforeSel_mc = hLeadingJetPt_beforeSel_mc_shape->Integral();
 	float Nentries_LeadingJetPt_beforeSel_Data = hLeadingJetPt_beforeSel_data_shape->Integral();	
 	hLeadingJetPt_beforeSel_mc_shape->Scale(Nentries_LeadingJetPt_beforeSel_Data/Nentries_LeadingJetPt_beforeSel_mc);
-	drawDataMcComparison("LeadingJetPt_beforeSel", hLeadingJetPt_beforeSel_mc_shape, hLeadingJetPt_beforeSel_data_shape, "p_{t}^{leading jet} [GeV/c]", "images/variables/LeadingJetPt_beforeSel_shape_inLogScale.pdf");
+	
+	myHistoName = "images/variables/LeadingJetPt_beforeSel_shape_inLogScale" + extension;
+	drawDataMcComparison("LeadingJetPt_beforeSel", hLeadingJetPt_beforeSel_mc_shape, hLeadingJetPt_beforeSel_data_shape, "p_{t}^{leading jet} [GeV/c]", myHistoName.c_str());
 	
 //************************************************************************************************************
 //
@@ -910,7 +964,9 @@ int main (int argc, char** argv)
 	float Nentries_LeadingJetPt_afterSel_mc = hLeadingJetPt_afterSel_mc_shape->Integral();
 	float Nentries_LeadingJetPt_afterSel_Data = hLeadingJetPt_afterSel_data_shape->Integral();	
 	hLeadingJetPt_afterSel_mc_shape->Scale(Nentries_LeadingJetPt_afterSel_Data/Nentries_LeadingJetPt_afterSel_mc);
-	drawDataMcComparison("LeadingJetPt_afterSel", hLeadingJetPt_afterSel_mc_shape, hLeadingJetPt_afterSel_data_shape, "p_{t}^{leading jet} [GeV/c]", "images/variables/LeadingJetPt_afterSel_shape_inLogScale.pdf");
+	
+	myHistoName = "images/variables/LeadingJetPt_afterSel_shape_inLogScale" + extension;
+	drawDataMcComparison("LeadingJetPt_afterSel", hLeadingJetPt_afterSel_mc_shape, hLeadingJetPt_afterSel_data_shape, "p_{t}^{leading jet} [GeV/c]", myHistoName.c_str());
 
 
 //************************************************************************************************************
@@ -929,7 +985,9 @@ int main (int argc, char** argv)
 	float Nentries_RecoilPt_beforeSel_mc = hRecoilPt_beforeSel_mc_shape->Integral();
 	float Nentries_RecoilPt_beforeSel_Data = hRecoilPt_beforeSel_data_shape->Integral();	
 	hRecoilPt_beforeSel_mc_shape->Scale(Nentries_RecoilPt_beforeSel_Data/Nentries_RecoilPt_beforeSel_mc);
-	drawDataMcComparison("RecoilPt_beforeSel", hRecoilPt_beforeSel_mc_shape, hRecoilPt_beforeSel_data_shape, "p_{t}^{Recoil} [GeV/c]", "images/variables/RecoilPt_beforeSel_shape_inLogScale.pdf");
+	
+	myHistoName = "images/variables/RecoilPt_beforeSel_shape_inLogScale" + extension;
+	drawDataMcComparison("RecoilPt_beforeSel", hRecoilPt_beforeSel_mc_shape, hRecoilPt_beforeSel_data_shape, "p_{t}^{Recoil} [GeV/c]", myHistoName.c_str());
 	
 //************************************************************************************************************
 //
@@ -947,7 +1005,9 @@ int main (int argc, char** argv)
 	float Nentries_RecoilPt_afterSel_mc = hRecoilPt_afterSel_mc_shape->Integral();
 	float Nentries_RecoilPt_afterSel_Data = hRecoilPt_afterSel_data_shape->Integral();	
 	hRecoilPt_afterSel_mc_shape->Scale(Nentries_RecoilPt_afterSel_Data/Nentries_RecoilPt_afterSel_mc);
-	drawDataMcComparison("RecoilPt_afterSel", hRecoilPt_afterSel_mc_shape, hRecoilPt_afterSel_data_shape, "p_{t}^{Recoil} [GeV/c]", "images/variables/RecoilPt_afterSel_shape_inLogScale.pdf");
+	
+	myHistoName = "images/variables/RecoilPt_afterSel_shape_inLogScale" + extension;
+	drawDataMcComparison("RecoilPt_afterSel", hRecoilPt_afterSel_mc_shape, hRecoilPt_afterSel_data_shape, "p_{t}^{Recoil} [GeV/c]", myHistoName.c_str());
 
 //************************************************************************************************************
 //
@@ -965,7 +1025,9 @@ int main (int argc, char** argv)
 	float Nentries_Npv_beforeSel_mc = hNpv_beforeSel_mc_shape->Integral();
 	float Nentries_Npv_beforeSel_Data = hNpv_beforeSel_data_shape->Integral();	
 	hNpv_beforeSel_mc_shape->Scale(Nentries_Npv_beforeSel_Data/Nentries_Npv_beforeSel_mc);
-	drawDataMcComparison("Npv_beforeSel", hNpv_beforeSel_mc_shape, hNpv_beforeSel_data_shape, "N_{PV}", "images/variables/Npv_beforeSel_shape_inLogScale.pdf");
+	
+	myHistoName = "images/variables/Npv_beforeSel_shape_inLogScale" + extension;
+	drawDataMcComparison("Npv_beforeSel", hNpv_beforeSel_mc_shape, hNpv_beforeSel_data_shape, "N_{PV}", myHistoName.c_str());
 	
 //************************************************************************************************************
 //
@@ -984,7 +1046,8 @@ int main (int argc, char** argv)
 	float Nentries_Npv_afterSel_Data = hNpv_afterSel_data_shape->Integral();	
 	hNpv_afterSel_mc_shape->Scale(Nentries_Npv_afterSel_Data/Nentries_Npv_afterSel_mc);
 
-	drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_shape, hNpv_afterSel_data_shape, "N_{PV}", "images/variables/Npv_afterSel_shape_inLogScale.pdf");
+	myHistoName = "images/variables/Npv_afterSel_shape_inLogScale" + extension;
+	drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_shape, hNpv_afterSel_data_shape, "N_{PV}", myHistoName.c_str());
 	
 	
 //************************************************************************************************************
@@ -1003,7 +1066,8 @@ int main (int argc, char** argv)
 	float Nentries_Alpha_beforeSel_Data = hAlpha_beforeSel_data_shape->Integral();	
 	hAlpha_beforeSel_mc_shape->Scale(Nentries_Alpha_beforeSel_Data/Nentries_Alpha_beforeSel_mc);
 
-	drawDataMcComparison("Alpha_beforeSel", hAlpha_beforeSel_mc_shape, hAlpha_beforeSel_data_shape, "#alpha", "images/variables/Alpha_beforeSel_shape_inLogScale.pdf");
+	myHistoName = "images/variables/Alpha_beforeSel_shape_inLogScale" + extension;
+	drawDataMcComparison("Alpha_beforeSel", hAlpha_beforeSel_mc_shape, hAlpha_beforeSel_data_shape, "#alpha", myHistoName.c_str());
 	
 //************************************************************************************************************
 //
@@ -1022,7 +1086,8 @@ int main (int argc, char** argv)
 	float Nentries_Alpha_afterSel_Data = hAlpha_afterSel_data_shape->Integral();	
 	hAlpha_afterSel_mc_shape->Scale(Nentries_Alpha_afterSel_Data/Nentries_Alpha_afterSel_mc);
 
-	drawDataMcComparison("Alpha_afterSel", hAlpha_afterSel_mc_shape, hAlpha_afterSel_data_shape,"#alpha", "images/variables/Alpha_afterSel_shape_inLogScale.pdf");
+	myHistoName = "images/variables/Alpha_afterSel_shape_inLogScale" + extension;
+	drawDataMcComparison("Alpha_afterSel", hAlpha_afterSel_mc_shape, hAlpha_afterSel_data_shape,"#alpha", myHistoName.c_str());
 
 
 //************************************************************************************************************
@@ -1042,7 +1107,8 @@ int main (int argc, char** argv)
 	float Nentries_Beta_beforeSel_Data = hBeta_beforeSel_data_shape->Integral();	
 	hBeta_beforeSel_mc_shape->Scale(Nentries_Beta_beforeSel_Data/Nentries_Beta_beforeSel_mc);
 
-	drawDataMcComparison("Beta_beforeSel", hBeta_beforeSel_mc_shape, hBeta_beforeSel_data_shape, "#beta", "images/variables/Beta_beforeSel_shape_inLogScale.pdf");
+	myHistoName = "images/variables/Beta_beforeSel_shape_inLogScale" + extension;
+	drawDataMcComparison("Beta_beforeSel", hBeta_beforeSel_mc_shape, hBeta_beforeSel_data_shape, "#beta", myHistoName.c_str());
 	
 //************************************************************************************************************
 //
@@ -1061,7 +1127,8 @@ int main (int argc, char** argv)
 	float Nentries_Beta_afterSel_Data = hBeta_afterSel_data_shape->Integral();	
 	hBeta_afterSel_mc_shape->Scale(Nentries_Beta_afterSel_Data/Nentries_Beta_afterSel_mc);
 
-	drawDataMcComparison("Beta_afterSel", hBeta_afterSel_mc_shape, hBeta_afterSel_data_shape,"#beta", "images/variables/Beta_afterSel_shape_inLogScale.pdf");
+	myHistoName = "images/variables/Beta_afterSel_shape_inLogScale" + extension;
+	drawDataMcComparison("Beta_afterSel", hBeta_afterSel_mc_shape, hBeta_afterSel_data_shape,"#beta", myHistoName.c_str());
 
 
 //************************************************************************************************************
@@ -1081,7 +1148,8 @@ int main (int argc, char** argv)
 	float Nentries_A_beforeSel_Data = hA_beforeSel_data_shape->Integral();	
 	hA_beforeSel_mc_shape->Scale(Nentries_A_beforeSel_Data/Nentries_A_beforeSel_mc);
 
-	drawDataMcComparison("A_beforeSel", hA_beforeSel_mc_shape, hA_beforeSel_data_shape, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", "images/variables/A_beforeSel_shape_inLogScale.pdf");
+	myHistoName = "images/variables/A_beforeSel_shape_inLogScale" + extension;
+	drawDataMcComparison("A_beforeSel", hA_beforeSel_mc_shape, hA_beforeSel_data_shape, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", myHistoName.c_str());
 	
 //************************************************************************************************************
 //
@@ -1100,38 +1168,54 @@ int main (int argc, char** argv)
 	float Nentries_A_afterSel_Data = hA_afterSel_data_shape->Integral();	
 	hA_afterSel_mc_shape->Scale(Nentries_A_afterSel_Data/Nentries_A_afterSel_mc);
 
-	drawDataMcComparison("A_afterSel", hA_afterSel_mc_shape, hA_afterSel_data_shape, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", "images/variables/A_afterSel_shape_inLogScale.pdf");
+	myHistoName = "images/variables/A_afterSel_shape_inLogScale" + extension;
+	drawDataMcComparison("A_afterSel", hA_afterSel_mc_shape, hA_afterSel_data_shape, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", myHistoName.c_str());
 
 //*******************************************************************************************************
 
     if(inLinScale) {
-      drawDataMcComparison("MJB_inclusive", hMJB_inclusive_mc_shape, hMJB_inclusive_data_shape, "MJB", "images/variables/MJB_inclusive_shape_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("Met_beforeSel", hMet_beforeSel_mc_shape, hMet_beforeSel_data_shape, "MET [GeV/c]", "images/variables/Met_beforeSel_shape_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("Met_afterSel", hMet_afterSel_mc_shape, hMet_afterSel_data_shape, "MET [GeV/c]", "images/variables/Met_afterSel_shape_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("LeadingJetPt_beforeSel", hLeadingJetPt_beforeSel_mc_shape, hLeadingJetPt_beforeSel_data_shape, "p_{t}^{leading jet} [GeV/c]", "images/variables/LeadingJetPt_beforeSel_shape_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("LeadingJetPt_afterSel", hLeadingJetPt_afterSel_mc_shape, hLeadingJetPt_afterSel_data_shape, "p_{t}^{leading jet} [GeV/c]", "images/variables/LeadingJetPt_afterSel_shape_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("RecoilPt_beforeSel", hRecoilPt_beforeSel_mc_shape, hRecoilPt_beforeSel_data_shape, "p_{t}^{Recoil} [GeV/c]", "images/variables/RecoilPt_beforeSel_shape_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("RecoilPt_afterSel", hRecoilPt_afterSel_mc_shape, hRecoilPt_afterSel_data_shape, "p_{t}^{Recoil} [GeV/c]", "images/variables/RecoilPt_afterSel_shape_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("Npv_beforeSel", hNpv_beforeSel_mc_shape, hNpv_beforeSel_data_shape, "N_{PV}", "images/variables/Npv_beforeSel_shape_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_shape, hNpv_afterSel_data_shape, "N_{PV}", "images/variables/Npv_afterSel_shape_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("Alpha_beforeSel", hAlpha_beforeSel_mc_shape, hAlpha_beforeSel_data_shape, "#alpha", "images/variables/Alpha_beforeSel_shape_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("Alpha_afterSel", hAlpha_afterSel_mc_shape, hAlpha_afterSel_data_shape,"#alpha", "images/variables/Alpha_afterSel_shape_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("Beta_beforeSel", hBeta_beforeSel_mc_shape, hBeta_beforeSel_data_shape, "#beta", "images/variables/Beta_beforeSel_shape_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("Beta_afterSel", hBeta_afterSel_mc_shape, hBeta_afterSel_data_shape, "#beta", "images/variables/Beta_afterSel_shape_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("A_beforeSel", hA_beforeSel_mc_shape, hA_beforeSel_data_shape, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", "images/variables/A_beforeSel_shape_inLinScale.pdf", inLinScale);
-      drawDataMcComparison("A_afterSel", hA_afterSel_mc_shape, hA_afterSel_data_shape, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", "images/variables/A_afterSel_shape_inLinScale.pdf", inLinScale);
+      myHistoName = "images/variables/MJB_inclusive_shape_inLinScale" + extension;
+      drawDataMcComparison("MJB_inclusive", hMJB_inclusive_mc_shape, hMJB_inclusive_data_shape, "MJB", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Met_beforeSel_shape_inLinScale" + extension;
+      drawDataMcComparison("Met_beforeSel", hMet_beforeSel_mc_shape, hMet_beforeSel_data_shape, "MET [GeV/c]", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Met_afterSel_shape_inLinScale" + extension;
+      drawDataMcComparison("Met_afterSel", hMet_afterSel_mc_shape, hMet_afterSel_data_shape, "MET [GeV/c]", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/LeadingJetPt_beforeSel_shape_inLinScale" + extension;
+      drawDataMcComparison("LeadingJetPt_beforeSel", hLeadingJetPt_beforeSel_mc_shape, hLeadingJetPt_beforeSel_data_shape, "p_{t}^{leading jet} [GeV/c]", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/LeadingJetPt_afterSel_shape_inLinScale" + extension;
+      drawDataMcComparison("LeadingJetPt_afterSel", hLeadingJetPt_afterSel_mc_shape, hLeadingJetPt_afterSel_data_shape, "p_{t}^{leading jet} [GeV/c]", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/RecoilPt_beforeSel_shape_inLinScale" + extension;
+      drawDataMcComparison("RecoilPt_beforeSel", hRecoilPt_beforeSel_mc_shape, hRecoilPt_beforeSel_data_shape, "p_{t}^{Recoil} [GeV/c]", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/RecoilPt_afterSel_shape_inLinScale" + extension;
+      drawDataMcComparison("RecoilPt_afterSel", hRecoilPt_afterSel_mc_shape, hRecoilPt_afterSel_data_shape, "p_{t}^{Recoil} [GeV/c]", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Npv_beforeSel_shape_inLinScale" + extension;
+      drawDataMcComparison("Npv_beforeSel", hNpv_beforeSel_mc_shape, hNpv_beforeSel_data_shape, "N_{PV}", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Npv_afterSel_shape_inLinScale" + extension;
+      drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_shape, hNpv_afterSel_data_shape, "N_{PV}", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Alpha_beforeSel_shape_inLinScale" + extension;
+      drawDataMcComparison("Alpha_beforeSel", hAlpha_beforeSel_mc_shape, hAlpha_beforeSel_data_shape, "#alpha", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Alpha_afterSel_shape_inLinScale" + extension;
+      drawDataMcComparison("Alpha_afterSel", hAlpha_afterSel_mc_shape, hAlpha_afterSel_data_shape,"#alpha", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Beta_beforeSel_shape_inLinScale" + extension;
+      drawDataMcComparison("Beta_beforeSel", hBeta_beforeSel_mc_shape, hBeta_beforeSel_data_shape, "#beta", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Beta_afterSel_shape_inLinScale" + extension;
+      drawDataMcComparison("Beta_afterSel", hBeta_afterSel_mc_shape, hBeta_afterSel_data_shape, "#beta", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/A_beforeSel_shape_inLinScale" + extension;
+      drawDataMcComparison("A_beforeSel", hA_beforeSel_mc_shape, hA_beforeSel_data_shape, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/A_afterSel_shape_inLinScale" + extension;
+      drawDataMcComparison("A_afterSel", hA_afterSel_mc_shape, hA_afterSel_data_shape, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", myHistoName.c_str(), inLinScale);
       for(int j=0; j<myPtBinning.getSize(); j++) {
 		binName = myPtBinning.getName(j);
 		myName = "MJB_{data}/MJB_{MC} for " + binName;
 		myXName = "MJB for " + binName;
-		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_shape_inLinScale.pdf";
+		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_shape_inLinScale" + extension;
 		drawDataMcComparison(myName.c_str(), vMJB_RecoilPt_mc_shape[j], vMJB_RecoilPt_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
       }
       for(int j=0; j<myNpvBinning.getSize(); j++) {
 		binName = myNpvBinning.getName(j);
 		myName = "MJB_{data}/MJB_{MC} for " + binName;
 		myXName = "MJB for " + binName;
-		mySaveName = "images/MJBperNpv/MJB_" + binName + "_shape_inLinScale.pdf";
+		mySaveName = "images/MJBperNpv/MJB_" + binName + "_shape_inLinScale" + extension;
 		drawDataMcComparison(myName.c_str(), vMJB_Npv_mc_shape[j], vMJB_Npv_data_shape[j],myXName.c_str(), mySaveName.c_str(), inLinScale);
       }    
     }  
