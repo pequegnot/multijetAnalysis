@@ -241,9 +241,15 @@ int main (int argc, char** argv)
 
 	TH1F* hMJB_inclusive = (TH1F*)f->Get("variables/afterSel/hMJB_inclusive");
 	TH1F* hNjet_JetPt = (TH1F*)f->Get("variables/afterSel/hNjet_JetPt");	
-	TH1F* hNpujet_JetPt = (TH1F*)f->Get("variables/afterSel/hNpujet_JetPt");	
+	TH1F* hNpuLoosejet_JetPt = (TH1F*)f->Get("variables/afterSel/hNpuLoosejet_JetPt");
+	TH1F* hNpuMediumjet_JetPt = (TH1F*)f->Get("variables/afterSel/hNpuMediumjet_JetPt");
+	TH1F* hNpuTightjet_JetPt = (TH1F*)f->Get("variables/afterSel/hNpuTightjet_JetPt");
+	TH1F* hNpuAlljet_JetPt = (TH1F*)f->Get("variables/afterSel/hNpuAlljet_JetPt");	
 	TH1F* hNjet_Npv = (TH1F*)f->Get("variables/afterSel/hNjet_Npv");	
-	TH1F* hNpujet_Npv = (TH1F*)f->Get("variables/afterSel/hNpujet_Npv");
+	TH1F* hNpuLoosejet_Npv = (TH1F*)f->Get("variables/afterSel/hNpuLoosejet_Npv");
+	TH1F* hNpuMediumjet_Npv = (TH1F*)f->Get("variables/afterSel/hNpuMediumjet_Npv");
+	TH1F* hNpuTightjet_Npv = (TH1F*)f->Get("variables/afterSel/hNpuTightjet_Npv");
+	TH1F* hNpuAlljet_Npv = (TH1F*)f->Get("variables/afterSel/hNpuAlljet_Npv");
 	TH1F* hFracJetsPt = (TH1F*)f->Get("variables/afterSel/hFracJetsPt");
 	TH1F* hHT = (TH1F*)f->Get("variables/afterSel/hHT");
 	TH1F* hNjetsRecoil = (TH1F*)f->Get("variables/afterSel/hNjetsRecoil");
@@ -285,12 +291,12 @@ int main (int argc, char** argv)
 
 //************************************************************************************************************
 //
-//                                      Njet and NpuJets as a function of ptjet
+//                                      Njet and NpuLooseJets as a function of ptjet
 //
 //************************************************************************************************************
 
 	h1_style(hNjet_JetPt);
-	h1_style(hNpujet_JetPt);
+	h1_style(hNpuLoosejet_JetPt);
 	
 	TCanvas* cNjets_JetPt = new TCanvas();
 	cNjets_JetPt->cd();
@@ -299,32 +305,134 @@ int main (int argc, char** argv)
 	saveName = "images/Njets/Njets_JetPt" + typeName + extension;
 	cNjets_JetPt->SaveAs(saveName.c_str());
 	cNjets_JetPt->Clear();
-	hNpujet_JetPt->Draw("hist");
+	hNpuLoosejet_JetPt->Draw("hist");
 	cNjets_JetPt->SetLogy();
-	saveName = "images/Njets/Npujets_JetPt" + typeName + extension;
+	saveName = "images/Njets/NpuLoosejets_JetPt" + typeName + extension;
 	cNjets_JetPt->SaveAs(saveName.c_str());
 	
-	TH1F *hFracPuJets_JetPt = new TH1F("hFracPuJets_JetPt","hFracPuJets_JetPt",30,0,600);
-	h1_style(hFracPuJets_JetPt);
-	hFracPuJets_JetPt = (TH1F*)hNpujet_JetPt->Clone();
-	hFracPuJets_JetPt->Divide(hNjet_JetPt);
-	hFracPuJets_JetPt->SetNameTitle("hFracPuJets_JetPt","PU jets fraction wrt p_{t}^{jet}");
-	hFracPuJets_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
-	hFracPuJets_JetPt->SetYTitle("PU jets fraction");
+	TH1F *hFracPuLooseJets_JetPt = new TH1F("hFracPuLooseJets_JetPt","hFracPuLooseJets_JetPt",30,0,600);
+	h1_style(hFracPuLooseJets_JetPt);
+	hFracPuLooseJets_JetPt = (TH1F*)hNpuLoosejet_JetPt->Clone();
+	hFracPuLooseJets_JetPt->Divide(hNjet_JetPt);
+	hFracPuLooseJets_JetPt->SetNameTitle("hFracPuLooseJets_JetPt","PU Loose jets fraction wrt p_{t}^{jet}");
+	hFracPuLooseJets_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
+	hFracPuLooseJets_JetPt->SetYTitle("PU Loose jets fraction");
 	cNjets_JetPt->Clear();
-	hFracPuJets_JetPt->Draw("hist");
+	hFracPuLooseJets_JetPt->Draw("hist");
 	cNjets_JetPt->SetLogy();
-	saveName = "images/Njets/FracPuJets_JetPt" + typeName + extension;
+	saveName = "images/Njets/FracPuLooseJets_JetPt" + typeName + extension;
 	cNjets_JetPt->SaveAs(saveName.c_str());
 	
 //************************************************************************************************************
 //
-//                                      Njet and NpuJets as a function of Npv
+//                                      Njet and NpuMediumJets as a function of ptjet
+//
+//************************************************************************************************************
+
+	h1_style(hNjet_JetPt);
+	h1_style(hNpuMediumjet_JetPt);
+	
+	cNjets_JetPt->cd();
+	cNjets_JetPt->Clear();
+	hNjet_JetPt->Draw("hist");
+	cNjets_JetPt->SetLogy();
+	saveName = "images/Njets/Njets_JetPt" + typeName + extension;
+	cNjets_JetPt->SaveAs(saveName.c_str());
+	cNjets_JetPt->Clear();
+	hNpuMediumjet_JetPt->Draw("hist");
+	cNjets_JetPt->SetLogy();
+	saveName = "images/Njets/NpuMediumjets_JetPt" + typeName + extension;
+	cNjets_JetPt->SaveAs(saveName.c_str());
+	
+	TH1F *hFracPuMediumJets_JetPt = new TH1F("hFracPuMediumJets_JetPt","hFracPuMediumJets_JetPt",30,0,600);
+	h1_style(hFracPuMediumJets_JetPt);
+	hFracPuMediumJets_JetPt = (TH1F*)hNpuMediumjet_JetPt->Clone();
+	hFracPuMediumJets_JetPt->Divide(hNjet_JetPt);
+	hFracPuMediumJets_JetPt->SetNameTitle("hFracPuMediumJets_JetPt","PU Medium jets fraction wrt p_{t}^{jet}");
+	hFracPuMediumJets_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
+	hFracPuMediumJets_JetPt->SetYTitle("PU Medium jets fraction");
+	cNjets_JetPt->Clear();
+	hFracPuMediumJets_JetPt->Draw("hist");
+	cNjets_JetPt->SetLogy();
+	saveName = "images/Njets/FracPuMediumJets_JetPt" + typeName + extension;
+	cNjets_JetPt->SaveAs(saveName.c_str());
+	
+//************************************************************************************************************
+//
+//                                      Njet and NpuTightJets as a function of ptjet
+//
+//************************************************************************************************************
+
+	h1_style(hNjet_JetPt);
+	h1_style(hNpuTightjet_JetPt);
+	
+	cNjets_JetPt->cd();
+	cNjets_JetPt->Clear();
+	hNjet_JetPt->Draw("hist");
+	cNjets_JetPt->SetLogy();
+	saveName = "images/Njets/Njets_JetPt" + typeName + extension;
+	cNjets_JetPt->SaveAs(saveName.c_str());
+	cNjets_JetPt->Clear();
+	hNpuTightjet_JetPt->Draw("hist");
+	cNjets_JetPt->SetLogy();
+	saveName = "images/Njets/NpuTightjets_JetPt" + typeName + extension;
+	cNjets_JetPt->SaveAs(saveName.c_str());
+	
+	TH1F *hFracPuTightJets_JetPt = new TH1F("hFracPuTightJets_JetPt","hFracPuTightJets_JetPt",30,0,600);
+	h1_style(hFracPuTightJets_JetPt);
+	hFracPuTightJets_JetPt = (TH1F*)hNpuTightjet_JetPt->Clone();
+	hFracPuTightJets_JetPt->Divide(hNjet_JetPt);
+	hFracPuTightJets_JetPt->SetNameTitle("hFracPuTightJets_JetPt","PU Tight jets fraction wrt p_{t}^{jet}");
+	hFracPuTightJets_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
+	hFracPuTightJets_JetPt->SetYTitle("PU Tight jets fraction");
+	cNjets_JetPt->Clear();
+	hFracPuTightJets_JetPt->Draw("hist");
+	cNjets_JetPt->SetLogy();
+	saveName = "images/Njets/FracPuTightJets_JetPt" + typeName + extension;
+	cNjets_JetPt->SaveAs(saveName.c_str());
+	
+//************************************************************************************************************
+//
+//                                      Njet and NpuAllJets as a function of ptjet
+//
+//************************************************************************************************************
+
+	h1_style(hNjet_JetPt);
+	h1_style(hNpuAlljet_JetPt);
+	
+	cNjets_JetPt->cd();
+	cNjets_JetPt->Clear();
+	hNjet_JetPt->Draw("hist");
+	cNjets_JetPt->SetLogy();
+	saveName = "images/Njets/Njets_JetPt" + typeName + extension;
+	cNjets_JetPt->SaveAs(saveName.c_str());
+	cNjets_JetPt->Clear();
+	hNpuAlljet_JetPt->Draw("hist");
+	cNjets_JetPt->SetLogy();
+	saveName = "images/Njets/NpuAlljets_JetPt" + typeName + extension;
+	cNjets_JetPt->SaveAs(saveName.c_str());
+	
+	TH1F *hFracPuAllJets_JetPt = new TH1F("hFracPuAllJets_JetPt","hFracPuAllJets_JetPt",30,0,600);
+	h1_style(hFracPuAllJets_JetPt);
+	hFracPuAllJets_JetPt = (TH1F*)hNpuAlljet_JetPt->Clone();
+	hFracPuAllJets_JetPt->Divide(hNjet_JetPt);
+	hFracPuAllJets_JetPt->SetNameTitle("hFracPuAllJets_JetPt","PU All jets fraction wrt p_{t}^{jet}");
+	hFracPuAllJets_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
+	hFracPuAllJets_JetPt->SetYTitle("PU All jets fraction");
+	cNjets_JetPt->Clear();
+	hFracPuAllJets_JetPt->Draw("hist");
+	cNjets_JetPt->SetLogy();
+	saveName = "images/Njets/FracPuAllJets_JetPt" + typeName + extension;
+	cNjets_JetPt->SaveAs(saveName.c_str());
+	
+//************************************************************************************************************
+//
+//                                      Njet and NpuLooseJets as a function of Npv
 //
 //************************************************************************************************************
 
 	h1_style(hNjet_Npv);
-	h1_style(hNpujet_Npv);
+	h1_style(hNpuLoosejet_Npv);
 	
 	TCanvas* cNjets_Npv = new TCanvas();
 	cNjets_Npv->cd();
@@ -333,22 +441,124 @@ int main (int argc, char** argv)
 	saveName = "images/Njets/Njets_Npv" + typeName + extension;
 	cNjets_Npv->SaveAs(saveName.c_str());
 	cNjets_Npv->Clear();
-	hNpujet_Npv->Draw("hist");
+	hNpuLoosejet_Npv->Draw("hist");
 	cNjets_Npv->SetLogy();
-	saveName = "images/Njets/Npujets_Npv" + typeName + extension;
+	saveName = "images/Njets/NpuLoosejets_Npv" + typeName + extension;
 	cNjets_Npv->SaveAs(saveName.c_str());
 	
-	TH1F *hFracPuJets_Npv = new TH1F("hFracPuJets_Npv","hFracPuJets_Npv",250,0,2500);
-	h1_style(hFracPuJets_Npv);
-	hFracPuJets_Npv = (TH1F*)hNpujet_Npv->Clone();
-	hFracPuJets_Npv->Divide(hNjet_Npv);
-	hFracPuJets_Npv->SetNameTitle("hFracPuJets_Npv","PU jets fraction wrt N_{PV}");
-	hFracPuJets_Npv->SetXTitle("N_{PV}");
-	hFracPuJets_Npv->SetYTitle("PU jets fraction");
+	TH1F *hFracPuLooseJets_Npv = new TH1F("hFracPuLooseJets_Npv","hFracPuLooseJets_Npv",250,0,2500);
+	h1_style(hFracPuLooseJets_Npv);
+	hFracPuLooseJets_Npv = (TH1F*)hNpuLoosejet_Npv->Clone();
+	hFracPuLooseJets_Npv->Divide(hNjet_Npv);
+	hFracPuLooseJets_Npv->SetNameTitle("hFracPuJets_Npv","PU Loose jets fraction wrt N_{PV}");
+	hFracPuLooseJets_Npv->SetXTitle("N_{PV}");
+	hFracPuLooseJets_Npv->SetYTitle("PU Loose jets fraction");
 	cNjets_Npv->Clear();
-	hFracPuJets_Npv->Draw("hist");
+	hFracPuLooseJets_Npv->Draw("hist");
 	cNjets_Npv->SetLogy();
-	saveName = "images/Njets/FracPuJets_Npv" + typeName + extension;
+	saveName = "images/Njets/FracPuLooseJets_Npv" + typeName + extension;
+	cNjets_Npv->SaveAs(saveName.c_str());
+	
+//************************************************************************************************************
+//
+//                                      Njet and NpuMediumJets as a function of Npv
+//
+//************************************************************************************************************
+
+	h1_style(hNjet_Npv);
+	h1_style(hNpuMediumjet_Npv);
+	
+	cNjets_Npv->cd();
+	cNjets_Npv->Clear();
+	hNjet_Npv->Draw("hist");
+	cNjets_Npv->SetLogy();
+	saveName = "images/Njets/Njets_Npv" + typeName + extension;
+	cNjets_Npv->SaveAs(saveName.c_str());
+	cNjets_Npv->Clear();
+	hNpuMediumjet_Npv->Draw("hist");
+	cNjets_Npv->SetLogy();
+	saveName = "images/Njets/NpuMediumjets_Npv" + typeName + extension;
+	cNjets_Npv->SaveAs(saveName.c_str());
+	
+	TH1F *hFracPuMediumJets_Npv = new TH1F("hFracPuMediumJets_Npv","hFracPuMediumJets_Npv",250,0,2500);
+	h1_style(hFracPuMediumJets_Npv);
+	hFracPuMediumJets_Npv = (TH1F*)hNpuMediumjet_Npv->Clone();
+	hFracPuMediumJets_Npv->Divide(hNjet_Npv);
+	hFracPuMediumJets_Npv->SetNameTitle("hFracPuJets_Npv","PU Medium jets fraction wrt N_{PV}");
+	hFracPuMediumJets_Npv->SetXTitle("N_{PV}");
+	hFracPuMediumJets_Npv->SetYTitle("PU Medium jets fraction");
+	cNjets_Npv->Clear();
+	hFracPuMediumJets_Npv->Draw("hist");
+	cNjets_Npv->SetLogy();
+	saveName = "images/Njets/FracPuMediumJets_Npv" + typeName + extension;
+	cNjets_Npv->SaveAs(saveName.c_str());
+	
+//************************************************************************************************************
+//
+//                                      Njet and NpuTightJets as a function of Npv
+//
+//************************************************************************************************************
+
+	h1_style(hNjet_Npv);
+	h1_style(hNpuTightjet_Npv);
+	
+	cNjets_Npv->cd();
+	cNjets_Npv->Clear();
+	hNjet_Npv->Draw("hist");
+	cNjets_Npv->SetLogy();
+	saveName = "images/Njets/Njets_Npv" + typeName + extension;
+	cNjets_Npv->SaveAs(saveName.c_str());
+	cNjets_Npv->Clear();
+	hNpuTightjet_Npv->Draw("hist");
+	cNjets_Npv->SetLogy();
+	saveName = "images/Njets/NpuTightjets_Npv" + typeName + extension;
+	cNjets_Npv->SaveAs(saveName.c_str());
+	
+	TH1F *hFracPuTightJets_Npv = new TH1F("hFracPuTightJets_Npv","hFracPuTightJets_Npv",250,0,2500);
+	h1_style(hFracPuTightJets_Npv);
+	hFracPuTightJets_Npv = (TH1F*)hNpuTightjet_Npv->Clone();
+	hFracPuTightJets_Npv->Divide(hNjet_Npv);
+	hFracPuTightJets_Npv->SetNameTitle("hFracPuJets_Npv","PU Tight jets fraction wrt N_{PV}");
+	hFracPuTightJets_Npv->SetXTitle("N_{PV}");
+	hFracPuTightJets_Npv->SetYTitle("PU Tight jets fraction");
+	cNjets_Npv->Clear();
+	hFracPuTightJets_Npv->Draw("hist");
+	cNjets_Npv->SetLogy();
+	saveName = "images/Njets/FracPuTightJets_Npv" + typeName + extension;
+	cNjets_Npv->SaveAs(saveName.c_str());
+	
+//************************************************************************************************************
+//
+//                                      Njet and NpuAllJets as a function of Npv
+//
+//************************************************************************************************************
+
+	h1_style(hNjet_Npv);
+	h1_style(hNpuAlljet_Npv);
+	
+	cNjets_Npv->cd();
+	cNjets_Npv->Clear();
+	hNjet_Npv->Draw("hist");
+	cNjets_Npv->SetLogy();
+	saveName = "images/Njets/Njets_Npv" + typeName + extension;
+	cNjets_Npv->SaveAs(saveName.c_str());
+	cNjets_Npv->Clear();
+	hNpuAlljet_Npv->Draw("hist");
+	cNjets_Npv->SetLogy();
+	saveName = "images/Njets/NpuAlljets_Npv" + typeName + extension;
+	cNjets_Npv->SaveAs(saveName.c_str());
+	
+	TH1F *hFracPuAllJets_Npv = new TH1F("hFracPuAllJets_Npv","hFracPuAllJets_Npv",250,0,2500);
+	h1_style(hFracPuAllJets_Npv);
+	hFracPuAllJets_Npv = (TH1F*)hNpuAlljet_Npv->Clone();
+	hFracPuAllJets_Npv->Divide(hNjet_Npv);
+	hFracPuAllJets_Npv->SetNameTitle("hFracPuJets_Npv","PU All jets fraction wrt N_{PV}");
+	hFracPuAllJets_Npv->SetXTitle("N_{PV}");
+	hFracPuAllJets_Npv->SetYTitle("PU All jets fraction");
+	cNjets_Npv->Clear();
+	hFracPuAllJets_Npv->Draw("hist");
+	cNjets_Npv->SetLogy();
+	saveName = "images/Njets/FracPuAllJets_Npv" + typeName + extension;
 	cNjets_Npv->SaveAs(saveName.c_str());
  
 //************************************************************************************************************
@@ -802,6 +1012,14 @@ int main (int argc, char** argv)
 	
 	TDirectory *afterSelDir = variablesDir->mkdir("afterSel","afterSel");
 	afterSelDir->cd();
+	hFracPuLooseJets_JetPt->Write();
+	hFracPuLooseJets_Npv->Write();
+	hFracPuMediumJets_JetPt->Write();
+	hFracPuMediumJets_Npv->Write();
+	hFracPuTightJets_JetPt->Write();
+	hFracPuTightJets_Npv->Write();
+	hFracPuAllJets_JetPt->Write();
+	hFracPuAllJets_Npv->Write();
 	hNjetsRecoil->Write();
 	hNjetsTotal->Write();
 	hMet_afterSel->Write();
@@ -814,9 +1032,9 @@ int main (int argc, char** argv)
 	hA_afterSel->Write();
 	hMJB_inclusive->Write();
 	hNjet_JetPt->Write();
-	hNpujet_JetPt->Write();
+	hNpuLoosejet_JetPt->Write();
 	hNjet_Npv->Write();
-	hNpujet_Npv->Write();
+	hNpuLoosejet_Npv->Write();
 	hHT->Write();
 	hFracJetsPt->Write();
 	
@@ -853,11 +1071,19 @@ int main (int argc, char** argv)
 			vPtRatio_GenPt[j]->Delete();
 		}
 	}
+	hFracPuLooseJets_JetPt->Delete();
+	hFracPuLooseJets_Npv->Delete();
+	hFracPuMediumJets_JetPt->Delete();
+	hFracPuMediumJets_Npv->Delete();
+	hFracPuTightJets_JetPt->Delete();
+	hFracPuTightJets_Npv->Delete();
+	hFracPuAllJets_JetPt->Delete();
+	hFracPuAllJets_Npv->Delete();
 	hMJB_inclusive->Delete();
 	hNjet_JetPt->Delete();
-	hNpujet_JetPt->Delete();
+	hNpuLoosejet_JetPt->Delete();
 	hNjet_Npv->Delete();
-	hNpujet_Npv->Delete();
+	hNpuLoosejet_Npv->Delete();
 	hHT->Delete();
 	hFracJetsPt->Delete();	
 	hMet_beforeSel->Delete();

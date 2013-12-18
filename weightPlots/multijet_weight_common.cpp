@@ -272,28 +272,62 @@ int main (int argc, char** argv)
 	hNjetsRecoil->Sumw2();
 	
 	TH1F* hNjetsTotal=new TH1F("hNjetsTotal","hNjetsTotal",25,0,25);
-	hNjetsTotal->SetXTitle("N_{recoil jets}");
+	hNjetsTotal->SetXTitle("N_{total jets}");
 	hNjetsTotal->Sumw2();
+	
+	TH1F* hNjetsGood=new TH1F("hNjetsGood","hNjetsGood",25,0,25);
+	hNjetsGood->SetXTitle("N_{good jets}");
+	hNjetsGood->Sumw2();
 
 	TH1F* hNjet_JetPt=new TH1F("hNjet_JetPt","hNjet_JetPt",150,0,3000);
 	hNjet_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
 	hNjet_JetPt->SetYTitle("N_{jets}");
 	hNjet_JetPt->Sumw2();
 	
-	TH1F* hNpujet_JetPt=new TH1F("hNpujet_JetPt","hNpujet_JetPt",150,0,3000);
-	hNpujet_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
-	hNpujet_JetPt->SetYTitle("N_{PU jets}");
-	hNpujet_JetPt->Sumw2();
+	TH1F* hNpuLoosejet_JetPt=new TH1F("hNpuLoosejet_JetPt","hNpuLoosejet_JetPt",150,0,3000);
+	hNpuLoosejet_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
+	hNpuLoosejet_JetPt->SetYTitle("N_{PU loose jets}");
+	hNpuLoosejet_JetPt->Sumw2();
+	
+	TH1F* hNpuMediumjet_JetPt=new TH1F("hNpuMediumjet_JetPt","hNpuMediumjet_JetPt",150,0,3000);
+	hNpuMediumjet_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
+	hNpuMediumjet_JetPt->SetYTitle("N_{PU medium jets}");
+	hNpuMediumjet_JetPt->Sumw2();
+	
+	TH1F* hNpuTightjet_JetPt=new TH1F("hNpuTightjet_JetPt","hNpuTightjet_JetPt",150,0,3000);
+	hNpuTightjet_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
+	hNpuTightjet_JetPt->SetYTitle("N_{PU tight jets}");
+	hNpuTightjet_JetPt->Sumw2();
+	
+	TH1F* hNpuAlljet_JetPt=new TH1F("hNpuAlljet_JetPt","hNpuAlljet_JetPt",150,0,3000);
+	hNpuAlljet_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
+	hNpuAlljet_JetPt->SetYTitle("N_{PU jets}");
+	hNpuAlljet_JetPt->Sumw2();
 	
 	TH1F* hNjet_Npv=new TH1F("hNjet_Npv","hNjet_Npv",70,0,70);
 	hNjet_Npv->SetXTitle("N_{PV}");
 	hNjet_Npv->SetYTitle("N_{jets}");
 	hNjet_Npv->Sumw2();
 	
-	TH1F* hNpujet_Npv=new TH1F("hNpujet_Npv","hNpujet_Npv",70,0,70);
-	hNpujet_Npv->SetXTitle("N_{PV}");
-	hNpujet_Npv->SetYTitle("N_{PU jets}");
-	hNpujet_Npv->Sumw2();
+	TH1F* hNpuLoosejet_Npv=new TH1F("hNpuLoosejet_Npv","hNpuLoosejet_Npv",70,0,70);
+	hNpuLoosejet_Npv->SetXTitle("N_{PV}");
+	hNpuLoosejet_Npv->SetYTitle("N_{PU loose jets}");
+	hNpuLoosejet_Npv->Sumw2();
+	
+	TH1F* hNpuMediumjet_Npv=new TH1F("hNpuMediumjet_Npv","hNpuMediumjet_Npv",70,0,70);
+	hNpuMediumjet_Npv->SetXTitle("N_{PV}");
+	hNpuMediumjet_Npv->SetYTitle("N_{PU medium jets}");
+	hNpuMediumjet_Npv->Sumw2();
+	
+	TH1F* hNpuTightjet_Npv=new TH1F("hNpuTightjet_Npv","hNpuTightjet_Npv",70,0,70);
+	hNpuTightjet_Npv->SetXTitle("N_{PV}");
+	hNpuTightjet_Npv->SetYTitle("N_{PU tight jets}");
+	hNpuTightjet_Npv->Sumw2();
+	
+	TH1F* hNpuAlljet_Npv=new TH1F("hNpuAlljet_Npv","hNpuAlljet_Npv",70,0,70);
+	hNpuAlljet_Npv->SetXTitle("N_{PV}");
+	hNpuAlljet_Npv->SetYTitle("N_{PU jets}");
+	hNpuAlljet_Npv->Sumw2();
 	
 	TH1F* hHT=new TH1F("hHT","hHT",250,0,2500);
 	hHT->SetXTitle("HT [GeV/c]");
@@ -642,6 +676,7 @@ int main (int argc, char** argv)
 								hHT->Fill(HT,weight);
 								hNjetsRecoil->Fill(jets_recoil_4vector->GetSize(), weight);
 								hNjetsTotal->Fill(n_totJets, weight);
+								hNjetsGood->Fill(n_goodJets, weight);
 								vNjetsRecoil_RecoilPt[binRecoilPt]->Fill(jets_recoil_4vector->GetSize(), weight);
 								for(int i=0; i<jets_recoil_4vector->GetSize(); i++) {
 									nRecoilJets_068E ++;
@@ -689,15 +724,42 @@ int main (int argc, char** argv)
 										jetsPt = jetsPt + ((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt();
 										hNjet_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
 									}
-									if(jet_puJetId[goodJetsIndex->at(i)] == 1) {
-										hNpujet_Npv->Fill(n_vertices, weight);
+									if(jet_puJetId[goodJetsIndex->at(i)] >= 1) {
+										hNpuAlljet_Npv->Fill(n_vertices, weight);
 										if(i == 0) {
 											puJetsPt = puJetsPt + leadingjetpt;
-											hNpujet_JetPt->Fill(leadingjetpt, weight);
+											hNpuAlljet_JetPt->Fill(leadingjetpt, weight);
 										}
 										else {
 											puJetsPt = puJetsPt + ((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt();
-											hNpujet_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
+											hNpuAlljet_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
+										}
+									}
+									if(jet_puJetId[goodJetsIndex->at(i)] == 1) {
+										hNpuLoosejet_Npv->Fill(n_vertices, weight);
+										if(i == 0) {
+											hNpuLoosejet_JetPt->Fill(leadingjetpt, weight);
+										}
+										else {
+											hNpuLoosejet_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
+										}
+									}
+									else if(jet_puJetId[goodJetsIndex->at(i)] == 2) {
+										hNpuMediumjet_Npv->Fill(n_vertices, weight);
+										if(i == 0) {
+											hNpuMediumjet_JetPt->Fill(leadingjetpt, weight);
+										}
+										else {
+											hNpuMediumjet_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
+										}
+									}
+									else if(jet_puJetId[goodJetsIndex->at(i)] == 3) {
+										hNpuTightjet_Npv->Fill(n_vertices, weight);
+										if(i == 0) {
+											hNpuTightjet_JetPt->Fill(leadingjetpt, weight);
+										}
+										else {
+											hNpuTightjet_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
 										}
 									}
 								}
@@ -807,6 +869,7 @@ int main (int argc, char** argv)
 	afterSelDir->cd();
 	hNjetsRecoil->Write();
 	hNjetsTotal->Write();
+	hNjetsGood->Write();
 	hMet_afterSel->Write();
 	hLeadingJetPt_afterSel->Write();
 	hRecoilPt_afterSel->Write();
@@ -817,9 +880,15 @@ int main (int argc, char** argv)
 	hA_afterSel->Write();
 	hMJB_inclusive->Write();
 	hNjet_JetPt->Write();
-	hNpujet_JetPt->Write();
+	hNpuLoosejet_JetPt->Write();
+	hNpuMediumjet_JetPt->Write();
+	hNpuTightjet_JetPt->Write();
+	hNpuAlljet_JetPt->Write();
 	hNjet_Npv->Write();
-	hNpujet_Npv->Write();
+	hNpuLoosejet_Npv->Write();
+	hNpuMediumjet_Npv->Write();
+	hNpuTightjet_Npv->Write();
+	hNpuAlljet_Npv->Write();
 	hHT->Write();
 	hFracJetsPt->Write();
 	
@@ -867,9 +936,15 @@ int main (int argc, char** argv)
 	}
 	hMJB_inclusive->Delete();
 	hNjet_JetPt->Delete();
-	hNpujet_JetPt->Delete();
+	hNpuLoosejet_JetPt->Delete();
+	hNpuMediumjet_JetPt->Delete();
+	hNpuTightjet_JetPt->Delete();
+	hNpuAlljet_JetPt->Delete();
 	hNjet_Npv->Delete();
-	hNpujet_Npv->Delete();
+	hNpuLoosejet_Npv->Delete();
+	hNpuMediumjet_Npv->Delete();
+	hNpuTightjet_Npv->Delete();
+	hNpuAlljet_Npv->Delete();
 	hHT->Delete();
 	hFracJetsPt->Delete();	
 	hMet_beforeSel->Delete();
@@ -888,6 +963,7 @@ int main (int argc, char** argv)
 	hA_afterSel->Delete();
 	hNjetsRecoil->Delete();
 	hNjetsTotal->Delete();
+	hNjetsGood->Delete();
 	hRecoilJetsPt_beforeSel->Delete();
 	hRecoilJetsPt_afterSel->Delete();
 	
