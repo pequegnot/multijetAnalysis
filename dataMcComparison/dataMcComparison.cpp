@@ -43,6 +43,7 @@
 
 #include "../common/ptBinning.h"
 #include "../common/npvBinning.h"
+#include "../common/etaBinning.h"
 
 
 using namespace std;

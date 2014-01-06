@@ -40,6 +40,7 @@
 
 #include "../common/ptBinning.h"
 #include "../common/npvBinning.h"
+#include "../common/etaBinning.h"
 
 
 using namespace std;
@@ -754,7 +755,7 @@ int main (int argc, char** argv)
 	
 //************************************************************************************************************
 //
-//                                      NjetsRecoil as a function of recoilpt
+//                                      NjetsRecoil_068E as a function of recoilpt
 //
 //************************************************************************************************************	
 
@@ -788,7 +789,7 @@ int main (int argc, char** argv)
 	
 //************************************************************************************************************
 //
-//                                      NjetsRecoil as a function of recoilpt
+//                                      NjetsRecoil_095E as a function of recoilpt
 //
 //************************************************************************************************************	
 

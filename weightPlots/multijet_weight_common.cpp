@@ -41,6 +41,7 @@
 
 #include "../common/ptBinning.h"
 #include "../common/npvBinning.h"
+#include "../common/etaBinning.h"
 #include "PUReweighting/PUReweighter.h"
 
 

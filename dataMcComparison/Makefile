@@ -20,10 +20,10 @@ all: $(NAME)
 	@echo "compiling the classes..."
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(NAME):$(NAME).o ../common/ptBinning.o ../common/npvBinning.o
+$(NAME):$(NAME).o ../common/ptBinning.o ../common/npvBinning.o ../common/etaBinning.o
 	@echo "linking..."
-	$(LD) $(LDFLAGS) $(NAME).o -o $(NAME) ../common/ptBinning.o ../common/npvBinning.o $(ROOTLIBS) 
+	$(LD) $(LDFLAGS) $(NAME).o -o $(NAME) ../common/ptBinning.o ../common/npvBinning.o ../common/etaBinning.o $(ROOTLIBS) 
 
 clean:
 	@echo "cleaning up..."
-	rm $(NAME).o ../common/ptBinning.o ../common/npvBinning.o 
+	rm $(NAME).o ../common/ptBinning.o ../common/npvBinning.o ../common/etaBinning.o
