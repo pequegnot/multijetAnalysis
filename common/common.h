@@ -46,7 +46,7 @@ int getDataColor () {
 }
 
 int getMcColor () {
-	return 4;
+	return 46;
 }
 
 std::string getFlavourBinName(int flavourBin) {
@@ -240,6 +240,33 @@ void h1_style(TH1 *h, int optstat=0) {
 	h->SetTitleSize(0.04,"Y");
 	//h->SetTitle(0);
 	h->SetTitleFont(42, "XYZ");
+	h->SetMarkerSize(0.8);
+}
+
+void h1_style_lo(TH1 *h, int optstat=0) {
+	h->SetStats(optstat);
+    	h->SetXTitle("Photon p_{T} [GeV/c]");
+    	h->SetYTitle("Data / MC");
+    	h->GetXaxis()->SetTitleOffset(1.2);
+    	h->GetYaxis()->SetTitleOffset(0.55);
+    	h->GetXaxis()->SetTickLength(0.06);
+    	h->GetXaxis()->SetMoreLogLabels();
+    	h->GetXaxis()->SetNoExponent();
+    	//h->GetXaxis()->SetLabelSize(0.);
+   	h->GetXaxis()->SetLabelSize(0.085);
+   	h->GetYaxis()->SetLabelSize(0.07);
+   	h->GetXaxis()->SetTitleSize(0.09);
+    	h->GetYaxis()->SetTitleSize(0.08);	
+	//h->SetTitleFont(42, "XYZ");
+}
+
+void h1_style_hi(TH1 *h, int optstat=0) {
+  h->GetXaxis()->SetTitleOffset(1.1);
+  h->GetYaxis()->SetTitleOffset(1.2);
+  h->GetYaxis()->SetTitleSize(0.045);
+  //h->GetXaxis()->SetMoreLogLabels();
+  //h->GetXaxis()->SetNoExponent();
+  h->GetXaxis()->SetLabelSize(0.);
 }
 
 std::vector<int> MarkerStyle() {

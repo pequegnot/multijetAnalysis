@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <vector>
 #include <TVector3.h>
+#include <TStyle.h>
 #include <TH1F.h>
 #include <TH1I.h>
 #include <TF1.h>
@@ -34,6 +35,7 @@
 #include <TRandom.h>
 #include <THStack.h>
 #include <TChain.h>
+#include <TPaveText.h>
 #include "TROOT.h"
 #include <tclap/CmdLine.h>
 
@@ -48,16 +50,198 @@ using namespace std;
 
 using namespace std;
 
+void applyStyle() {
+
+  TStyle* style_ = new TStyle("drawBaseStyle", "");
+  style_->SetCanvasColor(0);
+  style_->SetPadColor(0);
+  style_->SetFrameFillColor(0);
+  style_->SetStatColor(0);
+  style_->SetOptStat(0);
+  style_->SetTitleFillColor(0);
+  style_->SetCanvasBorderMode(0);
+  style_->SetPadBorderMode(0);
+  style_->SetFrameBorderMode(0);
+  style_->SetPadBottomMargin(0.12);
+  style_->SetPadLeftMargin(0.12);
+
+  // For the canvas:
+  style_->SetCanvasBorderMode(0);
+  style_->SetCanvasColor(kWhite);
+  style_->SetCanvasDefH(600); //Height of canvas
+  style_->SetCanvasDefW(600); //Width of canvas
+  style_->SetCanvasDefX(0); //POsition on screen
+  style_->SetCanvasDefY(0);
+
+  // For the Pad:
+  style_->SetPadBorderMode(0);
+  // style_->SetPadBorderSize(Width_t size = 1);
+  style_->SetPadColor(kWhite);
+  style_->SetPadGridX(false);
+  style_->SetPadGridY(false);
+  style_->SetGridColor(0);
+  style_->SetGridStyle(3);
+  style_->SetGridWidth(1);
+
+  // For the frame:
+  style_->SetFrameBorderMode(0);
+  style_->SetFrameBorderSize(1);
+  style_->SetFrameFillColor(0);
+  style_->SetFrameFillStyle(0);
+  style_->SetFrameLineColor(1);
+  style_->SetFrameLineStyle(1);
+  style_->SetFrameLineWidth(1);
+
+  // Margins:
+  style_->SetPadTopMargin(0.05);
+  style_->SetPadBottomMargin(0.15);//0.13);
+  style_->SetPadLeftMargin(0.15);//0.16);
+  style_->SetPadRightMargin(0.05);//0.02);
+
+  // For the Global title:
+
+  style_->SetOptTitle(0);
+  style_->SetTitleFont(42);
+  style_->SetTitleColor(1);
+  style_->SetTitleTextColor(1);
+  style_->SetTitleFillColor(10);
+  style_->SetTitleFontSize(0.05);
+
+  // For the axis titles:
+
+  style_->SetTitleColor(1, "XYZ");
+  style_->SetTitleFont(42, "XYZ");
+  style_->SetTitleSize(0.05, "XYZ");
+  // style_->SetTitleXSize(Float_t size = 0.02); // Another way to set the size?
+  // style_->SetTitleYSize(Float_t size = 0.02);
+  style_->SetTitleXOffset(1.15);//0.9);
+  style_->SetTitleYOffset(1.4); // => 1.15 if exponents
+  // style_->SetTitleOffset(1.1, "Y"); // Another way to set the Offset
+
+  // For the axis labels:
+
+  style_->SetLabelColor(1, "XYZ");
+  style_->SetLabelFont(42, "XYZ");
+  style_->SetLabelOffset(0.007, "XYZ");
+  style_->SetLabelSize(0.045, "XYZ");
+
+  // For the axis:
+
+  style_->SetAxisColor(1, "XYZ");
+  style_->SetStripDecimals(kTRUE);
+  style_->SetTickLength(0.03, "XYZ");
+  style_->SetNdivisions(510, "XYZ");
+  style_->SetPadTickX(1); // To get tick marks on the opposite side of the frame
+  style_->SetPadTickY(1);
+
+  // Legend
+  style_->SetLegendBorderSize(1);
+  style_->SetLegendFillColor(kWhite);
+  style_->SetLegendFont(42);
+
+  style_->cd();
+
+}
+
+  TPaveText* get_labelCMS(int legendQuadrant) {
+
+    if (legendQuadrant != 0 && legendQuadrant != 1 && legendQuadrant != 2 && legendQuadrant != 3) {
+      std::cout << "WARNING! Legend quadrant '" << legendQuadrant << "' not yet implemented for CMS label. Using 2." << std::endl;
+      legendQuadrant = 2;
+    }
+
+    float x1, y1, x2, y2;
+    if (legendQuadrant == 1) {
+      x1 = 0.12;
+      y1 = 0.95;
+      x2 = 0.95;
+      y2 = 1.;
+    } else if (legendQuadrant == 2) {
+      x1 = 0.25;
+      y1 = 0.86;
+      x2 = 0.42;
+      y2 = 0.92;
+    } else if (legendQuadrant == 3) {
+      x1 = 0.25;
+      y1 = 0.2;
+      x2 = 0.42;
+      y2 = 0.24;
+    } else if (legendQuadrant == 0) {
+      x1 = 0.17;
+      y1 = 0.963;
+      x2 = 0.65;
+      y2 = 0.985;
+    }
+
+
+    TPaveText* cmslabel = new TPaveText(x1, y1, x2, y2, "brNDC");
+    cmslabel->SetFillColor(kWhite);
+    cmslabel->SetTextSize(0.038);
+    cmslabel->SetTextFont(62);
+    cmslabel->AddText(Form("CMS Preliminary, #sqrt{s} = 8 TeV, L = 19.7 fb^{-1}"));
+    return cmslabel;
+
+  }
+
 
 void drawDataMcComparison(const string& canvasName, TH1 *hMc, TH1 *hData, const string& Xtitle, const string& path, bool inLinScale = false, string legendPos = "r", int withratio = 1){
-	TCanvas *cCanvas = new TCanvas(canvasName.c_str(),canvasName.c_str());
+	TCanvas *cCanvas = new TCanvas(canvasName.c_str(),canvasName.c_str(), 600, 800);
+	cCanvas->cd();
 	if(withratio == 1) {
-		cCanvas->Divide(1,2);
-		cCanvas->cd(1);
+  		// Data / MC comparison
+  		TPad* pad_hi = new TPad("pad_hi", "", 0., 0.33, 0.99, 0.99);
+  		pad_hi->Draw();
+  		//pad_hi->SetLogx();
+  		pad_hi->SetLeftMargin(0.12);
+  		pad_hi->SetBottomMargin(0.015);
+
+  		// Data / MC ratio
+		TPad* pad_lo = new TPad("pad_lo", "", 0., 0., 0.99, 0.33);
+		pad_lo->Draw();
+		//pad_lo->SetLogx();
+		pad_lo->SetLeftMargin(0.12);
+		pad_lo->SetTopMargin(1.);
+		pad_lo->SetBottomMargin(0.3);
+		
+		pad_lo->cd();
+   		TF1* ratioFit = new TF1("ratioFit", "[0]", hData->GetXaxis()->GetXmin(), hData->GetXaxis()->GetXmax());
+    		ratioFit->SetParameter(0, 0.);
+    		ratioFit->SetLineColor(46);
+    		ratioFit->SetLineWidth(2);
+		TH1* h = (TH1F*)hData->Clone();
+		h->Divide(hMc);
+		h1_style_lo(h);
+		h->SetStats(1);
+		h->SetTitle("Data/MC");
+		h->SetXTitle(Xtitle.c_str());
+		h->SetMarkerSize(0.5);
+		
+		//for(int i=1;i<h->GetEntries();i++){
+			//h->SetBinError(i,sqrt(pow(hData->GetBinError(i)/hMc->GetBinContent(i),2)+pow(hMc->GetBinError(i)*hData->GetBinContent(i)/(pow(hMc->GetBinContent(i),2)),2)));
+		//}
+		h->Fit(ratioFit, "RQ");
+		h->GetYaxis()->SetRangeUser(-1,3);
+		double fitValue = ratioFit->GetParameter(0);
+    		double fitError = ratioFit->GetParError(0);
+		
+    		TPaveText* fitlabel = new TPaveText(0.55, 0.77, 0.88, 0.83, "brNDC");
+    		fitlabel->SetTextSize(0.08);
+    		fitlabel->SetFillColor(0);
+		fitlabel->SetTextFont(42);
+    		TString fitLabelText = TString::Format("Fit: %.3f #pm %.3f", fitValue, fitError);
+    		fitlabel->AddText(fitLabelText);
+    		fitlabel->Draw("same");
+		
+		//gStyle->SetOptFit(111111);
+		h->Draw("PE1same");
+    		gPad->RedrawAxis();
+		
+    		pad_hi->cd();
 	}
-	else {
-		cCanvas->cd();
-	}
+	h1_style_hi(hMc);
+	h1_style_hi(hData);
+
+
 	gStyle->SetOptStat(0);
 	hMc->Draw("hist");
 	hMc->GetXaxis()->SetTitle(Xtitle.c_str());
@@ -76,34 +260,21 @@ void drawDataMcComparison(const string& canvasName, TH1 *hMc, TH1 *hData, const 
 		hData->SetMinimum(0.01);
 		gPad-> SetLogy();
 	}
+  	TLegend* legend = new TLegend(0.55, 0.15, 0.92, 0.38);
+  	legend->SetFillColor(kWhite);
+  	legend->SetFillStyle(0);
+  	legend->SetTextSize(0.038);
+	legend->SetTextFont(42);
+	legend->AddEntry(hMc,"MC","f");
+	legend->AddEntry(hData,"Data 2012","p");
+	legend->Draw("same");
+		
+  	Float_t cmsTextSize = 0.043;
+  	TPaveText* label_cms = get_labelCMS(1);
+  	label_cms->SetTextSize(cmsTextSize);
+	label_cms->Draw("same");
 	gPad->RedrawAxis();
 
-	TLegend *myLegend;
-	if(legendPos == "l") {
-		myLegend = new TLegend(0.13,0.69,0.33,0.88);
-	}
-	else {
-		myLegend = new TLegend(0.74,0.70,0.88,0.88);
-	}
-	myLegend->SetBorderSize(0);
-	myLegend->AddEntry(hMc,"MC","f");
-	myLegend->AddEntry(hData,"Data 2012","p");
-	myLegend->SetFillColor(0);
-	myLegend->Draw("SAME");
-	if(withratio == 1) {
-		cCanvas->cd(2);		
-		TH1* h = (TH1F*)hData->Clone();
-		h->Divide(hMc);
-		h->SetStats(1);
-		h->SetTitle("Data/MC");
-		h->SetXTitle(Xtitle.c_str());
-		//for(int i=1;i<h->GetEntries();i++){
-			//h->SetBinError(i,sqrt(pow(hData->GetBinError(i)/hMc->GetBinContent(i),2)+pow(hMc->GetBinError(i)*hData->GetBinContent(i)/(pow(hMc->GetBinContent(i),2)),2)));
-		//}
-		h->Fit("func","","",hData->GetXaxis()->GetXmin(),hData->GetXaxis()->GetXmax());
-		gStyle->SetOptFit(111111);
-		h->Draw("PE1");
-	}
 	cCanvas->SaveAs(path.c_str());
 }
 
@@ -149,54 +320,88 @@ TGraphErrors* getDataMcResponseRatio(TGraphErrors* gData, TGraphErrors* gMc, int
 }
 
 void drawComparisonResponse(const string& canvasName, TMultiGraph *mgResponse, TGraphErrors *gResponseMC, TGraphErrors *gResponseData, TGraph *gratio,const string& mcSample, const string& path) {
-	TCanvas *cResponse = new TCanvas(canvasName.c_str(),canvasName.c_str());
-	cResponse->Divide(1,2);
-	cResponse->cd(1);
+	TCanvas *cCanvas = new TCanvas(canvasName.c_str(),canvasName.c_str(), 600, 800);
+	cCanvas->cd();
+  	// Data / MC comparison
+  	TPad* pad_hi = new TPad("pad_hi", "", 0., 0.33, 0.99, 0.99);
+  	pad_hi->Draw();
+  	//pad_hi->SetLogx();
+  	pad_hi->SetLeftMargin(0.15);
+  	pad_hi->SetBottomMargin(0.015);
+
+  	// Data / MC ratio
+	TPad* pad_lo = new TPad("pad_lo", "", 0., 0., 0.99, 0.33);
+	pad_lo->Draw();
+	//pad_lo->SetLogx();
+	pad_lo->SetLeftMargin(0.15);
+	pad_lo->SetTopMargin(1.);
+	pad_lo->SetBottomMargin(0.3);
+	
+		
+    	pad_hi->cd();
+
 	gStyle->SetOptStat(0);
 	mgResponse->SetMaximum(1.05);
 	mgResponse->SetMinimum(0.9);
 	mgResponse->Draw("AP");
-	//mgResponse->GetXaxis()->SetLabelOffset(0.1);
-	mgResponse->GetXaxis()->SetLabelFont(42);
-	mgResponse->GetXaxis()->SetLabelSize(0.06);
-	//mgResponse->GetYaxis()->SetLabelOffset(0.1);
-	mgResponse->GetYaxis()->SetLabelFont(42);
-	mgResponse->GetYaxis()->SetLabelSize(0.06);
-	mgResponse->GetXaxis()->SetTitleOffset(-0.6);
-	mgResponse->GetXaxis()->SetTitleFont(42);
-	mgResponse->GetXaxis()->SetTitleSize(0.06);
-	mgResponse->GetYaxis()->SetTitleOffset(0.6);
-	mgResponse->GetYaxis()->SetTitleFont(42);
-	mgResponse->GetYaxis()->SetTitleSize(0.06);
-	//cResponse->SetLogy();
-	cResponse->SetLogx(1);
-	TLegend *lResponse = new TLegend(0.69,0.76,0.89,0.89);
-	lResponse->AddEntry(gResponseMC,mcSample.c_str(),"p");
-	lResponse->AddEntry(gResponseData,"data","p");
-	lResponse->SetFillColor(0);
-	//lResponse->SetBorderSize(0);
-	lResponse->Draw("SAME");
-	cResponse->cd(2);
-	gStyle->SetOptFit(11111);
+	mgResponse->GetXaxis()->SetLabelSize(0);
+	mgResponse->GetYaxis()->SetTitleOffset(1.3);
+	cCanvas->SetLogx(1);
+  	TLegend* legend = new TLegend(0.55, 0.15, 0.92, 0.38);
+  	legend->SetFillColor(kWhite);
+  	legend->SetFillStyle(0);
+	legend->SetTextFont(42);
+  	legend->SetTextSize(0.038);
+	legend->AddEntry(gResponseMC,"MC","p");
+	legend->AddEntry(gResponseData,"Data 2012","p");
+	legend->Draw("same");
+		
+  	Float_t cmsTextSize = 0.043;
+  	TPaveText* label_cms = get_labelCMS(1);
+  	label_cms->SetTextSize(cmsTextSize);
+	label_cms->Draw("same");
+	gPad->RedrawAxis();
+		
+	pad_lo->cd();
+   	TF1* ratioFit = new TF1("ratioFit", "[0]", mgResponse->GetXaxis()->GetXmin(),mgResponse->GetXaxis()->GetXmax());
+    	ratioFit->SetParameter(0, 0.);
+    	ratioFit->SetLineColor(46);
+    	ratioFit->SetLineWidth(2);
 	gratio->Draw("APE1");
-	//gratio->GetXaxis()->SetLabelOffset(0.1);
-	gratio->GetXaxis()->SetLabelFont(42);
-	gratio->GetXaxis()->SetLabelSize(0.06);
-	//gratio->GetYaxis()->SetLabelOffset(0.1);
-	gratio->GetYaxis()->SetLabelFont(42);
-	gratio->GetYaxis()->SetLabelSize(0.06);
-	gratio->GetXaxis()->SetTitleOffset(-0.6);
-	gratio->GetXaxis()->SetTitleFont(42);
-	gratio->GetXaxis()->SetTitleSize(0.06);
-	gratio->GetYaxis()->SetTitleOffset(0.6);
-	gratio->GetYaxis()->SetTitleFont(42);
-	gratio->GetYaxis()->SetTitleSize(0.06);
+	gratio->GetYaxis()->SetTitle("Data/MC");
+// 	//gratio->GetXaxis()->SetLabelOffset(0.1);
+// 	gratio->GetXaxis()->SetLabelFont(42);
+// 	gratio->GetXaxis()->SetLabelSize(0.06);
+// 	//gratio->GetYaxis()->SetLabelOffset(0.1);
+// 	gratio->GetYaxis()->SetLabelFont(42);
+// 	gratio->GetYaxis()->SetLabelSize(0.06);
+// 	gratio->GetXaxis()->SetTitleOffset(-0.6);
+// 	gratio->GetXaxis()->SetTitleFont(42);
+// 	gratio->GetXaxis()->SetTitleSize(0.06);
+ 	gratio->GetYaxis()->SetTitleOffset(1.3);
+// 	gratio->GetYaxis()->SetTitleFont(42);
+// 	gratio->GetYaxis()->SetTitleSize(0.06);
 	
 	gratio->GetXaxis()->SetLimits(mgResponse->GetXaxis()->GetXmin(),mgResponse->GetXaxis()->GetXmax());
 	
-	cResponse->Update();
+	cCanvas->Update();
+	gratio->Fit(ratioFit, "RQ");
+	//gratio->GetYaxis()->SetRangeUser(-1,3);
+	double fitValue = ratioFit->GetParameter(0);
+    	double fitError = ratioFit->GetParError(0);
+		
+    	TPaveText* fitlabel = new TPaveText(0.55, 0.77, 0.88, 0.83, "brNDC");
+    	fitlabel->SetTextSize(0.08);
+    	fitlabel->SetFillColor(0);
+	fitlabel->SetTextFont(42);
+    	TString fitLabelText = TString::Format("Fit: %.4f #pm %.4f", fitValue, fitError);
+    	fitlabel->AddText(fitLabelText);
+    	fitlabel->Draw("same");
+
+    	gPad->RedrawAxis();
+
 	
-	cResponse->SaveAs(path.c_str());
+	cCanvas->SaveAs(path.c_str());
 }
 
 int main (int argc, char** argv) 
@@ -210,7 +415,7 @@ int main (int argc, char** argv)
 	
 	string extension = ".pdf";	
 	
-	gStyle->SetOptFit(111111);
+	//gStyle->SetOptFit(111111);
 	
 	ptBinning myPtBinning;
 	npvBinning myNpvBinning;
@@ -289,6 +494,8 @@ int main (int argc, char** argv)
 	TFile *f_mc=TFile::Open(inname_mc);
 	
 	string myHistoName;
+	
+	applyStyle();
 
 //************************************************************************************************************
 //
