@@ -40,6 +40,7 @@
 
 #include "ptBinning.h"
 #include "npvBinning.h"
+#include "etaBinning.h"
 
 int getDataColor () {
 	return 1;
@@ -103,6 +104,17 @@ std::vector<TH1F*> buildPtVectorH1(ptBinning aPtBinning,const std::string& aName
 	for(int i=0; i<aPtBinning.getSize(); i++) {
 		std::string histoName;
 		histoName = aName + "_" + aPtBinning.getName(i) ;
+		myVector.push_back(new TH1F(histoName.c_str(),histoName.c_str(),nbinsx, xlow, xup));
+	}
+	return myVector;
+}
+
+std::vector<TH1F*> buildEtaVectorH1(etaBinning aEtaBinning,const std::string& aName,Int_t nbinsx,Double_t xlow,Double_t xup)
+{
+	std::vector<TH1F*> myVector;
+	for(int i=0; i<aEtaBinning.getSize(); i++) {
+		std::string histoName;
+		histoName = aName + "_" + aEtaBinning.getName(i) ;
 		myVector.push_back(new TH1F(histoName.c_str(),histoName.c_str(),nbinsx, xlow, xup));
 	}
 	return myVector;

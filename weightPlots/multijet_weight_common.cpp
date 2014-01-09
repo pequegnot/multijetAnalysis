@@ -176,6 +176,7 @@ int main (int argc, char** argv)
 
 	ptBinning myPtBinning;
 	npvBinning myNpvBinning;
+	etaBinning myEtaBinning;
 	PUReweighter myPUReweighter;
 	ptBinning myLowPtBinning(true);
 
@@ -199,6 +200,9 @@ int main (int argc, char** argv)
 	//MJB per recoilpt
 	vector<TH1F*> vMJB_RecoilPt = buildPtVectorH1(myPtBinning,"MJB",nbinsx,xlow,xup) ;
 	
+	//MJB per recoileta
+	vector<TH1F*> vMJB_RecoilEta = buildEtaVectorH1(myEtaBinning,"MJB",nbinsx,xlow,xup) ;
+	
 	//Rmpf per recoilpt
 	vector<TH1F*> vMPF_RecoilPt = buildPtVectorH1(myPtBinning,"MPF",nbinsx,xlow,xup) ;
 	
@@ -211,6 +215,10 @@ int main (int argc, char** argv)
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vMJB_RecoilPt[j]->Sumw2();
 		vMPF_RecoilPt[j]->Sumw2();
+	}
+	
+	for(int j=0; j<myEtaBinning.getSize(); j++) {
+		vMJB_RecoilEta[j]->Sumw2();
 	}
 	
 	//if(isMC) {
@@ -255,6 +263,10 @@ int main (int argc, char** argv)
 //*******************************************************************************************************
 
 	string saveName;
+	
+	TH1F* hRecoilEta=new TH1F("hRecoilEta","hRecoilEta",13,0,5.2);
+	hRecoilEta->SetXTitle("|#eta_{Recoil}|");
+	hRecoilEta->Sumw2();
 	
 	TH1F* hNTrueInteractionsBeforePUReweighting=new TH1F("hNTrueInteractionsBeforePUReweighting","hNTrueInteractionsBeforePUReweighting",70,0,70);
 	hNTrueInteractionsBeforePUReweighting->SetXTitle("nTrueInteractions");
@@ -433,6 +445,11 @@ int main (int argc, char** argv)
 	TH1F* hA_afterSel=new TH1F("hA_afterSel","hA_afterSel",20,0,1);
 	hA_afterSel->SetXTitle("A = p_{t}^{jet 2}/p_{t}^{Recoil}");
 	hA_afterSel->Sumw2();
+	
+	
+	TH1F* hRecoilWidth=new TH1F("hRecoilWidth","hRecoilWidth",20,0,1);
+	hRecoilWidth->SetXTitle("Recoil width (#Delta #eta = |#eta^{Recoil jet}_{max} - #eta^{Recoil jet}_{min}|)");
+	hRecoilWidth->Sumw2();
 
 //*****************************************************************************************************
 //
@@ -541,12 +558,14 @@ int main (int argc, char** argv)
 	
 	
 	//Usefull variables
-	int binRecoilPt;//bin en recoilpt	
+	int binRecoilPt;//bin en recoilpt
+	int binRecoilEta;//bin en recoileta		
 	int binGenPt;//bin en firstjetgenpt
 	int binJetPt;//bin en pt des jets		
 	float recoilpt;
 	float recoilpx;
 	float recoilpy;
+	float recoileta;
 	float metpx;
 	float metpy;
 	float metpt;
@@ -562,6 +581,11 @@ int main (int argc, char** argv)
 	float jetsPt;
 	float puJetsPt;
 	double PUWeight;
+	float recoilEtaMin;
+	float recoilEtaMax;
+	float recoilEtaMinTmp;
+	float recoilEtaMaxTmp;
+	float recoilDeltaEta;
 	
 	int ntot = 0;
 	int nphotonsel = 0;
@@ -572,7 +596,8 @@ int main (int argc, char** argv)
 	int nRecoilJets_095E;
 	float ptRecoil_tmp;
 	
-	int numberPtBins = myPtBinning.getSize();
+	int numberPtBins = myPtBinning.getSize();	
+	int numberEtaBins = myEtaBinning.getSize();
 	
 	//count events in the tree
 	unsigned int nEvents = (int)t_multijet->GetEntries();
@@ -641,6 +666,8 @@ int main (int argc, char** argv)
 		
 		recoilpx = recoil->Px();
 		recoilpy = recoil->Py();
+		recoileta = recoil->Eta();
+		binRecoilEta = myEtaBinning.getEtaBin(fabs(recoileta));
 		
 		
 		TLorentzVector* secondjet = (TLorentzVector*) jets_recoil_4vector->At(0);// first jet of the recoil system, so index is 0
@@ -699,7 +726,7 @@ int main (int argc, char** argv)
 					if(leadingjetpt>350.) {
 						//if(A<0.8) {
 							//if(secondjetpt < 1450.) {
-								
+								hRecoilEta->Fill(fabs(recoileta), weight);
 								hMJB_inclusive->Fill(MJB, weight);
 								hHT->Fill(HT,weight);
 								hNjetsRecoil->Fill(jets_recoil_4vector->GetSize(), weight);
@@ -728,12 +755,27 @@ int main (int argc, char** argv)
 								hMet_afterSel->Fill(metpt, weight);
 								hLeadingJetPt_afterSel->Fill(leadingjetpt, weight);
 								hRecoilPt_afterSel->Fill(recoilpt, weight);
+								
+								recoilEtaMin = ((TLorentzVector*)jets_recoil_4vector->At(0))->Eta();
+								recoilEtaMax = ((TLorentzVector*)jets_recoil_4vector->At(0))->Eta();
 								for(int i=0; i<jets_recoil_4vector->GetSize(); i++) {
+									recoilEtaMinTmp = ((TLorentzVector*)jets_recoil_4vector->At(i))->Eta();
+									recoilEtaMaxTmp = ((TLorentzVector*)jets_recoil_4vector->At(i))->Eta();
+									if(recoilEtaMinTmp < recoilEtaMin) {
+										recoilEtaMin = recoilEtaMinTmp;
+									}
+									
+									if (recoilEtaMaxTmp > recoilEtaMax) {
+										recoilEtaMax = recoilEtaMaxTmp;
+									}
 									hRecoilJetsPt_afterSel->Fill(((TLorentzVector*)jets_recoil_4vector->At(i))->Pt(), weight);
 									if(nRecoilJets<16) {
 										vRecoilJetsPt_NrecoilJets[nRecoilJets]->Fill(((TLorentzVector*)jets_recoil_4vector->At(i))->Pt(), weight);
 									}
 								}
+								recoilDeltaEta = fabs(recoilEtaMax - recoilEtaMin);
+								hRecoilWidth->Fill(recoilDeltaEta, weight);
+								
 								hNpv_afterSel->Fill(n_vertices, weight);
 								hAlpha_afterSel->Fill(alpha, weight);
 								hBeta_afterSel->Fill(beta, weight);
@@ -742,6 +784,7 @@ int main (int argc, char** argv)
 								vMJB_Npv[n_vertices]->Fill(MJB, weight);
 								vMJB_RecoilPt[binRecoilPt]->Fill(MJB, weight);
 								vMPF_RecoilPt[binRecoilPt]->Fill(Rmpf, weight);
+								vMJB_RecoilEta[binRecoilEta]->Fill(MJB, weight);
 							
 								for(int i=0; i<n_goodJets; i++) {
 									//cout<<"jet_puJetId["<<i<<"] : "<<jet_puJetId[i]<<endl;
@@ -853,10 +896,20 @@ int main (int argc, char** argv)
 
 	TDirectory *mjbDir = out->mkdir("MJB","MJB");
 	mjbDir->cd();
+	TDirectory *ptbinDir = mjbDir->mkdir("recoilPtBin","recoilPtBin");
+	ptbinDir->cd();
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vMJB_RecoilPt[j]->Write();
 	}
 	
+	TDirectory *etabinDir = mjbDir->mkdir("recoilEtaBin","recoilEtaBin");
+	etabinDir->cd();
+	for(int j=0; j<myEtaBinning.getSize(); j++) {
+		vMJB_RecoilEta[j]->Write();
+	}
+
+	TDirectory *npvbinDir = mjbDir->mkdir("npvBin","npvBin");
+	npvbinDir->cd();	
 	for(int j=0; j<myNpvBinning.getSize(); j++) {
 		vMJB_Npv[j]->Write();
 	}
@@ -892,6 +945,11 @@ int main (int argc, char** argv)
 		vNjetsRecoil_068E_RecoilPt[j]->Write();
 		vNjetsRecoil_095E_RecoilPt[j]->Write();
 	}
+
+	TDirectory *recoilDir = out->mkdir("recoil","recoil");
+	recoilDir->cd();	
+	hRecoilEta->Write();
+	hRecoilWidth->Write();
 	
 	TDirectory *variablesDir = out->mkdir("variables","variables");
 	variablesDir->cd();
@@ -922,15 +980,15 @@ int main (int argc, char** argv)
 	hA_afterSel->Write();
 	hMJB_inclusive->Write();
 	hNjet_JetPt->Write();
-	hNpuLoosejetTmp_JetPt->Write();
-	hNpuMediumjetTmp_JetPt->Write();
-	hNpuTightjetTmp_JetPt->Write();
-	hNpuAlljetTmp_JetPt->Write();
+	hNpuLoosejet_JetPt->Write();
+	hNpuMediumjet_JetPt->Write();
+	hNpuTightjet_JetPt->Write();
+	hNpuAlljet_JetPt->Write();
 	hNjet_Npv->Write();
-	hNpuLoosejetTmp_Npv->Write();
-	hNpuMediumjetTmp_Npv->Write();
-	hNpuTightjetTmp_Npv->Write();
-	hNpuAlljetTmp_Npv->Write();
+	hNpuLoosejet_Npv->Write();
+	hNpuMediumjet_Npv->Write();
+	hNpuTightjet_Npv->Write();
+	hNpuAlljet_Npv->Write();
 	hHT->Write();
 	hFracJetsPt->Write();
 	
@@ -954,6 +1012,10 @@ int main (int argc, char** argv)
 		vNjetsRecoil_RecoilPt[j]->Delete();
 		vNjetsRecoil_068E_RecoilPt[j]->Delete();
 		vNjetsRecoil_095E_RecoilPt[j]->Delete();
+	}
+
+	for(int j=0; j<myEtaBinning.getSize(); j++) {
+		vMJB_RecoilEta[j]->Delete();
 	}
 	
 	for(int j=0; j<myNpvBinning.getSize(); j++) {
@@ -1011,6 +1073,9 @@ int main (int argc, char** argv)
 	
 	hNTrueInteractionsBeforePUReweighting->Delete();
 	hNTrueInteractionsAfterPUReweighting->Delete();
+	
+	hRecoilEta->Delete();
+	hRecoilWidth->Delete();
 	
 	t_multijet->Delete();
 	t_vertices->Delete();

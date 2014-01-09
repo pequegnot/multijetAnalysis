@@ -420,6 +420,7 @@ int main (int argc, char** argv)
 	
 	ptBinning myPtBinning;
 	npvBinning myNpvBinning;
+	etaBinning myEtaBinning;
 	
 	Double_t xlow = getHistoXlow();
 	Double_t xup = getHistoXup();
@@ -429,6 +430,7 @@ int main (int argc, char** argv)
 	
 	int numberPtBins = myPtBinning.getSize();
 	int numberNpvBins = myNpvBinning.getSize();
+	int numberEtaBins = myEtaBinning.getSize();
 	
 	TF1 *func = new TF1("func","[0]");
 	func->SetParameter(0,1.);
@@ -507,6 +509,7 @@ int main (int argc, char** argv)
 	string vectorName;
 	string ptBinName;
 	string npvBinName;
+	string etaBinName;
 	
 //vectors for multijet study
 	
@@ -529,20 +532,37 @@ int main (int argc, char** argv)
 	vMJB_RecoilPt_data_shape.resize(numberPtBins);
 	vector<TH1F*> vMJB_RecoilPt_mc_shape;
 	vMJB_RecoilPt_mc_shape.resize(numberPtBins);
+	
+	//MJB per recoileta
+	vector<TH1F*> vMJB_RecoilEta_data_lumi;
+	vMJB_RecoilEta_data_lumi.resize(numberEtaBins);
+	vector<TH1F*> vMJB_RecoilEta_mc_lumi;
+	vMJB_RecoilEta_mc_lumi.resize(numberEtaBins);
+	vector<TH1F*> vMJB_RecoilEta_data_shape;
+	vMJB_RecoilEta_data_shape.resize(numberEtaBins);
+	vector<TH1F*> vMJB_RecoilEta_mc_shape;
+	vMJB_RecoilEta_mc_shape.resize(numberEtaBins);
 
 	
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		ptBinName = myPtBinning.getName(j);
-		vectorName = "MJB/MJB_" + ptBinName;
+		vectorName = "MJB/recoilPtBin/MJB_" + ptBinName;
 		vMJB_RecoilPt_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
 		vMJB_RecoilPt_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
 	}
 	
 	for(int j=0; j<myNpvBinning.getSize(); j++) {
 		npvBinName = myNpvBinning.getName(j);
-		vectorName = "MJB/MJB_" + npvBinName;
+		vectorName = "MJB/npvBin/MJB_" + npvBinName;
 		vMJB_Npv_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
 		vMJB_Npv_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());		
+	}
+	
+	for(int j=0; j<myEtaBinning.getSize(); j++) {
+		etaBinName = myEtaBinning.getName(j);
+		vectorName = "MJB/recoilEtaBin/MJB_" + etaBinName;
+		vMJB_RecoilEta_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
+		vMJB_RecoilEta_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
 	}
 	
 //************************************************************************************************************
@@ -551,8 +571,8 @@ int main (int argc, char** argv)
 //
 //************************************************************************************************************
 
-	TGraphErrors* gMJB_RecoilPt_data=(TGraphErrors*)f_data->Get("MJB/gMJB_RecoilPt");
-	TGraphErrors* gMJB_RecoilPt_mc=(TGraphErrors*)f_mc->Get("MJB/gMJB_RecoilPt");
+	TGraphErrors* gMJB_RecoilPt_data=(TGraphErrors*)f_data->Get("MJB/recoilPtBin/gMJB_RecoilPt");
+	TGraphErrors* gMJB_RecoilPt_mc=(TGraphErrors*)f_mc->Get("MJB/recoilPtBin/gMJB_RecoilPt");
 	
 	TGraph_data_style (gMJB_RecoilPt_data);
 	TGraph_mc_style (gMJB_RecoilPt_mc);
@@ -575,12 +595,40 @@ int main (int argc, char** argv)
 	
 //************************************************************************************************************
 //
+//                                      MJB as a function of etarecoil
+//
+//************************************************************************************************************
+
+	TGraphErrors* gMJB_RecoilEta_data=(TGraphErrors*)f_data->Get("MJB/recoilEtaBin/gMJB_RecoilEta");
+	TGraphErrors* gMJB_RecoilEta_mc=(TGraphErrors*)f_mc->Get("MJB/recoilEtaBin/gMJB_RecoilEta");
+	
+	TGraph_data_style (gMJB_RecoilEta_data);
+	TGraph_mc_style (gMJB_RecoilEta_mc);
+	
+	TMultiGraph *mgMJB_RecoilEta = new TMultiGraph();
+	mgMJB_RecoilEta->Add(gMJB_RecoilEta_mc,"pe");
+	mgMJB_RecoilEta->Add(gMJB_RecoilEta_data,"pe");
+	mgMJB_RecoilEta->SetTitle("MJB as a function of |#eta^{Recoil}|;|#eta^{Recoil}|;MJB");
+	
+	TGraphErrors *gMJB_RecoilEta_ratio = getDataMcResponseRatio(gMJB_RecoilEta_data,gMJB_RecoilEta_mc,numberEtaBins, "p_{t}^{Recoil} [GeV/c]");
+	gMJB_RecoilEta_ratio->GetYaxis()->SetTitle("MJB^{data}/MJB^{MC}");
+	gMJB_RecoilEta_ratio->GetXaxis()->SetTitle("|#eta^{Recoil}|");
+	gMJB_RecoilEta_ratio->SetName("Data/MC");
+	gMJB_RecoilEta_ratio->SetTitle("Data/MC");
+	gMJB_RecoilEta_ratio->SetMarkerSize(1.0);
+	gMJB_RecoilEta_ratio->Fit("func","","",gMJB_RecoilEta_data->GetXaxis()->GetXmin(),gMJB_RecoilEta_data->GetXaxis()->GetXmax());
+	
+	myHistoName = "images/response/MJB_RecoilEta" + extension;	
+	drawComparisonResponse("r1", mgMJB_RecoilEta, gMJB_RecoilEta_mc, gMJB_RecoilEta_data, gMJB_RecoilEta_ratio,"MC", myHistoName.c_str());
+	
+//************************************************************************************************************
+//
 //                                      MJB as a function of Npv
 //
 //************************************************************************************************************
 
-	TGraphErrors* gMJB_Npv_data=(TGraphErrors*)f_data->Get("MJB/gMJB_Npv");
-	TGraphErrors* gMJB_Npv_mc=(TGraphErrors*)f_mc->Get("MJB/gMJB_Npv");
+	TGraphErrors* gMJB_Npv_data=(TGraphErrors*)f_data->Get("MJB/npvBin/gMJB_Npv");
+	TGraphErrors* gMJB_Npv_mc=(TGraphErrors*)f_mc->Get("MJB/npvBin/gMJB_Npv");
 	
 	TGraph_data_style (gMJB_Npv_data);
 	TGraph_mc_style (gMJB_Npv_mc);
@@ -650,6 +698,12 @@ int main (int argc, char** argv)
 	
 	TH1F* hA_afterSel_mc_lumi=(TH1F*)f_mc->Get("variables/afterSel/hA_afterSel");
 	TH1F* hA_afterSel_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hA_afterSel");
+	
+	TH1F* hRecoilEta_mc_lumi=(TH1F*)f_mc->Get("recoil/hRecoilEta");
+	TH1F* hRecoilEta_data_lumi=(TH1F*)f_data->Get("recoil//hRecoilEta");
+	
+	TH1F* hRecoilWidth_mc_lumi=(TH1F*)f_mc->Get("recoil/hRecoilWidth");
+	TH1F* hRecoilWidth_data_lumi=(TH1F*)f_data->Get("recoil//hRecoilWidth");
 
 	string binName;
 	string myName;
@@ -679,6 +733,23 @@ int main (int argc, char** argv)
 		myXName = "MJB for " + binName;
 		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_lumi_inLogScale" + extension;
 		drawDataMcComparison(myName.c_str(), vMJB_RecoilPt_mc_lumi[j], vMJB_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+	}
+	
+//************************************************************************************************************
+//
+//                                      MJB per etarecoil 
+//
+//************************************************************************************************************	
+
+	for(int j=0; j<myEtaBinning.getSize(); j++) {
+		h1_style(vMJB_RecoilEta_data_lumi[j]);
+		h1_style(vMJB_RecoilEta_mc_lumi[j]);
+		vMJB_RecoilEta_mc_lumi[j]->Scale(getLumi());
+		binName = myEtaBinning.getName(j);
+		myName = "MJB_{data}/MJB_{MC} for " + binName;
+		myXName = "MJB for " + binName;
+		mySaveName = "images/MJBperEtaRecoil/MJB_" + binName + "_lumi_inLogScale" + extension;
+		drawDataMcComparison(myName.c_str(), vMJB_RecoilEta_mc_lumi[j], vMJB_RecoilEta_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 	
 //************************************************************************************************************
@@ -893,7 +964,39 @@ int main (int argc, char** argv)
 	myHistoName = "images/variables/Alpha_afterSel_lumi_inLogScale" + extension;
 	drawDataMcComparison("Alpha_afterSel", hAlpha_afterSel_mc_lumi, hAlpha_afterSel_data_lumi, "#alpha", myHistoName.c_str());
 		
+
+//************************************************************************************************************
+//
+//                                      etaRecoil
+//
+//************************************************************************************************************	
+			
 	
+	h1_style(hRecoilEta_mc_lumi);
+	h1_style(hRecoilEta_data_lumi);
+		
+	//rescale the Monte Carlo histogramm with luminosity
+	hRecoilEta_mc_lumi->Scale(getLumi());
+
+	myHistoName = "images/recoil/RecoilEta_lumi_inLogScale" + extension;
+	drawDataMcComparison("RecoilEta", hRecoilEta_mc_lumi, hRecoilEta_data_lumi, "|#eta^{Recoil}|", myHistoName.c_str());	
+	
+	
+//************************************************************************************************************
+//
+//                                      deltaEtaRecoil
+//
+//************************************************************************************************************	
+			
+	
+	h1_style(hRecoilWidth_mc_lumi);
+	h1_style(hRecoilWidth_data_lumi);
+		
+	//rescale the Monte Carlo histogramm with luminosity
+	hRecoilWidth_mc_lumi->Scale(getLumi());
+
+	myHistoName = "images/recoil/RecoilDeltaEta_lumi_inLogScale" + extension;
+	drawDataMcComparison("RecoilDeltaEta", hRecoilWidth_mc_lumi, hRecoilWidth_data_lumi, "Recoil width (#Delta #eta = |#eta^{Recoil jet}_{max} - #eta^{Recoil jet}_{min}|)", myHistoName.c_str());	
 
 
 //************************************************************************************************************
@@ -991,6 +1094,10 @@ int main (int argc, char** argv)
       drawDataMcComparison("Alpha_beforeSel", hAlpha_beforeSel_mc_lumi, hAlpha_beforeSel_data_lumi,"#alpha", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/Alpha_afterSel_lumi_inLinScale" + extension;
       drawDataMcComparison("Alpha_afterSel", hAlpha_afterSel_mc_lumi, hAlpha_afterSel_data_lumi, "#alpha", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/recoil/RecoilEta_lumi_inLinScale" + extension;
+      drawDataMcComparison("RecoilEta", hRecoilEta_mc_lumi, hRecoilEta_data_lumi, "|#eta^{Recoil}|", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/recoil/RecoilDeltaEta_lumi_inLinScale" + extension;
+      drawDataMcComparison("RecoilDeltaEta", hRecoilWidth_mc_lumi, hRecoilWidth_data_lumi, "Recoil width (#Delta #eta = |#eta^{Recoil jet}_{max} - #eta^{Recoil jet}_{min}|)", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/Beta_beforeSel_lumi_inLinScale" + extension;
       drawDataMcComparison("Beta_beforeSel", hBeta_beforeSel_mc_lumi, hBeta_beforeSel_data_lumi, "#beta", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/Beta_afterSel_lumi_inLinScale" + extension;
@@ -1005,6 +1112,13 @@ int main (int argc, char** argv)
 		myXName = "MJB for " + binName;
 		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_lumi_inLinScale" + extension;
 		drawDataMcComparison(myName.c_str(), vMJB_RecoilPt_mc_lumi[j], vMJB_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+      }
+      for(int j=0; j<myEtaBinning.getSize(); j++) {
+		binName = myEtaBinning.getName(j);
+		myName = "MJB_{data}/MJB_{MC} for " + binName;
+		myXName = "MJB for " + binName;
+		mySaveName = "images/MJBperEtaRecoil/MJB_" + binName + "_lumi_inLinScale" + extension;
+		drawDataMcComparison(myName.c_str(), vMJB_RecoilEta_mc_lumi[j], vMJB_RecoilEta_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
       }
       for(int j=0; j<myNpvBinning.getSize(); j++) {
 		binName = myNpvBinning.getName(j);
@@ -1027,6 +1141,8 @@ int main (int argc, char** argv)
   if(isShapeNorm) {
   float Nentries_MJB_RecoilPt_mc;
   float Nentries_MJB_RecoilPt_Data;
+   float Nentries_MJB_RecoilEta_mc;
+  float Nentries_MJB_RecoilEta_Data;
   float Nentries_MJB_Npv_mc;
   float Nentries_MJB_Npv_Data;
   
@@ -1051,6 +1167,29 @@ int main (int argc, char** argv)
 		myXName = "MJB for " + binName;
 		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_shape_inLogScale" + extension;
 		drawDataMcComparison(myName.c_str(), vMJB_RecoilPt_mc_lumi[j], vMJB_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+	}
+	
+//************************************************************************************************************
+//
+//                                      MJB per etarecoil 
+//
+//************************************************************************************************************	
+
+	for(int j=0; j<myEtaBinning.getSize(); j++) {
+		vMJB_RecoilEta_mc_shape[j]=(TH1F*)vMJB_RecoilEta_mc_lumi[j]->Clone();
+		vMJB_RecoilEta_data_shape[j]=(TH1F*)vMJB_RecoilEta_data_lumi[j]->Clone();
+		h1_style(vMJB_RecoilEta_data_shape[j]);
+		h1_style(vMJB_RecoilEta_mc_shape[j]);
+
+		Nentries_MJB_RecoilEta_mc = vMJB_RecoilEta_mc_shape[j]->Integral();
+		Nentries_MJB_RecoilEta_Data = vMJB_RecoilEta_data_shape[j]->Integral();
+		vMJB_RecoilEta_mc_shape[j]->Scale(Nentries_MJB_RecoilEta_Data/Nentries_MJB_RecoilEta_mc);
+
+		binName = myEtaBinning.getName(j);
+		myName = "MJB_{data}/MJB_{MC} for " + binName;
+		myXName = "MJB for " + binName;
+		mySaveName = "images/MJBperEtaRecoil/MJB_" + binName + "_shape_inLogScale" + extension;
+		drawDataMcComparison(myName.c_str(), vMJB_RecoilEta_mc_lumi[j], vMJB_RecoilEta_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 	
 //************************************************************************************************************
@@ -1297,6 +1436,45 @@ int main (int argc, char** argv)
 	myHistoName = "images/variables/Alpha_afterSel_shape_inLogScale" + extension;
 	drawDataMcComparison("Alpha_afterSel", hAlpha_afterSel_mc_shape, hAlpha_afterSel_data_shape,"#alpha", myHistoName.c_str());
 
+//************************************************************************************************************
+//
+//                                      recoilEta
+//
+//************************************************************************************************************	
+	
+	TH1F* hRecoilEta_mc_shape=(TH1F*)hRecoilEta_mc_lumi->Clone();
+	TH1F* hRecoilEta_data_shape=(TH1F*)hRecoilEta_data_lumi->Clone();
+
+	h1_style(hRecoilEta_mc_shape);
+	h1_style(hRecoilEta_data_shape);
+		
+	//rescale the Monte Carlo histogramm with number of entries
+	float Nentries_RecoilEta_mc = hRecoilEta_mc_shape->Integral();
+	float Nentries_RecoilEta_Data = hRecoilEta_data_shape->Integral();	
+	hRecoilEta_mc_shape->Scale(Nentries_RecoilEta_Data/Nentries_RecoilEta_mc);
+
+	myHistoName = "images/recoil/RecoilEta_shape_inLogScale" + extension;
+	drawDataMcComparison("RecoilEta", hRecoilEta_mc_shape, hRecoilEta_data_shape,"|#eta^{Recoil}|", myHistoName.c_str());
+	
+//************************************************************************************************************
+//
+//                                      recoilDeltaEta
+//
+//************************************************************************************************************	
+	
+	TH1F* hRecoilWidth_mc_shape=(TH1F*)hRecoilWidth_mc_lumi->Clone();
+	TH1F* hRecoilWidth_data_shape=(TH1F*)hRecoilWidth_data_lumi->Clone();
+
+	h1_style(hRecoilWidth_mc_shape);
+	h1_style(hRecoilWidth_data_shape);
+		
+	//rescale the Monte Carlo histogramm with number of entries
+	float Nentries_RecoilDeltaEta_mc = hRecoilWidth_mc_shape->Integral();
+	float Nentries_RecoilDeltaEta_Data = hRecoilWidth_data_shape->Integral();	
+	hRecoilWidth_mc_shape->Scale(Nentries_RecoilEta_Data/Nentries_RecoilEta_mc);
+
+	myHistoName = "images/recoil/RecoilDeltaEta_shape_inLogScale" + extension;
+	drawDataMcComparison("RecoilDeltaEta", hRecoilWidth_mc_shape, hRecoilWidth_data_shape,"Recoil width (#Delta #eta = |#eta^{Recoil jet}_{max} - #eta^{Recoil jet}_{min}|)", myHistoName.c_str());
 
 //************************************************************************************************************
 //
@@ -1404,6 +1582,10 @@ int main (int argc, char** argv)
       drawDataMcComparison("Alpha_beforeSel", hAlpha_beforeSel_mc_shape, hAlpha_beforeSel_data_shape, "#alpha", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/Alpha_afterSel_shape_inLinScale" + extension;
       drawDataMcComparison("Alpha_afterSel", hAlpha_afterSel_mc_shape, hAlpha_afterSel_data_shape,"#alpha", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/recoil/RecoilEta_shape_inLinScale" + extension;
+      drawDataMcComparison("RecoilEta", hRecoilEta_mc_shape, hRecoilEta_data_shape,"|#eta^{Recoil}|", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/recoil/RecoilDeltaEta_shape_inLinScale" + extension;
+      drawDataMcComparison("RecoilDeltaEta", hRecoilWidth_mc_shape, hRecoilWidth_data_shape,"Recoil width (#Delta #eta = |#eta^{Recoil jet}_{max} - #eta^{Recoil jet}_{min}|)", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/Beta_beforeSel_shape_inLinScale" + extension;
       drawDataMcComparison("Beta_beforeSel", hBeta_beforeSel_mc_shape, hBeta_beforeSel_data_shape, "#beta", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/Beta_afterSel_shape_inLinScale" + extension;
@@ -1418,6 +1600,13 @@ int main (int argc, char** argv)
 		myXName = "MJB for " + binName;
 		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_shape_inLinScale" + extension;
 		drawDataMcComparison(myName.c_str(), vMJB_RecoilPt_mc_shape[j], vMJB_RecoilPt_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+      }
+      for(int j=0; j<myEtaBinning.getSize(); j++) {
+		binName = myEtaBinning.getName(j);
+		myName = "MJB_{data}/MJB_{MC} for " + binName;
+		myXName = "MJB for " + binName;
+		mySaveName = "images/MJBperEtaRecoil/MJB_" + binName + "_shape_inLinScale" + extension;
+		drawDataMcComparison(myName.c_str(), vMJB_RecoilEta_mc_shape[j], vMJB_RecoilEta_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
       }
       for(int j=0; j<myNpvBinning.getSize(); j++) {
 		binName = myNpvBinning.getName(j);

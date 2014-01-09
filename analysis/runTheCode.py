@@ -5,8 +5,8 @@ import os, subprocess, datetime, tempfile
 d = datetime.datetime.now().strftime("%d%b%y")
 
 inputs = [
-        ['MULTIJET_MC_QCD_HT-500ToInf_analysis.root', '../weightPlots/output_rootfile/17Dec13/MC/MULTIJET_MC_QCD_HT_merged_17Dec13.root', "isMC"],
-	['MULTIJET_Run2012ABCD-22Jan2013_analysis.root', '../weightPlots/output_rootfile/17Dec13/data/MULTIJET_Data_merged_2012_17Dec13.root', "isData"],
+        ['MULTIJET_MC_QCD_HT-500ToInf_analysis.root', '../weightPlots/output_rootfile/08Jan14/MC/MULTIJET_MC_QCD_HT_merged_08Jan14.root', "isMC"],
+	['MULTIJET_Run2012ABCD-22Jan2013_analysis.root', '../weightPlots/output_rootfile/08Jan14/data/MULTIJET_Data_merged_2012_08Jan14.root', "isData"],
 
         ]
 

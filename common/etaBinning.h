@@ -14,11 +14,9 @@ class etaBinning
     public:
 
     etaBinning();
-    etaBinning(bool isLowPtBinning);
     ~etaBinning();
-    void fillPtBins();
-    void fillLowPtBins();
-    int getPtBin(float eta);
+    void fillEtaBins();
+    int getEtaBin(float eta);
     size_t getSize();
     std::string getName(int bin);
     std::pair<float, float> getBinValue(int bin);
@@ -27,7 +25,7 @@ class etaBinning
 
 
     private:
-    std::vector<std::pair<float,float> > mPtBins;
+    std::vector<std::pair<float,float> > mEtaBins;
 
 
 };

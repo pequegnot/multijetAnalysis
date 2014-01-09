@@ -137,13 +137,16 @@ int main (int argc, char** argv)
 	ptBinning myPtBinning;
 	npvBinning myNpvBinning;
 	ptBinning myLowPtBinning(true);
+	etaBinning myEtaBinning;
 	
 	int numberPtBins = myPtBinning.getSize();
 	int numberNpvBins = myNpvBinning.getSize();
+	int numberEtaBins = myEtaBinning.getSize();
 	
 	string vectorName;
 	string ptBinName;
 	string npvBinName;
+	string etaBinName;
 
 	
 //usefull variables
@@ -164,6 +167,10 @@ int main (int argc, char** argv)
 	vector<TH1F*> vMJB_RecoilPt;
 	vMJB_RecoilPt.resize(numberPtBins);
 	
+	//MJB per recoileta
+	vector<TH1F*> vMJB_RecoilEta;
+	vMJB_RecoilEta.resize(numberEtaBins);
+	
 	//Rmpf per recoilpt
 	vector<TH1F*> vMPF_RecoilPt;
 	vMPF_RecoilPt.resize(numberPtBins);
@@ -179,10 +186,22 @@ int main (int argc, char** argv)
 	
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		ptBinName = myPtBinning.getName(j);
-		vectorName = "MJB/MJB_" + ptBinName;
+		vectorName = "MJB/recoilPtBin/MJB_" + ptBinName;
 		vMJB_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
 		vectorName = "MPF/MPF_" + ptBinName;
 		vMPF_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());	
+	}
+	
+	for(int j=0; j<myEtaBinning.getSize(); j++) {
+		etaBinName = myEtaBinning.getName(j);
+		vectorName = "MJB/recoilEtaBin/MJB_" + etaBinName;
+		vMJB_RecoilEta[j] = (TH1F*)f->Get(vectorName.c_str());
+	}
+	
+	for(int j=0; j<myNpvBinning.getSize(); j++) {
+		npvBinName = myNpvBinning.getName(j);
+		vectorName = "MJB/npvBin/MJB_" + npvBinName;
+		vMJB_Npv[j] = (TH1F*)f->Get(vectorName.c_str());	
 	}
 	
 	//if(isMC) {
@@ -226,11 +245,7 @@ int main (int argc, char** argv)
 	
 	//}
 	
-	for(int j=0; j<myNpvBinning.getSize(); j++) {
-		npvBinName = myNpvBinning.getName(j);
-		vectorName = "MJB/MJB_" + npvBinName;
-		vMJB_Npv[j] = (TH1F*)f->Get(vectorName.c_str());	
-	}
+
 
 //*******************************************************************************************************
 //
@@ -273,6 +288,9 @@ int main (int argc, char** argv)
 	TH1F* hBeta_afterSel = (TH1F*)f->Get("variables/afterSel/hBeta_afterSel");	
 	TH1F* hA_afterSel = (TH1F*)f->Get("variables/afterSel/hA_afterSel");
 	TH1F* hRecoilJetsPt_afterSel = (TH1F*)f->Get("variables/afterSel/hRecoilJetsPt_afterSel");
+	
+	TH1F* hRecoilEta = (TH1F*)f->Get("recoil/hRecoilEta");
+	TH1F* hRecoilWidth = (TH1F*)f->Get("recoil/hRecoilWidth");
 
 
 //************************************************************************************************************
@@ -684,6 +702,44 @@ int main (int argc, char** argv)
 	saveName = "images/MJB/cMJB_RecoilPt" + typeName + extension;
 	cMJB_RecoilPt->SaveAs(saveName.c_str());
 	
+
+//************************************************************************************************************
+//
+//                                      MJB as a function of recoileta
+//
+//************************************************************************************************************	
+
+	float aMJB_RecoilEta_Mean[numberEtaBins];
+	float aMJB_RecoilEta_MeanError[numberEtaBins];
+	float aRecoilEtaBins_Mean[numberEtaBins];
+	float aRecoilEtaBins_MeanError[numberEtaBins];
+	
+	for(int i=0; i<numberEtaBins; i++) {
+		aMJB_RecoilEta_Mean[i] = vMJB_RecoilEta[i]->GetMean();
+		aMJB_RecoilEta_MeanError[i] = vMJB_RecoilEta[i]->GetMeanError();
+		aRecoilEtaBins_Mean[i] = ( myEtaBinning.getBinValueInf(i)+myEtaBinning.getBinValueSup(i) )/2.;
+		aRecoilEtaBins_MeanError[i]=0.;
+	}
+	
+	TCanvas *cMJB_RecoilEta = new TCanvas("cMJB_RecoilEta","cMJB_RecoilEta");
+	cMJB_RecoilEta->cd();
+	
+	TGraphErrors *gMJB_RecoilEta = new TGraphErrors(numberEtaBins,aRecoilEtaBins_Mean, aMJB_RecoilEta_Mean, aRecoilEtaBins_MeanError, aMJB_RecoilEta_MeanError);
+	gMJB_RecoilEta->SetName("MJB");
+	gMJB_RecoilEta->SetTitle("MJB as a function of |#eta^{Recoil}|");
+	gMJB_RecoilEta->GetXaxis()->SetTitle("|#eta^{Recoil}|");
+	gMJB_RecoilEta->GetYaxis()->SetTitle("MJB");
+	gMJB_RecoilEta->SetMarkerStyle(20);
+	gMJB_RecoilEta->SetMarkerColor(plotColor);
+	gMJB_RecoilEta->SetLineColor(plotColor);
+	//gMJB_RecoilEta->SetMarkerSize(0.5);	
+	cMJB_RecoilEta->cd();
+	//gMJB_RecoilEta->SetLogx(1);
+	//gMJB_RecoilEta->GetYaxis()->SetRangeUser(0.7,1.1);
+	gMJB_RecoilEta->Draw("ape");
+	TGraph_style (gMJB_RecoilEta);
+	saveName = "images/MJB/cMJB_RecoilEta" + typeName + extension;
+	cMJB_RecoilEta->SaveAs(saveName.c_str());
 	
 //************************************************************************************************************
 //
@@ -950,15 +1006,26 @@ int main (int argc, char** argv)
 
 	TDirectory *mjbDir = out->mkdir("MJB","MJB");
 	mjbDir->cd();
+	TDirectory *ptbinDir = mjbDir->mkdir("recoilPtBin","recoilPtBin");
+	ptbinDir->cd();
+	gMJB_RecoilPt->Write("gMJB_RecoilPt");
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vMJB_RecoilPt[j]->Write();
 	}
-	gMJB_RecoilPt->Write("gMJB_RecoilPt");	
 	
+	TDirectory *etabinDir = mjbDir->mkdir("recoilEtaBin","recoilEtaBin");
+	etabinDir->cd();
+	gMJB_RecoilEta->Write("gMJB_RecoilEta");
+	for(int j=0; j<myEtaBinning.getSize(); j++) {
+		vMJB_RecoilEta[j]->Write();
+	}
+
+	TDirectory *npvbinDir = mjbDir->mkdir("npvBin","npvBin");
+	npvbinDir->cd();	
+	gMJB_Npv->Write("gMJB_Npv");	
 	for(int j=0; j<myNpvBinning.getSize(); j++) {
 		vMJB_Npv[j]->Write();
 	}
-	gMJB_Npv->Write("gMJB_Npv");	
 	
 	TDirectory *mpfDir = out->mkdir("MPF","MPF");
 	mpfDir->cd();
@@ -996,6 +1063,11 @@ int main (int argc, char** argv)
 		vNjetsRecoil_068E_RecoilPt[j]->Write();
 		vNjetsRecoil_095E_RecoilPt[j]->Write();
 	}
+
+	TDirectory *recoilDir = out->mkdir("recoil","recoil");
+	recoilDir->cd();	
+	hRecoilEta->Write();
+	hRecoilWidth->Write();
 	
 	TDirectory *variablesDir = out->mkdir("variables","variables");
 	variablesDir->cd();
@@ -1105,6 +1177,8 @@ int main (int argc, char** argv)
 	hNjetsTotal->Delete();
 	hRecoilJetsPt_beforeSel->Delete();
 	hRecoilJetsPt_afterSel->Delete();
+	hRecoilEta->Delete();
+	hRecoilWidth->Delete();
 	
 	return 0;
 }
