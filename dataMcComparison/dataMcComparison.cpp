@@ -185,7 +185,7 @@ void applyStyle() {
   }
 
 
-void drawDataMcComparison(const string& canvasName, TH1 *hMc, TH1 *hData, const string& Xtitle, const string& path, bool inLinScale = false, string legendPos = "r", int withratio = 1){
+void drawDataMcComparison(const string& canvasName, TH1 *hMc, TH1 *hData, const string& Xtitle, const string& path, bool inLinScale = false, const string& Ytitle = "", string legendPos = "r", int withratio = 1){
 	TCanvas *cCanvas = new TCanvas(canvasName.c_str(),canvasName.c_str(), 600, 800);
 	cCanvas->cd();
 	if(withratio == 1) {
@@ -215,6 +215,7 @@ void drawDataMcComparison(const string& canvasName, TH1 *hMc, TH1 *hData, const 
 		h->SetStats(1);
 		h->SetTitle("Data/MC");
 		h->SetXTitle(Xtitle.c_str());
+		h->SetYTitle(Ytitle.c_str());
 		h->SetMarkerSize(0.5);
 		
 		//for(int i=1;i<h->GetEntries();i++){
@@ -320,7 +321,7 @@ TGraphErrors* getDataMcResponseRatio(TGraphErrors* gData, TGraphErrors* gMc, int
 	return gDataMcResponseratio;
 }
 
-void drawComparisonResponse(const string& canvasName, TMultiGraph *mgResponse, TGraphErrors *gResponseMC, TGraphErrors *gResponseData, TGraph *gratio,const string& mcSample, const string& path) {
+void drawComparisonResponse(const string& canvasName, TMultiGraph *mgResponse, TGraphErrors *gResponseMC, TGraphErrors *gResponseData, TGraph *gratio,const string& mcSample, const string& path, bool doFit = false) {
 	TCanvas *cCanvas = new TCanvas(canvasName.c_str(),canvasName.c_str(), 600, 800);
 	cCanvas->cd();
   	// Data / MC comparison
@@ -348,6 +349,30 @@ void drawComparisonResponse(const string& canvasName, TMultiGraph *mgResponse, T
 	mgResponse->GetXaxis()->SetLabelSize(0);
 	mgResponse->GetYaxis()->SetTitleOffset(1.3);
 	cCanvas->SetLogx(1);
+	
+	if(doFit) {
+   	  TF1* myLinFit = new TF1("myLinFit", "[0]*x + [1]", mgResponse->GetXaxis()->GetXmin(),mgResponse->GetXaxis()->GetXmax());
+      	  myLinFit->SetParameter(0.5, 1.);
+    	  myLinFit->SetLineColor(1);
+    	  myLinFit->SetLineWidth(2);
+
+	
+	  cCanvas->Update();
+	  gResponseData->Fit(myLinFit, "RQ");
+	  double linfitValue = myLinFit->GetParameter(0);
+    	  double linfitError = myLinFit->GetParError(0);
+		
+    	  TPaveText* linfitlabel = new TPaveText(0.55, 0.77, 0.88, 0.83, "brNDC");
+    	  linfitlabel->SetTextSize(0.035);
+    	  linfitlabel->SetFillColor(0);
+	  linfitlabel->SetTextFont(42);
+    	  TString linfitLabelText = TString::Format("Data slope: %.5f #pm %.5f", linfitValue, linfitError);
+    	  linfitlabel->AddText(linfitLabelText);
+    	  linfitlabel->Draw("same");
+
+    	  gPad->RedrawAxis();	
+	}
+	
   	TLegend* legend = new TLegend(0.55, 0.15, 0.92, 0.38);
   	legend->SetFillColor(kWhite);
   	legend->SetFillStyle(0);
@@ -454,6 +479,9 @@ int main (int argc, char** argv)
     TCLAP::UnlabeledValueArg<std::string> mcArg("mc", "mc input file name", true, "", "string");
     cmd.add( mcArg );
     
+    TCLAP::ValueArg<std::string> plotNameArg("", "plotName", "plotName", true, "", "string", cmd);
+    TCLAP::ValueArg<std::string> extensionArg("", "extension", "extension", true, "", "string", cmd);
+    
     // Define a switch and add it to the command line.
     // A switch arg is a boolean argument and only defines a flag that
     // indicates true or false.  In this example the SwitchArg adds itself
@@ -481,10 +509,11 @@ int main (int argc, char** argv)
     isLumiNorm = lumiArg.getValue();
     isShapeNorm = shapeArg.getValue();
     inLinScale = linArg.getValue();
+    extension = plotNameArg.getValue() + extensionArg.getValue();
     rmPU = rmPUArg.getValue();
     
     if(rmPU) {
-	extension = "_woPUJets.pdf";    
+	extension = "_woPUJets" + plotNameArg.getValue() + extensionArg.getValue();    
     }
   
     
@@ -646,7 +675,7 @@ int main (int argc, char** argv)
 	gMJB_Npv_ratio->Fit("func","","",gMJB_Npv_data->GetXaxis()->GetXmin(),gMJB_Npv_data->GetXaxis()->GetXmax());
 	
 	myHistoName = "images/response/MJB_Npv" + extension;	
-	drawComparisonResponse("r2", mgMJB_Npv, gMJB_Npv_mc, gMJB_Npv_data, gMJB_Npv_ratio,"MC", myHistoName.c_str());
+	drawComparisonResponse("r2", mgMJB_Npv, gMJB_Npv_mc, gMJB_Npv_data, gMJB_Npv_ratio,"MC", myHistoName.c_str(), true);
 
 //************************************************************************************************************
 //
@@ -698,6 +727,9 @@ int main (int argc, char** argv)
 	
 	TH1F* hA_afterSel_mc_lumi=(TH1F*)f_mc->Get("variables/afterSel/hA_afterSel");
 	TH1F* hA_afterSel_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hA_afterSel");
+	
+	TH1F* hFracRmPuJets_JetPt_mc_lumi=(TH1F*)f_mc->Get("variables/afterSel/hFracRmPuJets_JetPt");
+	TH1F* hFracRmPuJets_JetPt_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hFracRmPuJets_JetPt");
 	
 	TH1F* hRecoilEta_mc_lumi=(TH1F*)f_mc->Get("recoil/hRecoilEta");
 	TH1F* hRecoilEta_data_lumi=(TH1F*)f_data->Get("recoil//hRecoilEta");
@@ -927,7 +959,21 @@ int main (int argc, char** argv)
 	myHistoName = "images/variables/Npv_afterSel_lumi_inLogScale" + extension;
 	drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_lumi, hNpv_afterSel_data_lumi, "N_{PV}", myHistoName.c_str());
 		
+
+//************************************************************************************************************
+//
+//                                      FracRmPuJets_JetPt
+//
+//************************************************************************************************************	
+			
 	
+	h1_style(hFracRmPuJets_JetPt_mc_lumi);
+	h1_style(hFracRmPuJets_JetPt_data_lumi);
+		
+	//rescale the Monte Carlo histogramm with luminosity
+	hFracRmPuJets_JetPt_mc_lumi->Scale(getLumi());
+	myHistoName = "images/variables/FracRmPuJets_JetPt_lumi_inLogScale" + extension;
+	drawDataMcComparison("FracRmPuJets_JetPt", hFracRmPuJets_JetPt_mc_lumi, hFracRmPuJets_JetPt_data_lumi, "p_{t}^{jet} [GeV/c]", myHistoName.c_str(), false, "N_{removed PU jets}/N_{total jets}");	
 
 	
 //************************************************************************************************************
@@ -1090,6 +1136,8 @@ int main (int argc, char** argv)
       drawDataMcComparison("Npv_beforeSel", hNpv_beforeSel_mc_lumi, hNpv_beforeSel_data_lumi,  "N_{PV}", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/Npv_afterSel_lumi_inLinScale" + extension;
       drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_lumi, hNpv_afterSel_data_lumi,  "N_{PV}", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/FracRmPuJets_JetPt_lumi_inLinScale" + extension;
+      drawDataMcComparison("FracRmPuJets_JetPt", hFracRmPuJets_JetPt_mc_lumi, hFracRmPuJets_JetPt_data_lumi,  "p_{t}^{jet} [GeV/c]", myHistoName.c_str(), inLinScale, "N_{removed PU jets}/N_{total jets}");
       myHistoName = "images/variables/Alpha_beforeSel_lumi_inLinScale" + extension;
       drawDataMcComparison("Alpha_beforeSel", hAlpha_beforeSel_mc_lumi, hAlpha_beforeSel_data_lumi,"#alpha", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/Alpha_afterSel_lumi_inLinScale" + extension;
@@ -1396,6 +1444,26 @@ int main (int argc, char** argv)
 	myHistoName = "images/variables/Npv_afterSel_shape_inLogScale" + extension;
 	drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_shape, hNpv_afterSel_data_shape, "N_{PV}", myHistoName.c_str());
 	
+//************************************************************************************************************
+//
+//                                      FracRmPuJets_JetPt
+//
+//************************************************************************************************************	
+	
+	TH1F* hFracRmPuJets_JetPt_mc_shape=(TH1F*)hFracRmPuJets_JetPt_mc_lumi->Clone();
+	TH1F* hFracRmPuJets_JetPt_data_shape=(TH1F*)hFracRmPuJets_JetPt_data_lumi->Clone();
+
+	h1_style(hFracRmPuJets_JetPt_mc_shape);
+	h1_style(hFracRmPuJets_JetPt_data_shape);
+		
+	//rescale the Monte Carlo histogramm with number of entries
+	float Nentries_FracRmPuJets_JetPt_mc = hFracRmPuJets_JetPt_mc_shape->Integral();
+	float Nentries_FracRmPuJets_JetPt_Data = hFracRmPuJets_JetPt_data_shape->Integral();	
+	hFracRmPuJets_JetPt_mc_shape->Scale(Nentries_FracRmPuJets_JetPt_Data/Nentries_FracRmPuJets_JetPt_mc);
+
+	myHistoName = "images/variables/FracRmPuJets_JetPt_shape_inLogScale" + extension;
+	drawDataMcComparison("FracRmPuJets_JetPt", hFracRmPuJets_JetPt_mc_shape, hFracRmPuJets_JetPt_data_shape, "p_{t}^{jet} [GeV/c]", myHistoName.c_str(), false, "N_{removed PU jets}/N_{total jets}");
+	
 	
 //************************************************************************************************************
 //
@@ -1578,6 +1646,8 @@ int main (int argc, char** argv)
       drawDataMcComparison("Npv_beforeSel", hNpv_beforeSel_mc_shape, hNpv_beforeSel_data_shape, "N_{PV}", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/Npv_afterSel_shape_inLinScale" + extension;
       drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_shape, hNpv_afterSel_data_shape, "N_{PV}", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/FracRmPuJets_JetPt_shape_inLinScale" + extension;
+      drawDataMcComparison("FracRmPuJets_JetPt", hFracRmPuJets_JetPt_mc_shape, hFracRmPuJets_JetPt_data_shape, "p_{t}^{jet} [GeV/c]", myHistoName.c_str(), inLinScale, "N_{removed PU jets}/N_{total jets}");
       myHistoName = "images/variables/Alpha_beforeSel_shape_inLinScale" + extension;
       drawDataMcComparison("Alpha_beforeSel", hAlpha_beforeSel_mc_shape, hAlpha_beforeSel_data_shape, "#alpha", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/Alpha_afterSel_shape_inLinScale" + extension;

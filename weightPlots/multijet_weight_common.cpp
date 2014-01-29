@@ -292,21 +292,21 @@ int main (int argc, char** argv)
 	hNjetsGood->SetXTitle("N_{good jets}");
 	hNjetsGood->Sumw2();
 
-	TH1F* hNjet_JetPt=new TH1F("hNjet_JetPt","hNjet_JetPt",150,0,3000);
+	TH1F* hNjet_JetPt=new TH1F("hNjet_JetPt","hNjet_JetPt",100,0,1000);
 	hNjet_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
 	hNjet_JetPt->SetYTitle("N_{jets}");
 	hNjet_JetPt->Sumw2();
 	
-	TH1F* hNpuLoosejetTmp_JetPt=new TH1F("hNpuLoosejetTmp_JetPt","hNpuLoosejetTmp_JetPt",150,0,3000);
+	TH1F* hNpuLoosejetTmp_JetPt=new TH1F("hNpuLoosejetTmp_JetPt","hNpuLoosejetTmp_JetPt",100,0,1000);
 	hNpuLoosejetTmp_JetPt->Sumw2();
 	
-	TH1F* hNpuMediumjetTmp_JetPt=new TH1F("hNpuMediumjetTmp_JetPt","hNpuMediumjetTmp_JetPt",150,0,3000);
+	TH1F* hNpuMediumjetTmp_JetPt=new TH1F("hNpuMediumjetTmp_JetPt","hNpuMediumjetTmp_JetPt",100,0,1000);
 	hNpuMediumjetTmp_JetPt->Sumw2();
 	
-	TH1F* hNpuTightjetTmp_JetPt=new TH1F("hNpuTightjetTmp_JetPt","hNpuTightjetTmp_JetPt",150,0,3000);
+	TH1F* hNpuTightjetTmp_JetPt=new TH1F("hNpuTightjetTmp_JetPt","hNpuTightjetTmp_JetPt",100,0,1000);
 	hNpuTightjetTmp_JetPt->Sumw2();
 	
-	TH1F* hNpuAlljetTmp_JetPt=new TH1F("hNpuAlljetTmp_JetPt","hNpuAlljetTmp_JetPt",150,0,3000);
+	TH1F* hNpuAlljetTmp_JetPt=new TH1F("hNpuAlljetTmp_JetPt","hNpuAlljetTmp_JetPt",100,0,1000);
 	hNpuAlljetTmp_JetPt->Sumw2();
 	
 	TH1F* hNjet_Npv=new TH1F("hNjet_Npv","hNjet_Npv",70,0,70);
@@ -326,23 +326,30 @@ int main (int argc, char** argv)
 	TH1F* hNpuAlljetTmp_Npv=new TH1F("hNpuAlljetTmp_Npv","hNpuAlljetTmp_Npv",70,0,70);
 	hNpuAlljetTmp_Npv->Sumw2();
 	
+	
 //************************************************************************************************************************
-	TH1F* hNpuLoosejet_JetPt=new TH1F("hNpuLoosejet_JetPt","hNpuLoosejet_JetPt",150,0,3000);
+	TH1F* hNrmPuJets_JetPt=new TH1F("hNrmPuJets_JetPt","hNrmPuJets_JetPt",100,0,1000);
+	hNrmPuJets_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
+	hNrmPuJets_JetPt->SetYTitle("N_{PU jets}");
+	hNrmPuJets_JetPt->Sumw2();
+	
+
+	TH1F* hNpuLoosejet_JetPt=new TH1F("hNpuLoosejet_JetPt","hNpuLoosejet_JetPt",100,0,1000);
 	hNpuLoosejet_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
 	hNpuLoosejet_JetPt->SetYTitle("N_{PU loose jets}");
 	hNpuLoosejet_JetPt->Sumw2();
 	
-	TH1F* hNpuMediumjet_JetPt=new TH1F("hNpuMediumjet_JetPt","hNpuMediumjet_JetPt",150,0,3000);
+	TH1F* hNpuMediumjet_JetPt=new TH1F("hNpuMediumjet_JetPt","hNpuMediumjet_JetPt",100,0,1000);
 	hNpuMediumjet_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
 	hNpuMediumjet_JetPt->SetYTitle("N_{PU medium jets}");
 	hNpuMediumjet_JetPt->Sumw2();
 	
-	TH1F* hNpuTightjet_JetPt=new TH1F("hNpuTightjet_JetPt","hNpuTightjet_JetPt",150,0,3000);
+	TH1F* hNpuTightjet_JetPt=new TH1F("hNpuTightjet_JetPt","hNpuTightjet_JetPt",100,0,1000);
 	hNpuTightjet_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
 	hNpuTightjet_JetPt->SetYTitle("N_{PU tight jets}");
 	hNpuTightjet_JetPt->Sumw2();
 	
-	TH1F* hNpuAlljet_JetPt=new TH1F("hNpuAlljet_JetPt","hNpuAlljet_JetPt",150,0,3000);
+	TH1F* hNpuAlljet_JetPt=new TH1F("hNpuAlljet_JetPt","hNpuAlljet_JetPt",100,0,1000);
 	hNpuAlljet_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
 	hNpuAlljet_JetPt->SetYTitle("N_{PU jets}");
 	hNpuAlljet_JetPt->Sumw2();
@@ -377,11 +384,11 @@ int main (int argc, char** argv)
 	hFracJetsPt->SetXTitle("p_{t}^{PU jets}/p_{t}^{totjets}");
 	hFracJetsPt->Sumw2();
 	
-	TH1F* hMet_beforeSel=new TH1F("hMet_beforeSel","hMet_beforeSel",10,0,1000);
+	TH1F* hMet_beforeSel=new TH1F("hMet_beforeSel","hMet_beforeSel",100,0,1000);
 	hMet_beforeSel->SetXTitle("MET [GeV/c]");
 	hMet_beforeSel->Sumw2();
 	
-	TH1F* hMet_afterSel=new TH1F("hMet_afterSel","hMet_afterSel",10,0,1000);
+	TH1F* hMet_afterSel=new TH1F("hMet_afterSel","hMet_afterSel",100,0,1000);
 	hMet_afterSel->SetXTitle("MET [GeV/c]");
 	hMet_afterSel->Sumw2();
 	
@@ -461,9 +468,11 @@ int main (int argc, char** argv)
 	TChain* t_multijet = NULL;
 	TChain* t_vertices = NULL;
 	TChain* t_event = NULL;
+	TChain* t_jet_PF = NULL;
 	loadChain(inputFiles, "Multijet", t_multijet);
 	loadChain(inputFiles, "Vertices", t_vertices);
 	loadChain(inputFiles, "event", t_event);
+	loadChain(inputFiles, "jet_PF", t_jet_PF);
 
 
 
@@ -556,6 +565,13 @@ int main (int argc, char** argv)
 	float nTrueInteractions;
 	t_event->SetBranchAddress("nTrueInteractions",&nTrueInteractions);
 	
+	//jet_PF
+	TClonesArray* jet_PF_4vector = new TClonesArray("TLorentzVector");
+	t_jet_PF->SetBranchAddress("jet_4vector",&jet_PF_4vector);	
+	
+	int jet_PF_puJetFullId[100];
+	t_jet_PF->SetBranchAddress("jet_puJetFullId",&jet_PF_puJetFullId);
+	
 	
 	//Usefull variables
 	int binRecoilPt;//bin en recoilpt
@@ -586,6 +602,8 @@ int main (int argc, char** argv)
 	float recoilEtaMinTmp;
 	float recoilEtaMaxTmp;
 	float recoilDeltaEta;
+	float jet_PF_pt;
+	
 	
 	int ntot = 0;
 	int nphotonsel = 0;
@@ -609,6 +627,7 @@ int main (int argc, char** argv)
 		t_multijet->GetEntry(ievt);
 		t_vertices->GetEntry(ievt);
 		t_event->GetEntry(ievt);
+		t_jet_PF->GetEntry(ievt);
 		if(ievt%10000 == 0) {
 			cout<<"Event # "<<ievt<<", file ended at "<<(ievt*100.)/(nEvents*1.)<<" %"<<endl;
 		} 
@@ -720,6 +739,31 @@ int main (int argc, char** argv)
 		hBeta_beforeSel->Fill(beta, weight);
 		hA_beforeSel->Fill(A, weight);
 		
+		for(int i=0; i<jet_PF_4vector->GetEntriesFast(); i++) {
+			jet_PF_pt = ((TLorentzVector*) jet_PF_4vector->At(i))->Pt();
+			hNjet_Npv->Fill(n_vertices, weight);
+			hNjet_JetPt->Fill(jet_PF_pt, weight);
+			if(jet_PF_puJetFullId[i] < 6) {
+				hNrmPuJets_JetPt->Fill(jet_PF_pt, weight);
+			}
+			if(jet_PF_puJetFullId[i] == 4) {
+				hNpuLoosejetTmp_Npv->Fill(n_vertices, weight);
+				hNpuLoosejetTmp_JetPt->Fill(jet_PF_pt, weight);
+			}
+			else if(jet_PF_puJetFullId[i] == 6) {
+				hNpuMediumjetTmp_Npv->Fill(n_vertices, weight);
+				hNpuMediumjetTmp_JetPt->Fill(jet_PF_pt, weight);
+			}
+			else if(jet_PF_puJetFullId[i] == 7) {
+				hNpuTightjetTmp_Npv->Fill(n_vertices, weight);
+				hNpuTightjetTmp_JetPt->Fill(jet_PF_pt, weight);
+			}
+			if(jet_PF_puJetFullId[i] >= 4) {
+				hNpuAlljetTmp_Npv->Fill(n_vertices, weight);
+				hNpuAlljetTmp_JetPt->Fill(jet_PF_pt, weight);
+			}
+		}
+		
 		if(isSelected == 1) {
 			if(n_muons == 0 || n_muons_loose == 0) {
 				if(n_photons == 0 || n_photons_loose == 0) {
@@ -786,18 +830,19 @@ int main (int argc, char** argv)
 								vMPF_RecoilPt[binRecoilPt]->Fill(Rmpf, weight);
 								vMJB_RecoilEta[binRecoilEta]->Fill(MJB, weight);
 							
-								for(int i=0; i<n_goodJets; i++) {
+								for(int i=0; i<(jets_recoil_4vector->GetEntriesFast()+1); i++) {
 									//cout<<"jet_puJetId["<<i<<"] : "<<jet_puJetId[i]<<endl;
-									hNjet_Npv->Fill(n_vertices, weight);
+									//hNjet_Npv->Fill(n_vertices, weight);
 									if(i == 0) {
 										jetsPt = jetsPt + leadingjetpt;
-										hNjet_JetPt->Fill(leadingjetpt, weight);
+										//hNjet_JetPt->Fill(leadingjetpt, weight);
 									}
 									else {
 										jetsPt = jetsPt + ((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt();
-										hNjet_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
+										//hNjet_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
 									}
-									if(jet_puJetId[goodJetsIndex->at(i)] >= 1) {
+									
+									/*if(jet_puJetId[goodJetsIndex->at(i)] >= 4) {
 										hNpuAlljetTmp_Npv->Fill(n_vertices, weight);
 										if(i == 0) {
 											puJetsPt = puJetsPt + leadingjetpt;
@@ -808,7 +853,15 @@ int main (int argc, char** argv)
 											hNpuAlljetTmp_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
 										}
 									}
-									if(jet_puJetId[goodJetsIndex->at(i)] == 1) {
+									if(jet_puJetId[goodJetsIndex->at(i)] < 6) {
+										if(i == 0) {
+											hNrmPuJets_JetPt->Fill(leadingjetpt, weight);
+										}
+										else {
+											hNrmPuJets_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
+										}
+									}
+									if(jet_puJetId[goodJetsIndex->at(i)] == 4) {
 										hNpuLoosejetTmp_Npv->Fill(n_vertices, weight);
 										if(i == 0) {
 											hNpuLoosejetTmp_JetPt->Fill(leadingjetpt, weight);
@@ -817,7 +870,7 @@ int main (int argc, char** argv)
 											hNpuLoosejetTmp_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
 										}
 									}
-									else if(jet_puJetId[goodJetsIndex->at(i)] == 2) {
+									else if(jet_puJetId[goodJetsIndex->at(i)] == 6) {
 										hNpuMediumjetTmp_Npv->Fill(n_vertices, weight);
 										if(i == 0) {
 											hNpuMediumjetTmp_JetPt->Fill(leadingjetpt, weight);
@@ -826,7 +879,7 @@ int main (int argc, char** argv)
 											hNpuMediumjetTmp_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
 										}
 									}
-									else if(jet_puJetId[goodJetsIndex->at(i)] == 3) {
+									else if(jet_puJetId[goodJetsIndex->at(i)] == 7) {
 										hNpuTightjetTmp_Npv->Fill(n_vertices, weight);
 										if(i == 0) {
 											hNpuTightjetTmp_JetPt->Fill(leadingjetpt, weight);
@@ -834,7 +887,7 @@ int main (int argc, char** argv)
 										else {
 											hNpuTightjetTmp_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
 										}
-									}
+									}*/
 								}
 								hFracJetsPt->Fill(puJetsPt/jetsPt,weight);
 							
@@ -878,7 +931,6 @@ int main (int argc, char** argv)
 	hNpuMediumjetTmp_JetPt->Add(hNjet_JetPt, hNpuMediumjetTmp_JetPt, 1, -1);
 	hNpuTightjetTmp_JetPt->Add(hNjet_JetPt, hNpuTightjetTmp_JetPt, 1, -1);
 	hNpuAlljetTmp_JetPt->Add(hNjet_JetPt, hNpuAlljetTmp_JetPt, 1, -1);
-	
 	
  
 
@@ -980,6 +1032,7 @@ int main (int argc, char** argv)
 	hA_afterSel->Write();
 	hMJB_inclusive->Write();
 	hNjet_JetPt->Write();
+	hNrmPuJets_JetPt->Write();
 	hNpuLoosejet_JetPt->Write();
 	hNpuMediumjet_JetPt->Write();
 	hNpuTightjet_JetPt->Write();
@@ -1040,6 +1093,7 @@ int main (int argc, char** argv)
 	}
 	hMJB_inclusive->Delete();
 	hNjet_JetPt->Delete();
+	hNrmPuJets_JetPt->Delete();
 	hNpuLoosejet_JetPt->Delete();
 	hNpuMediumjet_JetPt->Delete();
 	hNpuTightjet_JetPt->Delete();

@@ -78,6 +78,8 @@ int main (int argc, char** argv)
 
     TCLAP::ValueArg<std::string> inputFileArg("i", "input-file", "The input file", true, "", "string", cmd);
     TCLAP::ValueArg<std::string> outputFileArg("o", "output-file", "output file", true, "", "string", cmd);
+    TCLAP::ValueArg<std::string> plotNameArg("", "plotName", "plotName", true, "", "string", cmd);
+    TCLAP::ValueArg<std::string> extensionArg("", "extension", "extension", true, "", "string", cmd);
     
     // Define a switch and add it to the command line.
     // A switch arg is a boolean argument and only defines a flag that
@@ -103,10 +105,11 @@ int main (int argc, char** argv)
     isMC = mcArg.getValue();
     outputName = outputFileArg.getValue();
     inputName = inputFileArg.getValue();
+    extension = plotNameArg.getValue() + extensionArg.getValue();
     rmPU = rmPUArg.getValue();
     
     if(rmPU) {
-	extension = "_woPUJets.pdf";    
+	extension = "_woPUJets" + plotNameArg.getValue() + extensionArg.getValue();    
     }
     
     if (!isMC) {
@@ -288,9 +291,25 @@ int main (int argc, char** argv)
 	TH1F* hBeta_afterSel = (TH1F*)f->Get("variables/afterSel/hBeta_afterSel");	
 	TH1F* hA_afterSel = (TH1F*)f->Get("variables/afterSel/hA_afterSel");
 	TH1F* hRecoilJetsPt_afterSel = (TH1F*)f->Get("variables/afterSel/hRecoilJetsPt_afterSel");
+	TH1F* hNrmPuJets_JetPt = (TH1F*)f->Get("variables/afterSel/hNrmPuJets_JetPt");
 	
 	TH1F* hRecoilEta = (TH1F*)f->Get("recoil/hRecoilEta");
 	TH1F* hRecoilWidth = (TH1F*)f->Get("recoil/hRecoilWidth");
+
+
+//************************************************************************************************************
+//
+//                compute fraction of removed jets from the selection because of PU ID cut
+//
+//************************************************************************************************************
+
+	TH1F* hFracRmPuJets_JetPt=(TH1F*)hNrmPuJets_JetPt->Clone();
+	hFracRmPuJets_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
+	hFracRmPuJets_JetPt->SetYTitle("N_{removed PU jets}/N_{total jets}");
+	hFracRmPuJets_JetPt->Sumw2();
+	// compute binomial errors for efficiency
+	hFracRmPuJets_JetPt->Divide(hNrmPuJets_JetPt, hNjet_JetPt, 1, 1, "B");
+	//hFracRmPuJets_JetPt->Divide(hNjet_JetPt);
 
 
 //************************************************************************************************************
@@ -1093,6 +1112,8 @@ int main (int argc, char** argv)
 	hFracPuTightJets_Npv->Write();
 	hFracPuAllJets_JetPt->Write();
 	hFracPuAllJets_Npv->Write();
+	hNrmPuJets_JetPt->Write();
+	hFracRmPuJets_JetPt->Write("hFracRmPuJets_JetPt");
 	hNjetsRecoil->Write();
 	hNjetsTotal->Write();
 	hMet_afterSel->Write();
@@ -1179,6 +1200,8 @@ int main (int argc, char** argv)
 	hRecoilJetsPt_afterSel->Delete();
 	hRecoilEta->Delete();
 	hRecoilWidth->Delete();
+	hNrmPuJets_JetPt->Delete();
+	hFracRmPuJets_JetPt->Delete();
 	
 	return 0;
 }

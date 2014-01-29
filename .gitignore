@@ -1,0 +1,10 @@
+*.o
+*.d
+*.root
+*.pdf
+*.png
+common/npvBinning_cpp.so
+common/ptBinning_cpp.so
+weightPlots/multijet_weight_common
+dataMcComparison/dataMcComparison
+analysis/multijet_analysis_common

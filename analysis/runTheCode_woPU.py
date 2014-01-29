@@ -5,16 +5,16 @@ import os, subprocess, datetime, tempfile
 d = datetime.datetime.now().strftime("%d%b%y")
 
 inputs = [
-        ['MULTIJET_MC_QCD_HT-500ToInf_analysis.root', '../weightPlots/output_rootfile/09Jan14/MC/MULTIJET_MC_QCD_HT_merged_09Jan14.root', "isMC", "", ".pdf"],
-	['MULTIJET_Run2012ABCD-22Jan2013_analysis.root', '../weightPlots/output_rootfile/09Jan14/data/MULTIJET_Data_merged_2012_09Jan14.root', "isData", "", ".pdf"],
+        ['MULTIJET_MC_QCD_HT-500ToInf_analysis_woPU_pt25_eta28.root', '../weightPlots/output_rootfile/29Jan14/MC/MULTIJET_MC_QCD_HT_merged_woPU_pt25_eta28_29Jan14.root', "isMC", "_pt25_eta28", ".pdf"],
+	['MULTIJET_Run2012ABCD-22Jan2013_analysis_woPU_pt25_eta28.root', '../weightPlots/output_rootfile/29Jan14/data/MULTIJET_Data_merged_2012_woPU_pt25_eta28_29Jan14.root', "isData", "_pt25_eta28", ".pdf"],
 
         ]
 
 def launch(input, output, type, plotName, extension):
     if type == "isMC":
-        args = ["./multijet_analysis_common", "-i", input, "-o", output, "--mc", "--plotName", plotName, "--extension", extension]
+        args = ["./multijet_analysis_common", "-i", input, "-o", output, "--mc", "--rmPU", "--plotName", plotName, "--extension", extension]
     elif type == "isData":
-        args = ["./multijet_analysis_common", "-i", input, "-o", output, "--data", "--plotName", plotName, "--extension", extension]
+        args = ["./multijet_analysis_common", "-i", input, "-o", output, "--data", "--rmPU", "--plotName", plotName, "--extension", extension]
 
     return " ".join(args)
 
