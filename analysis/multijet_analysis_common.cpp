@@ -78,8 +78,8 @@ int main (int argc, char** argv)
 
     TCLAP::ValueArg<std::string> inputFileArg("i", "input-file", "The input file", true, "", "string", cmd);
     TCLAP::ValueArg<std::string> outputFileArg("o", "output-file", "output file", true, "", "string", cmd);
-    TCLAP::ValueArg<std::string> plotNameArg("", "plotName", "plotName", true, "", "string", cmd);
-    TCLAP::ValueArg<std::string> extensionArg("", "extension", "extension", true, "", "string", cmd);
+    TCLAP::ValueArg<std::string> plotNameArg("", "plotName", "plotName", false, "", "string", cmd);
+    TCLAP::ValueArg<std::string> extensionArg("", "extension", "extension", false, ".pdf", "string", cmd);
     
     // Define a switch and add it to the command line.
     // A switch arg is a boolean argument and only defines a flag that

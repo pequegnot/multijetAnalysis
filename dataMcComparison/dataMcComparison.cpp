@@ -479,8 +479,8 @@ int main (int argc, char** argv)
     TCLAP::UnlabeledValueArg<std::string> mcArg("mc", "mc input file name", true, "", "string");
     cmd.add( mcArg );
     
-    TCLAP::ValueArg<std::string> plotNameArg("", "plotName", "plotName", true, "", "string", cmd);
-    TCLAP::ValueArg<std::string> extensionArg("", "extension", "extension", true, "", "string", cmd);
+    TCLAP::ValueArg<std::string> plotNameArg("", "plotName", "plotName", false, "", "string", cmd);
+    TCLAP::ValueArg<std::string> extensionArg("", "extension", "extension", false, ".pdf", "string", cmd);
     
     // Define a switch and add it to the command line.
     // A switch arg is a boolean argument and only defines a flag that
