@@ -11,7 +11,7 @@ myWorkingArea> cd multijetAnalysis
 
 ## Step 1: weight the MC plots
 
-The aim of this step is to reweight the MC to 1 /pb and to do the pileup reweighting on MC from the data pileup profile.
+The aim of this step is to convert extractor tuples to histograms. It allows to reweight the MC to 1 /pb and to do the pileup reweighting on MC from the data pileup profile.
 
 
 ```bash
@@ -37,7 +37,8 @@ PUReweighter::PUReweighter(PUProfile profile/* = PUProfile::S10*/, Systematic sy
 The script used to weight the MC is called `multijet_weight_common.cpp` and it can be executed by the following python files:
 - `runTheCodeOnMC_woPU.py` for MC
 - `runTheCodeOnData_woPU.py` for data
-_Remark_: You can also use `runTheCodeOnMC(Data).py` if the PU jets are not removed from the jets collection in your input rootfiles (output files of Extractors).
+
+*Remark*: You can also use `runTheCodeOnMC(Data).py` if the PU jets are not removed from the jets collection in your input rootfiles (output files of Extractors).
 
 Edit the executable `runTheCodeOnMC(Data)_woPU.py` and tune it with your corresponding files and informations (see how the executable is constructed bellow). 
 
@@ -57,13 +58,40 @@ in the code. The typical command to run to execute the code on MC is the followi
 weightPlots>./multijet_weight_common --input-list myInputList -o myOutputFile --mc --Nevents myNumberOfProcessedEvents --Xsection myXsection
 ```
 
-The options are:
+The options of `multijet_weight_common.cpp` script are:
 
---input-list, -i: the list of your input rootfiles (output files of Extractors)
---ouput-file, -o: name of your output file
---mc: you precise here that your input rootfiles are MC
---Nevents: Number of processed events 
---Xsection: the cross section used to generate your sample
+*   --input-list <string>
+     (OR required)  A text file containing a list of input files
+         -- OR --
+*   -i <string>,  --input-file <string>
+     (OR required)  The input file
+
+
+*   --data
+     (OR required)  Is this data?
+         -- OR --
+*   --mc
+     (OR required)  Is this mc?
+
+
+*   -o <string>,  --output-file <string>
+     (required)  name of your output file
+
+*   --Xsection <float>
+     the cross section used to generate your sample
+
+*   --Nevents <int>
+     Number of processed events 
+
+*   --,  --ignore_rest
+     Ignores the rest of the labeled arguments following this flag.
+
+*   --version
+     Displays version information and exits.
+
+*   -h,  --help
+     Displays usage information and exits.
+
 
 First of all, you need to create an output list of the Extractuples by executing
 the `createOutputListForData.py` and `createOutputListForMC.py` scripts:
