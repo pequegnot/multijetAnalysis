@@ -50,6 +50,22 @@ int getMcColor () {
 	return 46;
 }
 
+float HLT_PFJet140_prescaleFactor () {
+	return 368.852;
+}
+
+float HLT_PFJet200_prescaleFactor () {
+	return 77.030;
+}
+
+float HLT_PFJet260_prescaleFactor () {
+	return 19.048;
+}
+
+float HLT_PFJet320_prescaleFactor () {
+	return 1.0;
+}
+
 std::string getFlavourBinName(int flavourBin) {
 //****************************************************************************************
 //                   !!!! WARNING !!!!
