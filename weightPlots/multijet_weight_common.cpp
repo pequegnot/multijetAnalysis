@@ -592,7 +592,7 @@ int main (int argc, char** argv)
 
 	//HLT
 	std::vector<std::string>* HLT_vector = NULL;
-    	 t_HLT->SetBranchAddress("HLT_vector",&HLT_vector);
+  t_HLT->SetBranchAddress("HLT_vector",&HLT_vector);
 	
 	
 	//Usefull variables
@@ -735,45 +735,59 @@ int main (int argc, char** argv)
 			hNTrueInteractionsAfterPUReweighting->Fill(nTrueInteractions,PUWeight);
 			weight = lumiWeight*PUWeight;
 		}
+    //cout<<"isMC: "<<isMC<<endl;
+    //cout<<"!isMC: "<<!isMC<<endl;
 		if(!isMC) {
 			dropEvent = true;
+      //cout<<"leadingjetpt: "<<leadingjetpt<<endl;
+      //cout<<" HLT_vector->size(): "<< HLT_vector->size()<<endl;
 			if(leadingjetpt >= 170. && leadingjetpt < 230.) {
 				for(int i = 0; i < HLT_vector->size(); i++) {
-					if(HLT_vector->at(i) == "HLT_PFJet140") {
+          //cout<<"HLT_vector->at("<<i<<")"<< HLT_vector->at(i) <<endl;
+          //cout<<"leadingjetpt"<<leadingjetpt<<endl;
+					if(TString(HLT_vector->at(i)).Contains("HLT_PFJet140")) {
 						dropEvent = false;
-						weight = weight*HLT_PFJet140_prescaleFactor();
+						weight = HLT_PFJet140_prescaleFactor();
 						hLeadingJetPt_170to230->Fill(leadingjetpt, weight);
+            break;
 					}
 				}								
 			}
 			else if(leadingjetpt >= 230. && leadingjetpt < 290.) {
 				for(int i = 0; i < HLT_vector->size(); i++) {
-					if(HLT_vector->at(i) == "HLT_PFJet200") {
+					if(TString(HLT_vector->at(i)).Contains("HLT_PFJet200")) {
 						dropEvent = false;
-						weight = weight*HLT_PFJet200_prescaleFactor();
+						weight = HLT_PFJet200_prescaleFactor();
 						hLeadingJetPt_230to290->Fill(leadingjetpt, weight);
+            break;
 					}	
 				}								
 			}
 			else if(leadingjetpt >= 290. && leadingjetpt < 350.) {
 				for(int i = 0; i < HLT_vector->size(); i++) {
-					if(HLT_vector->at(i) == "HLT_PFJet260") {
+					if(TString(HLT_vector->at(i)).Contains("HLT_PFJet260")) {
 						dropEvent = false;
-						weight = weight*HLT_PFJet260_prescaleFactor();
+						weight = HLT_PFJet260_prescaleFactor();
 						hLeadingJetPt_290to350->Fill(leadingjetpt, weight);
+            break;
 					}	
 				}								
 			}
 			else if(leadingjetpt >= 350.) {
 				for(int i = 0; i < HLT_vector->size(); i++) {
-					if(HLT_vector->at(i) == "HLT_PFJet320") {
+          //cout<<"HLT_vector->at("<<i<<")"<< HLT_vector->at(i) <<endl;
+          //cout<<"leadingjetpt"<<leadingjetpt<<endl;
+					if(TString(HLT_vector->at(i)).Contains("HLT_PFJet320")) {
 						dropEvent = false;
-						weight = weight*HLT_PFJet320_prescaleFactor();
+						weight = HLT_PFJet320_prescaleFactor();
 						hLeadingJetPt_350toInf->Fill(leadingjetpt, weight);
+            break;
 					}	
 				}								
 			}
 		}
+    //cout<<"dropEvent: "<<dropEvent<<endl;
+    if(dropEvent) continue;
 
 //*****************************************************************************************************
 //
