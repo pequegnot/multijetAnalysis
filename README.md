@@ -98,7 +98,7 @@ First of all, you need to create an output list of the Extractuples by executing
 the `createOutputListForData.py` and `createOutputListForMC.py` scripts:
 ```
 ./createOutputListForData.py -p /<path>/Extractors/MultijetExtractorAnalysis/test
-./createOutputListForData.py -p /<path>/Extractors/MultijetExtractorAnalysis/test
+./createOutputListForMC.py -p /<path>/Extractors/MultijetExtractorAnalysis/test
 ```
 
 You can compute, from the MC Pattuples, the real number of processed events in MC (which can be different from the number of generated AOD events or the number of events at the end of Pat obtained by
