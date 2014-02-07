@@ -67,6 +67,69 @@ std::cout << " " << ibin - 1 << " " << puHisto->GetBinContent(ibin) << std::endl
     gDirectory = currentDirectory;
   }
 
+PUReweighter::PUReweighter(const std::string& dataFileName, PUProfile profile/* = PUProfile::S10*/, Systematic syst/* = Systematic::NOMINAL*/):
+  puHisto(NULL) {
+  
+    //const std::string dataFileName = "/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD.root";
+    
+    TDirectory* currentDirectory = gDirectory;
+    
+    TFile* dataFile = TFile::Open(dataFileName.c_str());
+
+    if (! dataFile) {
+      std::cerr << "Error: can't open " << dataFileName.c_str() << ". No PU reweighting." << std::endl;
+      return;
+    } else {
+      std::cout << "Using " << dataFileName.c_str() << " for PU reweighting" << std::endl;
+    }
+
+    initPUProfiles();
+    std::vector<double>& profile_coefs = mPUCoefs[profile];
+
+    TH1* dataHisto = static_cast<TH1*>(dataFile->Get("pileup"));
+
+    // Create MC PU histogram
+    //warning !!! this histo has to have the same number of bins than dataHisto that you created with pileupCalc.py
+    TH1D* mcHisto = new TH1D("pileup_mc", "pileup", 80, 0, 80);
+    mcHisto->SetDirectory(NULL);
+    for (unsigned int i = 1; i <= (unsigned int) mcHisto->GetNbinsX(); i++) {
+      double coef = (i - 1) < profile_coefs.size() ? profile_coefs[i - 1] : 0.;
+      if (profile == PUProfile::S7 && i <= 4)
+        coef = 0; // For low PU runs
+
+      mcHisto->SetBinContent(i, coef);
+    }
+
+    //TODO: Check for NULL ptr
+
+    // Normalize
+    dataHisto->Scale(1.0 / dataHisto->Integral());
+    mcHisto->Scale(1.0 / mcHisto->Integral());
+
+    // MC * data / MC = data, so the weights are data/MC:
+    puHisto = static_cast<TH1*>(dataHisto->Clone());
+    puHisto->Divide(mcHisto);
+    puHisto->SetDirectory(NULL); // "detach" the histo from the file
+
+    /*
+std::cout << " Lumi/Pileup Reweighting: Computed Weights per In-Time Nint " << std::endl;
+
+int NBins = puHisto->GetNbinsX();
+
+for (int ibin = 1; ibin < NBins + 1; ++ibin) {
+std::cout << " " << ibin - 1 << " " << puHisto->GetBinContent(ibin) << std::endl;
+}
+*/
+
+    dataFile->Close();
+
+    delete dataFile;
+    delete mcHisto;
+
+    gDirectory = currentDirectory;
+  }
+
+
 double PUReweighter::weight(float interactions) const {
   if (!puHisto) {
     return 1.;

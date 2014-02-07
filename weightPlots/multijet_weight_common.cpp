@@ -178,6 +178,10 @@ int main (int argc, char** argv)
 	npvBinning myNpvBinning;
 	etaBinning myEtaBinning;
 	PUReweighter myPUReweighter;
+  PUReweighter myPUReweighter_HLT_PFJet140("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet140.root");
+  PUReweighter myPUReweighter_HLT_PFJet200("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet200.root");
+  PUReweighter myPUReweighter_HLT_PFJet260("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet260.root");
+  PUReweighter myPUReweighter_HLT_PFJet320("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet320.root");
 	ptBinning myLowPtBinning(true);
 
 	
@@ -618,7 +622,7 @@ int main (int argc, char** argv)
 	bool dropEvent=false;
 	float jetsPt;
 	float puJetsPt;
-	double PUWeight;
+	double PUWeight = 1;
 	float recoilEtaMin;
 	float recoilEtaMax;
 	float recoilEtaMinTmp;
@@ -731,7 +735,25 @@ int main (int argc, char** argv)
 
 		if(isMC) {
 			hNTrueInteractionsBeforePUReweighting->Fill(nTrueInteractions);
-			PUWeight = myPUReweighter.weight(nTrueInteractions);
+      PUWeight = 1; 
+      dropEvent = true;
+			if(leadingjetpt >= 170. && leadingjetpt < 230.) {
+				PUWeight = myPUReweighter_HLT_PFJet140.weight(nTrueInteractions);
+        dropEvent = false;
+			}
+			else if(leadingjetpt >= 230. && leadingjetpt < 290.) {
+				PUWeight = myPUReweighter_HLT_PFJet200.weight(nTrueInteractions);			
+        dropEvent = false;
+			}
+			else if(leadingjetpt >= 290. && leadingjetpt < 350.) {
+				PUWeight = myPUReweighter_HLT_PFJet260.weight(nTrueInteractions);			
+        dropEvent = false;
+			}
+			else if(leadingjetpt >= 350.) {
+				PUWeight = myPUReweighter_HLT_PFJet320.weight(nTrueInteractions);		
+        dropEvent = false;
+			}
+			//PUWeight = myPUReweighter.weight(nTrueInteractions);
 			hNTrueInteractionsAfterPUReweighting->Fill(nTrueInteractions,PUWeight);
 			weight = lumiWeight*PUWeight;
 		}

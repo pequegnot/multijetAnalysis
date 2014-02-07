@@ -17,6 +17,7 @@ enum class Systematic : uint8_t {
 class PUReweighter {
   public:
     PUReweighter(PUProfile profile = PUProfile::S10, Systematic syst = Systematic::NOMINAL);
+    PUReweighter(const std::string& dataFileName, PUProfile profile = PUProfile::S10, Systematic syst = Systematic::NOMINAL);
 
     ~PUReweighter() {
       delete puHisto;
