@@ -203,6 +203,9 @@ int main (int argc, char** argv)
 
 	//MJB per recoilpt
 	vector<TH1F*> vMJB_RecoilPt = buildPtVectorH1(myPtBinning,"MJB",nbinsx,xlow,xup) ;
+
+	//ptLeadingJet per recoilpt
+	vector<TH1F*> vLeadingJetPt_RecoilPt = buildPtVectorH1(myPtBinning,"LeadingJetPt",150,0,3000) ;
 	
 	//MJB per recoileta
 	vector<TH1F*> vMJB_RecoilEta = buildEtaVectorH1(myEtaBinning,"MJB",nbinsx,xlow,xup) ;
@@ -219,6 +222,7 @@ int main (int argc, char** argv)
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vMJB_RecoilPt[j]->Sumw2();
 		vMPF_RecoilPt[j]->Sumw2();
+    vLeadingJetPt_RecoilPt[j]->Sumw2();
 	}
 	
 	for(int j=0; j<myEtaBinning.getSize(); j++) {
@@ -933,10 +937,11 @@ int main (int argc, char** argv)
 									hBeta_afterSel->Fill(beta, weight);
 									hA_afterSel->Fill(A, weight);
 							
-									vMJB_Npv[n_vertices]->Fill(MJB, weight);
-									vMJB_RecoilPt[binRecoilPt]->Fill(MJB, weight);
-									vMPF_RecoilPt[binRecoilPt]->Fill(Rmpf, weight);
-									vMJB_RecoilEta[binRecoilEta]->Fill(MJB, weight);
+								vMJB_Npv[n_vertices]->Fill(MJB, weight);
+								vMJB_RecoilPt[binRecoilPt]->Fill(MJB, weight);
+                vLeadingJetPt_RecoilPt[binRecoilPt]->Fill(leadingjetpt, weight);
+								vMPF_RecoilPt[binRecoilPt]->Fill(Rmpf, weight);
+								vMJB_RecoilEta[binRecoilEta]->Fill(MJB, weight);
 							
 								for(int i=0; i<(jets_recoil_4vector->GetEntriesFast()+1); i++) {
 									//cout<<"jet_puJetId["<<i<<"] : "<<jet_puJetId[i]<<endl;
@@ -1083,7 +1088,15 @@ int main (int argc, char** argv)
 	mpfDir->cd();
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vMPF_RecoilPt[j]->Write();
-	}	
+	}
+
+  TDirectory *leadingJetDir = out->mkdir("leadingJet","leadingJet");
+	leadingJetDir->cd();
+	TDirectory *ptbin_jet1Dir = leadingJetDir->mkdir("recoilPtBin","recoilPtBin");
+	ptbin_jet1Dir->cd();
+	for(int j=0; j<myPtBinning.getSize(); j++) {
+		vLeadingJetPt_RecoilPt[j]->Write();
+	}
 	
 	if(isMC) {
 		TDirectory *trueDir = out->mkdir("Rtrue","Rtrue");

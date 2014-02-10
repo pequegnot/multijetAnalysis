@@ -5,6 +5,7 @@ import os, subprocess, datetime, tempfile
 d = datetime.datetime.now().strftime("%d%b%y")
 
 inputs = [
+
         ['MULTIJET_Run2012A-22Jan2013_woPU_pt25_eta50_HLTsel.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_Jet_Run2012A-22Jan2013_woPU_pt25_eta50_28Jan.list'],
         ['MULTIJET_Run2012B-22Jan2013_woPU_pt25_eta50_HLTsel.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_JetHT_Run2012B-22Jan2013_woPU_pt25_eta50_28Jan.list'],
         ['MULTIJET_Run2012C-22Jan2013_woPU_pt25_eta50_HLTsel.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_JetHT_Run2012C-22Jan2013_woPU_pt25_eta50_28Jan.list'],

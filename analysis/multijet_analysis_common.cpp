@@ -169,6 +169,10 @@ int main (int argc, char** argv)
 	//MJB per recoilpt
 	vector<TH1F*> vMJB_RecoilPt;
 	vMJB_RecoilPt.resize(numberPtBins);
+
+	//leadingJetPt per recoilpt
+	vector<TH1F*> vLeadingJetPt_RecoilPt;
+	vLeadingJetPt_RecoilPt.resize(numberPtBins);
 	
 	//MJB per recoileta
 	vector<TH1F*> vMJB_RecoilEta;
@@ -191,6 +195,8 @@ int main (int argc, char** argv)
 		ptBinName = myPtBinning.getName(j);
 		vectorName = "MJB/recoilPtBin/MJB_" + ptBinName;
 		vMJB_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
+    vectorName = "leadingJet/recoilPtBin/LeadingJetPt_" + ptBinName;
+		vLeadingJetPt_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
 		vectorName = "MPF/MPF_" + ptBinName;
 		vMPF_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());	
 	}
@@ -1052,7 +1058,15 @@ int main (int argc, char** argv)
 		vMPF_RecoilPt[j]->Write();
 	}
 	gMPF_RecoilPt->Write("gMPF_RecoilPt");	
-	
+
+  TDirectory *leadingJetDir = out->mkdir("leadingJet","leadingJet");
+	leadingJetDir->cd();
+	TDirectory *ptbin_jet1Dir = leadingJetDir->mkdir("recoilPtBin","recoilPtBin");
+	ptbin_jet1Dir->cd();
+	for(int j=0; j<myPtBinning.getSize(); j++) {
+		vLeadingJetPt_RecoilPt[j]->Write();
+	}	
+
 	if(isMC) {
 		TDirectory *trueDir = out->mkdir("Rtrue","Rtrue");
 		trueDir->cd();

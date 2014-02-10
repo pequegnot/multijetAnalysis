@@ -561,6 +561,16 @@ int main (int argc, char** argv)
 	vMJB_RecoilPt_data_shape.resize(numberPtBins);
 	vector<TH1F*> vMJB_RecoilPt_mc_shape;
 	vMJB_RecoilPt_mc_shape.resize(numberPtBins);
+
+  //LeandingJetPt per recoilpt
+	vector<TH1F*> vLeadingJetPt_RecoilPt_data_lumi;
+	vLeadingJetPt_RecoilPt_data_lumi.resize(numberPtBins);
+	vector<TH1F*> vLeadingJetPt_RecoilPt_mc_lumi;
+	vLeadingJetPt_RecoilPt_mc_lumi.resize(numberPtBins);
+	vector<TH1F*> vLeadingJetPt_RecoilPt_data_shape;
+	vLeadingJetPt_RecoilPt_data_shape.resize(numberPtBins);
+	vector<TH1F*> vLeadingJetPt_RecoilPt_mc_shape;
+	vLeadingJetPt_RecoilPt_mc_shape.resize(numberPtBins);
 	
 	//MJB per recoileta
 	vector<TH1F*> vMJB_RecoilEta_data_lumi;
@@ -578,6 +588,9 @@ int main (int argc, char** argv)
 		vectorName = "MJB/recoilPtBin/MJB_" + ptBinName;
 		vMJB_RecoilPt_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
 		vMJB_RecoilPt_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
+    vectorName = "leadingJet/recoilPtBin/LeadingJetPt_" + ptBinName;
+		vLeadingJetPt_RecoilPt_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
+		vLeadingJetPt_RecoilPt_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
 	}
 	
 	for(int j=0; j<myNpvBinning.getSize(); j++) {
@@ -765,6 +778,23 @@ int main (int argc, char** argv)
 		myXName = "MJB for " + binName;
 		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_lumi_inLogScale" + extension;
 		drawDataMcComparison(myName.c_str(), vMJB_RecoilPt_mc_lumi[j], vMJB_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+	}
+
+//************************************************************************************************************
+//
+//                                      LeadingJetPt per ptrecoil 
+//
+//************************************************************************************************************	
+
+	for(int j=0; j<myPtBinning.getSize(); j++) {
+		h1_style(vLeadingJetPt_RecoilPt_data_lumi[j]);
+		h1_style(vLeadingJetPt_RecoilPt_mc_lumi[j]);
+		vLeadingJetPt_RecoilPt_mc_lumi[j]->Scale(getLumi());
+		binName = myPtBinning.getName(j);
+		myName = "LeadingJetPt_{data}/LeadingJetPt_{MC} for " + binName;
+		myXName = "LeadingJetPt for " + binName + " [GeV/c]";
+		mySaveName = "images/LeadingJetPtperPtRecoil/LeadingJetPt_" + binName + "_lumi_inLogScale" + extension;
+		drawDataMcComparison(myName.c_str(), vLeadingJetPt_RecoilPt_mc_lumi[j], vLeadingJetPt_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 	
 //************************************************************************************************************
@@ -1160,6 +1190,11 @@ int main (int argc, char** argv)
 		myXName = "MJB for " + binName;
 		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_lumi_inLinScale" + extension;
 		drawDataMcComparison(myName.c_str(), vMJB_RecoilPt_mc_lumi[j], vMJB_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+    
+    myName = "pT^{Leading Jet}_{data}/pT^{Leading Jet}_{MC} for " + binName;
+		myXName = "pT^{Leading Jet} for " + binName + " [GeV/c]";
+		mySaveName = "images/LeadingJetPtperPtRecoil/LeadingJetPt_" + binName + "_lumi_inLinScale" + extension;
+		drawDataMcComparison(myName.c_str(), vLeadingJetPt_RecoilPt_mc_lumi[j], vLeadingJetPt_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
       }
       for(int j=0; j<myEtaBinning.getSize(); j++) {
 		binName = myEtaBinning.getName(j);
@@ -1189,7 +1224,9 @@ int main (int argc, char** argv)
   if(isShapeNorm) {
   float Nentries_MJB_RecoilPt_mc;
   float Nentries_MJB_RecoilPt_Data;
-   float Nentries_MJB_RecoilEta_mc;
+  float Nentries_LeadingJetPt_RecoilPt_mc;
+  float Nentries_LeadingJetPt_RecoilPt_Data;
+  float Nentries_MJB_RecoilEta_mc;
   float Nentries_MJB_RecoilEta_Data;
   float Nentries_MJB_Npv_mc;
   float Nentries_MJB_Npv_Data;
@@ -1215,6 +1252,29 @@ int main (int argc, char** argv)
 		myXName = "MJB for " + binName;
 		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_shape_inLogScale" + extension;
 		drawDataMcComparison(myName.c_str(), vMJB_RecoilPt_mc_lumi[j], vMJB_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+	}
+
+//************************************************************************************************************
+//
+//                                      LeadingJetPt per ptrecoil 
+//
+//************************************************************************************************************	
+
+	for(int j=0; j<myPtBinning.getSize(); j++) {
+		vLeadingJetPt_RecoilPt_mc_shape[j]=(TH1F*)vLeadingJetPt_RecoilPt_mc_lumi[j]->Clone();
+		vLeadingJetPt_RecoilPt_data_shape[j]=(TH1F*)vLeadingJetPt_RecoilPt_data_lumi[j]->Clone();
+		h1_style(vLeadingJetPt_RecoilPt_data_shape[j]);
+		h1_style(vLeadingJetPt_RecoilPt_mc_shape[j]);
+
+		Nentries_LeadingJetPt_RecoilPt_mc = vLeadingJetPt_RecoilPt_mc_shape[j]->Integral();
+		Nentries_LeadingJetPt_RecoilPt_Data = vLeadingJetPt_RecoilPt_data_shape[j]->Integral();
+		vLeadingJetPt_RecoilPt_mc_shape[j]->Scale(Nentries_LeadingJetPt_RecoilPt_Data/Nentries_LeadingJetPt_RecoilPt_mc);
+
+		binName = myPtBinning.getName(j);
+		myName = "pT^{Leading Jet}_{data}/pT^{Leading Jet}_{MC} for " + binName;
+		myXName = "pT^{Leading Jet} for " + binName + " [GeV/c]";
+		mySaveName = "images/LeadingJetPtperPtRecoil/LeadingJetPt_" + binName + "_shape_inLogScale" + extension;
+		drawDataMcComparison(myName.c_str(), vLeadingJetPt_RecoilPt_mc_lumi[j], vLeadingJetPt_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 	
 //************************************************************************************************************
@@ -1670,6 +1730,11 @@ int main (int argc, char** argv)
 		myXName = "MJB for " + binName;
 		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_shape_inLinScale" + extension;
 		drawDataMcComparison(myName.c_str(), vMJB_RecoilPt_mc_shape[j], vMJB_RecoilPt_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+
+    myName = "pT^{Leading Jet}_{data}/pT^{Leading Jet}_{MC} for " + binName;
+		myXName = "pT^{Leading Jet} for " + binName + " [GeV/c]";
+		mySaveName = "images/LeadingJetPtperPtRecoil/LeadingJetPtperPt_" + binName + "_shape_inLinScale" + extension;
+		drawDataMcComparison(myName.c_str(), vLeadingJetPt_RecoilPt_mc_shape[j], vLeadingJetPt_RecoilPt_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
       }
       for(int j=0; j<myEtaBinning.getSize(); j++) {
 		binName = myEtaBinning.getName(j);
