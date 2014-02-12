@@ -207,7 +207,10 @@ int main (int argc, char** argv)
 	//ptLeadingJet per recoilpt
 	vector<TH1F*> vLeadingJetPt_RecoilPt = buildPtVectorH1(myPtBinning,"LeadingJetPt",150,0,3000) ;
 	
-	//MJB per recoileta
+  //RecoilPt per recoilpt bin
+	vector<TH1F*> vRecoilPt_RecoilPt = buildPtVectorH1(myPtBinning,"RecoilPt",150,0,3000) ;
+	
+  //MJB per recoileta
 	vector<TH1F*> vMJB_RecoilEta = buildEtaVectorH1(myEtaBinning,"MJB",nbinsx,xlow,xup) ;
 	
 	//Rmpf per recoilpt
@@ -223,6 +226,8 @@ int main (int argc, char** argv)
 		vMJB_RecoilPt[j]->Sumw2();
 		vMPF_RecoilPt[j]->Sumw2();
     vLeadingJetPt_RecoilPt[j]->Sumw2();
+    vRecoilPt_RecoilPt[j]->Sumw2();
+
 	}
 	
 	for(int j=0; j<myEtaBinning.getSize(); j++) {
@@ -526,7 +531,7 @@ int main (int argc, char** argv)
 	t_multijet->SetBranchAddress("jetsgen_recoil_4vector",&jetsgen_recoil_4vector);
 	
 	std::vector<int>* goodJetsIndex = NULL;
-    	 t_multijet->SetBranchAddress("goodJetsIndex",&goodJetsIndex);
+  t_multijet->SetBranchAddress("goodJetsIndex",&goodJetsIndex);
 	
 	float A;
 	t_multijet->SetBranchAddress("A",&A);
@@ -878,7 +883,7 @@ int main (int argc, char** argv)
 			if(n_muons == 0 || n_muons_loose == 0) {
 				if(n_photons == 0 || n_photons_loose == 0) {
 					//if(leadingjetpt>350.) {
-					if(recoilpt>250.) {
+					//if(recoilpt>250.) {
 						//if(A<0.8) {
 							//if(secondjetpt < 1450.) {							
 								if(dropEvent == false) {
@@ -939,6 +944,7 @@ int main (int argc, char** argv)
 							
 								vMJB_Npv[n_vertices]->Fill(MJB, weight);
 								vMJB_RecoilPt[binRecoilPt]->Fill(MJB, weight);
+                vRecoilPt_RecoilPt[binRecoilPt]->Fill(recoilpt, weight);
                 vLeadingJetPt_RecoilPt[binRecoilPt]->Fill(leadingjetpt, weight);
 								vMPF_RecoilPt[binRecoilPt]->Fill(Rmpf, weight);
 								vMJB_RecoilEta[binRecoilEta]->Fill(MJB, weight);
@@ -1034,7 +1040,7 @@ int main (int argc, char** argv)
 						   //}      
              //}
             }
-					}
+					//}
 				}
 			}		
 		}
@@ -1137,6 +1143,11 @@ int main (int argc, char** argv)
 	recoilDir->cd();	
 	hRecoilEta->Write();
 	hRecoilWidth->Write();
+	TDirectory *ptbin_recoilDir = recoilDir->mkdir("recoilPtBin","recoilPtBin");
+	ptbin_recoilDir->cd();
+	for(int j=0; j<myPtBinning.getSize(); j++) {
+		vRecoilPt_RecoilPt[j]->Write();
+	}
 	
 	TDirectory *variablesDir = out->mkdir("variables","variables");
 	variablesDir->cd();
