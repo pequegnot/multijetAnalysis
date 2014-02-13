@@ -753,19 +753,19 @@ int main (int argc, char** argv)
 			hNTrueInteractionsBeforePUReweighting->Fill(nTrueInteractions);
       PUWeight = 1; 
       dropEvent = true;
-			if(leadingjetptraw >= 170. && leadingjetptraw < 230.) {
+			if(leadingjetrawpt >= 170. && leadingjetrawpt < 230.) {
 				PUWeight = myPUReweighter_HLT_PFJet140.weight(nTrueInteractions);
         dropEvent = false;
 			}
-			else if(leadingjetptraw >= 230. && leadingjetptraw < 290.) {
+			else if(leadingjetrawpt >= 230. && leadingjetrawpt < 290.) {
 				PUWeight = myPUReweighter_HLT_PFJet200.weight(nTrueInteractions);			
         dropEvent = false;
 			}
-			else if(leadingjetptraw >= 290. && leadingjetptraw < 350.) {
+			else if(leadingjetrawpt >= 290. && leadingjetrawpt < 350.) {
 				PUWeight = myPUReweighter_HLT_PFJet260.weight(nTrueInteractions);			
         dropEvent = false;
 			}
-			else if(leadingjetptraw >= 350.) {
+			else if(leadingjetrawpt >= 350.) {
 				PUWeight = myPUReweighter_HLT_PFJet320.weight(nTrueInteractions);		
         dropEvent = false;
 			}
@@ -779,7 +779,7 @@ int main (int argc, char** argv)
 			dropEvent = true;
       //cout<<"leadingjetpt: "<<leadingjetpt<<endl;
       //cout<<" HLT_vector->size(): "<< HLT_vector->size()<<endl;
-			if(leadingjetptraw >= 170. && leadingjetptraw < 230.) {
+			if(leadingjetrawpt >= 170. && leadingjetrawpt < 230.) {
 				for(int i = 0; i < HLT_vector->size(); i++) {
           //cout<<"HLT_vector->at("<<i<<")"<< HLT_vector->at(i) <<endl;
           //cout<<"leadingjetpt"<<leadingjetpt<<endl;
@@ -791,7 +791,7 @@ int main (int argc, char** argv)
 					}
 				}								
 			}
-			else if(leadingjetptraw >= 230. && leadingjetptraw < 290.) {
+			else if(leadingjetrawpt >= 230. && leadingjetrawpt < 290.) {
 				for(int i = 0; i < HLT_vector->size(); i++) {
 					if(TString(HLT_vector->at(i)).Contains("HLT_PFJet200")) {
 						dropEvent = false;
@@ -801,7 +801,7 @@ int main (int argc, char** argv)
 					}	
 				}								
 			}
-			else if(leadingjetptraw >= 290. && leadingjetptraw < 350.) {
+			else if(leadingjetrawpt >= 290. && leadingjetrawpt < 350.) {
 				for(int i = 0; i < HLT_vector->size(); i++) {
 					if(TString(HLT_vector->at(i)).Contains("HLT_PFJet260")) {
 						dropEvent = false;
@@ -811,7 +811,7 @@ int main (int argc, char** argv)
 					}	
 				}								
 			}
-			else if(leadingjetptraw >= 350.) {
+			else if(leadingjetrawpt >= 350.) {
 				for(int i = 0; i < HLT_vector->size(); i++) {
           //cout<<"HLT_vector->at("<<i<<")"<< HLT_vector->at(i) <<endl;
           //cout<<"leadingjetpt"<<leadingjetpt<<endl;
