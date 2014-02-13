@@ -523,6 +523,9 @@ int main (int argc, char** argv)
 	
 	TClonesArray* leadingjetgen_4vector = new TClonesArray("TLorentzVector");
 	t_multijet->SetBranchAddress("leadingjetgen_4vector",&leadingjetgen_4vector);
+
+	TClonesArray* leadingjetraw_4vector = new TClonesArray("TLorentzVector");
+	t_multijet->SetBranchAddress("leadingjetraw_4vector",&leadingjetraw_4vector);
 	
 	TClonesArray* jets_recoil_4vector = new TClonesArray("TLorentzVector");
 	t_multijet->SetBranchAddress("jets_recoil_4vector",&jets_recoil_4vector);
@@ -622,6 +625,7 @@ int main (int argc, char** argv)
 	float metpt;
 	float secondjetpt;	
 	float leadingjetgenpt;
+  float leadingjetrawpt;
 	float leadingjetpt;
 	float Rmpf = -1.;
 	float Rtrue = -1.;
@@ -698,6 +702,9 @@ int main (int argc, char** argv)
 		TLorentzVector* leadingjet = (TLorentzVector*) leadingjet_4vector->At(0);
 		leadingjetpt = leadingjet->Pt();
 
+		TLorentzVector* leadingjetraw = (TLorentzVector*) leadingjetraw_4vector->At(0);
+		leadingjetrawpt = leadingjetraw->Pt();
+
 		binRecoilPt = myPtBinning.getPtBin(recoilpt);
 		if(binRecoilPt == -1) continue;
 		
@@ -746,19 +753,19 @@ int main (int argc, char** argv)
 			hNTrueInteractionsBeforePUReweighting->Fill(nTrueInteractions);
       PUWeight = 1; 
       dropEvent = true;
-			if(leadingjetpt >= 170. && leadingjetpt < 230.) {
+			if(leadingjetptraw >= 170. && leadingjetptraw < 230.) {
 				PUWeight = myPUReweighter_HLT_PFJet140.weight(nTrueInteractions);
         dropEvent = false;
 			}
-			else if(leadingjetpt >= 230. && leadingjetpt < 290.) {
+			else if(leadingjetptraw >= 230. && leadingjetptraw < 290.) {
 				PUWeight = myPUReweighter_HLT_PFJet200.weight(nTrueInteractions);			
         dropEvent = false;
 			}
-			else if(leadingjetpt >= 290. && leadingjetpt < 350.) {
+			else if(leadingjetptraw >= 290. && leadingjetptraw < 350.) {
 				PUWeight = myPUReweighter_HLT_PFJet260.weight(nTrueInteractions);			
         dropEvent = false;
 			}
-			else if(leadingjetpt >= 350.) {
+			else if(leadingjetptraw >= 350.) {
 				PUWeight = myPUReweighter_HLT_PFJet320.weight(nTrueInteractions);		
         dropEvent = false;
 			}
@@ -772,7 +779,7 @@ int main (int argc, char** argv)
 			dropEvent = true;
       //cout<<"leadingjetpt: "<<leadingjetpt<<endl;
       //cout<<" HLT_vector->size(): "<< HLT_vector->size()<<endl;
-			if(leadingjetpt >= 170. && leadingjetpt < 230.) {
+			if(leadingjetptraw >= 170. && leadingjetptraw < 230.) {
 				for(int i = 0; i < HLT_vector->size(); i++) {
           //cout<<"HLT_vector->at("<<i<<")"<< HLT_vector->at(i) <<endl;
           //cout<<"leadingjetpt"<<leadingjetpt<<endl;
@@ -784,7 +791,7 @@ int main (int argc, char** argv)
 					}
 				}								
 			}
-			else if(leadingjetpt >= 230. && leadingjetpt < 290.) {
+			else if(leadingjetptraw >= 230. && leadingjetptraw < 290.) {
 				for(int i = 0; i < HLT_vector->size(); i++) {
 					if(TString(HLT_vector->at(i)).Contains("HLT_PFJet200")) {
 						dropEvent = false;
@@ -794,7 +801,7 @@ int main (int argc, char** argv)
 					}	
 				}								
 			}
-			else if(leadingjetpt >= 290. && leadingjetpt < 350.) {
+			else if(leadingjetptraw >= 290. && leadingjetptraw < 350.) {
 				for(int i = 0; i < HLT_vector->size(); i++) {
 					if(TString(HLT_vector->at(i)).Contains("HLT_PFJet260")) {
 						dropEvent = false;
@@ -804,7 +811,7 @@ int main (int argc, char** argv)
 					}	
 				}								
 			}
-			else if(leadingjetpt >= 350.) {
+			else if(leadingjetptraw >= 350.) {
 				for(int i = 0; i < HLT_vector->size(); i++) {
           //cout<<"HLT_vector->at("<<i<<")"<< HLT_vector->at(i) <<endl;
           //cout<<"leadingjetpt"<<leadingjetpt<<endl;
