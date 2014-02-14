@@ -208,7 +208,7 @@ int main (int argc, char** argv)
 	vector<TH1F*> vLeadingJetPt_RecoilPt = buildPtVectorH1(myPtBinning,"LeadingJetPt",150,0,3000) ;
 	
   //RecoilPt per recoilpt bin
-	vector<TH1F*> vRecoilPt_RecoilPt = buildPtVectorH1(myPtBinning,"RecoilPt",150,0,3000) ;
+	vector<TH1F*> vRecoilPt_RecoilPt = buildBinnedDistriVectorH1(myPtBinning,"RecoilPt",20) ;
 	
   //MJB per recoileta
 	vector<TH1F*> vMJB_RecoilEta = buildEtaVectorH1(myEtaBinning,"MJB",nbinsx,xlow,xup) ;
@@ -890,7 +890,7 @@ int main (int argc, char** argv)
 			if(n_muons == 0 || n_muons_loose == 0) {
 				if(n_photons == 0 || n_photons_loose == 0) {
 					//if(leadingjetpt>350.) {
-					//if(recoilpt>250.) {
+					if(recoilpt>250.) {
 						//if(A<0.8) {
 							//if(secondjetpt < 1450.) {							
 								if(dropEvent == false) {
@@ -1047,7 +1047,7 @@ int main (int argc, char** argv)
 						   //}      
              //}
             }
-					//}
+					}
 				}
 			}		
 		}

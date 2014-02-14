@@ -125,6 +125,23 @@ std::vector<TH1F*> buildPtVectorH1(ptBinning aPtBinning,const std::string& aName
 	return myVector;
 }
 
+std::vector<TH1F*> buildBinnedDistriVectorH1(ptBinning aPtBinning, const std::string& aName, Double_t binrange)
+{
+	std::vector<TH1F*> myVector;
+  Double_t xlow;
+  Double_t xup;
+  Int_t nbinsx;
+	for(int i=0; i<aPtBinning.getSize(); i++) {
+		std::string histoName;
+		histoName = aName + "_" + aPtBinning.getName(i) ;
+    xlow = aPtBinning.getBinValueInf(i);
+    xup = aPtBinning.getBinValueSup(i);
+    nbinsx = (xup - xlow)/binrange;
+		myVector.push_back(new TH1F(histoName.c_str(),histoName.c_str(),nbinsx, xlow, xup));
+	}
+	return myVector;
+}
+
 std::vector<TH1F*> buildEtaVectorH1(etaBinning aEtaBinning,const std::string& aName,Int_t nbinsx,Double_t xlow,Double_t xup)
 {
 	std::vector<TH1F*> myVector;
