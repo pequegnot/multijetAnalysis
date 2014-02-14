@@ -202,7 +202,7 @@ int main (int argc, char** argv)
     vectorName = "leadingJet/recoilPtBin/LeadingJetPt_" + ptBinName;
 		vLeadingJetPt_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
     vectorName = "recoil/recoilPtBin/RecoilPt_" + ptBinName;
-		vRecoilt_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
+		vRecoilPt_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
 		vectorName = "MPF/MPF_" + ptBinName;
 		vMPF_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());	
 	}
