@@ -114,7 +114,7 @@ double getHistoXup() {
 	return 2.;
 }
 
-std::vector<TH1F*> buildPtVectorH1(ptBinning aPtBinning,const std::string& aName,Int_t nbinsx,Double_t xlow,Double_t xup)
+std::vector<TH1F*> buildPtVectorH1(ptBinning& aPtBinning,const std::string& aName,Int_t nbinsx,Double_t xlow,Double_t xup)
 {
 	std::vector<TH1F*> myVector;
 	for(int i=0; i<aPtBinning.getSize(); i++) {
@@ -125,7 +125,7 @@ std::vector<TH1F*> buildPtVectorH1(ptBinning aPtBinning,const std::string& aName
 	return myVector;
 }
 
-std::vector<TH1F*> buildBinnedDistriVectorH1(ptBinning aPtBinning, const std::string& aName, Double_t binrange)
+std::vector<TH1F*> buildBinnedDistriVectorH1(ptBinning& aPtBinning, const std::string& aName, Double_t binrange)
 {
 	std::vector<TH1F*> myVector;
   Double_t xlow;
@@ -142,7 +142,7 @@ std::vector<TH1F*> buildBinnedDistriVectorH1(ptBinning aPtBinning, const std::st
 	return myVector;
 }
 
-std::vector<TH1F*> buildEtaVectorH1(etaBinning aEtaBinning,const std::string& aName,Int_t nbinsx,Double_t xlow,Double_t xup)
+std::vector<TH1F*> buildEtaVectorH1(etaBinning& aEtaBinning,const std::string& aName,Int_t nbinsx,Double_t xlow,Double_t xup)
 {
 	std::vector<TH1F*> myVector;
 	for(int i=0; i<aEtaBinning.getSize(); i++) {
@@ -153,7 +153,7 @@ std::vector<TH1F*> buildEtaVectorH1(etaBinning aEtaBinning,const std::string& aN
 	return myVector;
 }
 
-std::vector<TH1F*> buildNpvVectorH1(npvBinning aNpvBinning,const std::string& aName,Int_t nbinsx,Double_t xlow,Double_t xup)
+std::vector<TH1F*> buildNpvVectorH1(npvBinning& aNpvBinning,const std::string& aName,Int_t nbinsx,Double_t xlow,Double_t xup)
 {
 	std::vector<TH1F*> myVector;
 	for(int i=0; i<aNpvBinning.getSize(); i++) {
