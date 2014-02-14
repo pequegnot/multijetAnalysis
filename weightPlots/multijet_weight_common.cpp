@@ -205,10 +205,10 @@ int main (int argc, char** argv)
 	vector<TH1F*> vMJB_RecoilPt = buildPtVectorH1(myPtBinning,"MJB",nbinsx,xlow,xup) ;
 
 	//ptLeadingJet per recoilpt
-	vector<TH1F*> vLeadingJetPt_RecoilPt = buildPtVectorH1(myPtBinning,"LeadingJetPt",150,0,3000) ;
+	vector<TH1F*> vLeadingJetPt_RecoilPt = buildPtVectorH1(myPtBinning,"LeadingJetPt",35,200,650) ;
 	
   //RecoilPt per recoilpt bin
-	vector<TH1F*> vRecoilPt_RecoilPt = buildBinnedDistriVectorH1(myPtBinning,"RecoilPt",20) ;
+	vector<TH1F*> vRecoilPt_RecoilPt = buildBinnedDistriVectorH1(myPtBinning,"RecoilPt",5) ;
 	
   //MJB per recoileta
 	vector<TH1F*> vMJB_RecoilEta = buildEtaVectorH1(myEtaBinning,"MJB",nbinsx,xlow,xup) ;
@@ -706,7 +706,6 @@ int main (int argc, char** argv)
 		leadingjetrawpt = leadingjetraw->Pt();
 
 		binRecoilPt = myPtBinning.getPtBin(recoilpt);
-		if(binRecoilPt == -1) continue;
 		
 		TLorentzVector* leadingjetgen = NULL;
 		if(isMC) {
@@ -714,7 +713,6 @@ int main (int argc, char** argv)
 			leadingjetgenpt = leadingjetgen->Pt();
 		
 			binGenPt = myPtBinning.getPtBin(leadingjetgenpt);
-			if(binGenPt == -1) continue;
 			
 			Rtrue = leadingjetpt/leadingjetgenpt;
 		}
@@ -724,7 +722,7 @@ int main (int argc, char** argv)
 		recoileta = recoil->Eta();
 		binRecoilEta = myEtaBinning.getEtaBin(fabs(recoileta));
 		
-		
+	  if(jets_recoil_4vector->GetEntriesFast() == 0) continue;	
 		TLorentzVector* secondjet = (TLorentzVector*) jets_recoil_4vector->At(0);// first jet of the recoil system, so index is 0
 		secondjetpt = secondjet->Pt();
 		
@@ -825,7 +823,7 @@ int main (int argc, char** argv)
 			}
 		}
     //cout<<"dropEvent: "<<dropEvent<<endl;
-    if(dropEvent) continue;
+    //if(dropEvent) continue;
 
 //*****************************************************************************************************
 //
@@ -885,12 +883,15 @@ int main (int argc, char** argv)
 				hNpuAlljetTmp_JetPt->Fill(jet_PF_pt, weight);
 			}
 		}
+    
+    if(binRecoilPt < 0) continue;
+    if(isMC && binGenPt < 0) continue;
 		
 		if(isSelected == 1) {
 			if(n_muons == 0 || n_muons_loose == 0) {
 				if(n_photons == 0 || n_photons_loose == 0) {
 					//if(leadingjetpt>350.) {
-					if(recoilpt>250.) {
+					//if(recoilpt>250.) {
 						//if(A<0.8) {
 							//if(secondjetpt < 1450.) {							
 								if(dropEvent == false) {
@@ -1024,6 +1025,7 @@ int main (int argc, char** argv)
 										vPtRatio_GenPt[binGenPt]->Fill(recoilpt/leadingjetgenpt, weight);							
 										vRtrue_leadingJet_RecoilPt[binRecoilPt]->Fill(Rtrue, weight);
 										binJetPt = myLowPtBinning.getPtBin(leadingjetpt);
+										if(binJetPt == -1) continue;
 										vRtrue_allJets_JetPt[binJetPt]->Fill(Rtrue, weight);
 									}
 									for (int i = 0; i < n_jets_recoil; i++) {
@@ -1047,7 +1049,7 @@ int main (int argc, char** argv)
 						   //}      
              //}
             }
-					}
+					//}
 				}
 			}		
 		}
