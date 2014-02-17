@@ -684,152 +684,6 @@ int main (int argc, char** argv)
 // 		}
 	
 //*********************************************************************************************************
-
-				
-		jetsPt = 0.;
-		puJetsPt = 0.;
-		nRecoilJets_068E = 0;
-		nRecoilJets_095E = 0;
-		ptRecoil_tmp = 0.;
-		
-		int nentries_recoil_4vector = recoil_4vector->GetEntriesFast();
-		if(nentries_recoil_4vector == 0) 
-		  continue;
-		  
-		TLorentzVector* recoil = (TLorentzVector*) recoil_4vector->At(0);
-		recoilpt = recoil->Pt();
-		
-		TLorentzVector* leadingjet = (TLorentzVector*) leadingjet_4vector->At(0);
-		leadingjetpt = leadingjet->Pt();
-
-		TLorentzVector* leadingjetraw = (TLorentzVector*) leadingjetraw_4vector->At(0);
-		leadingjetrawpt = leadingjetraw->Pt();
-
-		binRecoilPt = myPtBinning.getPtBin(recoilpt);
-		
-		TLorentzVector* leadingjetgen = NULL;
-		if(isMC) {
-			leadingjetgen = (TLorentzVector*) leadingjetgen_4vector->At(0);
-			leadingjetgenpt = leadingjetgen->Pt();
-		
-			binGenPt = myPtBinning.getPtBin(leadingjetgenpt);
-			
-			Rtrue = leadingjetpt/leadingjetgenpt;
-		}
-		
-		recoilpx = recoil->Px();
-		recoilpy = recoil->Py();
-		recoileta = recoil->Eta();
-		binRecoilEta = myEtaBinning.getEtaBin(fabs(recoileta));
-		
-	  if(jets_recoil_4vector->GetEntriesFast() == 0) continue;	
-		TLorentzVector* secondjet = (TLorentzVector*) jets_recoil_4vector->At(0);// first jet of the recoil system, so index is 0
-		secondjetpt = secondjet->Pt();
-		
-		TLorentzVector* met = (TLorentzVector*) met_4vector->At(0);
-		metpx = met->Px();
-		metpy = met->Py();
-		metpt = met->Pt();
-		
-		Rmpf = 1 + (recoilpx*metpx + recoilpy*metpy)/(pow(recoilpt,2));		
-		
-		recoilrecopt = 0.;
-		recoilgenpt = 0.;
-		
-		nRecoilJets = jets_recoil_4vector->GetSize();
-
-
-//*****************************************************************************************************
-//
-//                                      reweighting
-//
-//*****************************************************************************************************
-
-		dropEvent=false;
-
-		if(isMC) {
-			hNTrueInteractionsBeforePUReweighting->Fill(nTrueInteractions);
-      PUWeight = 1; 
-      dropEvent = true;
-			if(leadingjetrawpt >= 170. && leadingjetrawpt < 230.) {
-				PUWeight = myPUReweighter_HLT_PFJet140.weight(nTrueInteractions);
-        dropEvent = false;
-			}
-			else if(leadingjetrawpt >= 230. && leadingjetrawpt < 290.) {
-				PUWeight = myPUReweighter_HLT_PFJet200.weight(nTrueInteractions);			
-        dropEvent = false;
-			}
-			else if(leadingjetrawpt >= 290. && leadingjetrawpt < 350.) {
-				PUWeight = myPUReweighter_HLT_PFJet260.weight(nTrueInteractions);			
-        dropEvent = false;
-			}
-			else if(leadingjetrawpt >= 350.) {
-				PUWeight = myPUReweighter_HLT_PFJet320.weight(nTrueInteractions);		
-        dropEvent = false;
-			}
-			//PUWeight = myPUReweighter.weight(nTrueInteractions);
-			hNTrueInteractionsAfterPUReweighting->Fill(nTrueInteractions,PUWeight);
-			weight = lumiWeight*PUWeight;
-		}
-    //cout<<"isMC: "<<isMC<<endl;
-    //cout<<"!isMC: "<<!isMC<<endl;
-		if(!isMC) {
-			dropEvent = true;
-      //cout<<"leadingjetpt: "<<leadingjetpt<<endl;
-      //cout<<" HLT_vector->size(): "<< HLT_vector->size()<<endl;
-			if(leadingjetrawpt >= 170. && leadingjetrawpt < 230.) {
-				for(int i = 0; i < HLT_vector->size(); i++) {
-          //cout<<"HLT_vector->at("<<i<<")"<< HLT_vector->at(i) <<endl;
-          //cout<<"leadingjetpt"<<leadingjetpt<<endl;
-					if(TString(HLT_vector->at(i)).Contains("HLT_PFJet140")) {
-						dropEvent = false;
-						weight = HLT_PFJet140_prescaleFactor();
-						hLeadingJetPt_170to230->Fill(leadingjetpt, weight);
-            break;
-					}
-				}								
-			}
-			else if(leadingjetrawpt >= 230. && leadingjetrawpt < 290.) {
-				for(int i = 0; i < HLT_vector->size(); i++) {
-					if(TString(HLT_vector->at(i)).Contains("HLT_PFJet200")) {
-						dropEvent = false;
-						weight = HLT_PFJet200_prescaleFactor();
-						hLeadingJetPt_230to290->Fill(leadingjetpt, weight);
-            break;
-					}	
-				}								
-			}
-			else if(leadingjetrawpt >= 290. && leadingjetrawpt < 350.) {
-				for(int i = 0; i < HLT_vector->size(); i++) {
-					if(TString(HLT_vector->at(i)).Contains("HLT_PFJet260")) {
-						dropEvent = false;
-						weight = HLT_PFJet260_prescaleFactor();
-						hLeadingJetPt_290to350->Fill(leadingjetpt, weight);
-            break;
-					}	
-				}								
-			}
-			else if(leadingjetrawpt >= 350.) {
-				for(int i = 0; i < HLT_vector->size(); i++) {
-          //cout<<"HLT_vector->at("<<i<<")"<< HLT_vector->at(i) <<endl;
-          //cout<<"leadingjetpt"<<leadingjetpt<<endl;
-					if(TString(HLT_vector->at(i)).Contains("HLT_PFJet320")) {
-						dropEvent = false;
-						weight = HLT_PFJet320_prescaleFactor();
-						hLeadingJetPt_350toInf->Fill(leadingjetpt, weight);
-            break;
-					}	
-				}								
-			}
-		}
-    //cout<<"dropEvent: "<<dropEvent<<endl;
-    //if(dropEvent) continue;
-
-//*****************************************************************************************************
-//
-//                                      filling histogramms
-//
-//*****************************************************************************************************
 		int n_muons_loose = 0;
 		if(n_muons != 0) {			
 			for(int i=0; i<n_muons; i++) {
@@ -847,210 +701,382 @@ int main (int argc, char** argv)
 				}
 			}
 		}
-		
-		hMet_beforeSel->Fill(metpt, weight);
-		hLeadingJetPt_beforeSel->Fill(leadingjetpt, weight);
-		hRecoilPt_beforeSel->Fill(recoilpt, weight);
-		for(int i=0; i<jets_recoil_4vector->GetSize(); i++) {
-			hRecoilJetsPt_beforeSel->Fill(((TLorentzVector*)jets_recoil_4vector->At(i))->Pt(), weight);
-		}
-		hNpv_beforeSel->Fill(n_vertices, weight);
-		hAlpha_beforeSel->Fill(alpha, weight);
-		hBeta_beforeSel->Fill(beta, weight);
-		hA_beforeSel->Fill(A, weight);
-		
-		for(int i=0; i<jet_PF_4vector->GetEntriesFast(); i++) {
-			jet_PF_pt = ((TLorentzVector*) jet_PF_4vector->At(i))->Pt();
-			hNjet_Npv->Fill(n_vertices, weight);
-			hNjet_JetPt->Fill(jet_PF_pt, weight);
-			if(jet_PF_puJetFullId[i] < 6) {
-				hNrmPuJets_JetPt->Fill(jet_PF_pt, weight);
-			}
-			if(jet_PF_puJetFullId[i] == 4) {
-				hNpuLoosejetTmp_Npv->Fill(n_vertices, weight);
-				hNpuLoosejetTmp_JetPt->Fill(jet_PF_pt, weight);
-			}
-			else if(jet_PF_puJetFullId[i] == 6) {
-				hNpuMediumjetTmp_Npv->Fill(n_vertices, weight);
-				hNpuMediumjetTmp_JetPt->Fill(jet_PF_pt, weight);
-			}
-			else if(jet_PF_puJetFullId[i] == 7) {
-				hNpuTightjetTmp_Npv->Fill(n_vertices, weight);
-				hNpuTightjetTmp_JetPt->Fill(jet_PF_pt, weight);
-			}
-			if(jet_PF_puJetFullId[i] >= 4) {
-				hNpuAlljetTmp_Npv->Fill(n_vertices, weight);
-				hNpuAlljetTmp_JetPt->Fill(jet_PF_pt, weight);
-			}
-		}
-    
-    if(binRecoilPt < 0) continue;
-    if(isMC && binGenPt < 0) continue;
-		
-		if(isSelected == 1) {
-			if(n_muons == 0 || n_muons_loose == 0) {
-				if(n_photons == 0 || n_photons_loose == 0) {
-					//if(leadingjetpt>350.) {
-					//if(recoilpt>250.) {
-						//if(A<0.8) {
-							//if(secondjetpt < 1450.) {							
-								if(dropEvent == false) {
-									hRecoilEta->Fill(fabs(recoileta), weight);
-									hMJB_inclusive->Fill(MJB, weight);
-									hHT->Fill(HT,weight);
-									hNjetsRecoil->Fill(jets_recoil_4vector->GetSize(), weight);
-									hNjetsTotal->Fill(n_totJets, weight);
-									hNjetsGood->Fill(n_goodJets, weight);
-									vNjetsRecoil_RecoilPt[binRecoilPt]->Fill(jets_recoil_4vector->GetSize(), weight);
-									ptRecoil_tmp = 0;
-									for(int i=0; i<jets_recoil_4vector->GetSize(); i++) {
-										nRecoilJets_068E ++;
-										ptRecoil_tmp = ptRecoil_tmp + ((TLorentzVector*)jets_recoil_4vector->At(i))->Pt();
-										if(ptRecoil_tmp >= 0.68 * recoilpt) {
-											vNjetsRecoil_068E_RecoilPt[binRecoilPt]->Fill(nRecoilJets_068E, weight);
-											break;
-										}	
-									}
-									ptRecoil_tmp = 0;
-									for(int i=0; i<jets_recoil_4vector->GetSize(); i++) {
-										nRecoilJets_095E ++;
-										ptRecoil_tmp = ptRecoil_tmp + ((TLorentzVector*)jets_recoil_4vector->At(i))->Pt();
-										if(ptRecoil_tmp >= 0.95 * recoilpt) {
-											vNjetsRecoil_095E_RecoilPt[binRecoilPt]->Fill(nRecoilJets_095E, weight);
-											break;
-										}	
-									}
-						
-									hMet_afterSel->Fill(metpt, weight);
-									hLeadingJetPt_afterSel->Fill(leadingjetpt, weight);
-									hRecoilPt_afterSel->Fill(recoilpt, weight);
-								
-									recoilEtaMin = ((TLorentzVector*)jets_recoil_4vector->At(0))->Eta();
-									recoilEtaMax = ((TLorentzVector*)jets_recoil_4vector->At(0))->Eta();
-									for(int i=0; i<jets_recoil_4vector->GetSize(); i++) {
-										recoilEtaMinTmp = ((TLorentzVector*)jets_recoil_4vector->At(i))->Eta();
-										recoilEtaMaxTmp = ((TLorentzVector*)jets_recoil_4vector->At(i))->Eta();
-										if(recoilEtaMinTmp < recoilEtaMin) {
-											recoilEtaMin = recoilEtaMinTmp;
-										}
-									
-										if (recoilEtaMaxTmp > recoilEtaMax) {
-											recoilEtaMax = recoilEtaMaxTmp;
-										}
-										hRecoilJetsPt_afterSel->Fill(((TLorentzVector*)jets_recoil_4vector->At(i))->Pt(), weight);
-										if(nRecoilJets<16) {
-											vRecoilJetsPt_NrecoilJets[nRecoilJets]->Fill(((TLorentzVector*)jets_recoil_4vector->At(i))->Pt(), weight);
-										}
-									}
-									recoilDeltaEta = fabs(recoilEtaMax - recoilEtaMin);
-									hRecoilWidth->Fill(recoilDeltaEta, weight);
-								
-									hNpv_afterSel->Fill(n_vertices, weight);
-									hAlpha_afterSel->Fill(alpha, weight);
-									hBeta_afterSel->Fill(beta, weight);
-									hA_afterSel->Fill(A, weight);
-							
-								vMJB_Npv[n_vertices]->Fill(MJB, weight);
-								vMJB_RecoilPt[binRecoilPt]->Fill(MJB, weight);
-                vRecoilPt_RecoilPt[binRecoilPt]->Fill(recoilpt, weight);
-                vLeadingJetPt_RecoilPt[binRecoilPt]->Fill(leadingjetpt, weight);
-								vMPF_RecoilPt[binRecoilPt]->Fill(Rmpf, weight);
-								vMJB_RecoilEta[binRecoilEta]->Fill(MJB, weight);
-							
-								for(int i=0; i<(jets_recoil_4vector->GetEntriesFast()+1); i++) {
-									//cout<<"jet_puJetId["<<i<<"] : "<<jet_puJetId[i]<<endl;
-									//hNjet_Npv->Fill(n_vertices, weight);
-									if(i == 0) {
-										jetsPt = jetsPt + leadingjetpt;
-										//hNjet_JetPt->Fill(leadingjetpt, weight);
-									}
-									else {
-										jetsPt = jetsPt + ((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt();
-										//hNjet_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
-									}
-									
-									/*if(jet_puJetId[goodJetsIndex->at(i)] >= 4) {
-										hNpuAlljetTmp_Npv->Fill(n_vertices, weight);
-										if(i == 0) {
-											puJetsPt = puJetsPt + leadingjetpt;
-											hNpuAlljetTmp_JetPt->Fill(leadingjetpt, weight);
-										}
-										else {
-											puJetsPt = puJetsPt + ((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt();
-											hNpuAlljetTmp_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
-										}
-									}
-									if(jet_puJetId[goodJetsIndex->at(i)] < 6) {
-										if(i == 0) {
-											hNrmPuJets_JetPt->Fill(leadingjetpt, weight);
-										}
-										else {
-											hNrmPuJets_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
-										}
-									}
-									if(jet_puJetId[goodJetsIndex->at(i)] == 4) {
-										hNpuLoosejetTmp_Npv->Fill(n_vertices, weight);
-										if(i == 0) {
-											hNpuLoosejetTmp_JetPt->Fill(leadingjetpt, weight);                    
-										}
-										else {
-											hNpuLoosejetTmp_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);                    
-										}
 
-									}
-									else if(jet_puJetId[goodJetsIndex->at(i)] == 6) {
-										hNpuMediumjetTmp_Npv->Fill(n_vertices, weight);
-										if(i == 0) {
-											hNpuMediumjetTmp_JetPt->Fill(leadingjetpt, weight);
-										}
-                   	else {
-												hNpuMediumjetTmp_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
-									 	}
+    if(isSelected == 1) {
+      if(n_muons == 0 || n_muons_loose == 0) {
+        if(n_photons == 0 || n_photons_loose == 0) {
+				
+//*****************************************************************************************************
+//
+//                                      dynamic variables computation
+//
+//*****************************************************************************************************
 
-									}
-									else if(jet_puJetId[goodJetsIndex->at(i)] == 7) {
-										hNpuTightjetTmp_Npv->Fill(n_vertices, weight);
-										if(i == 0) {
-											hNpuTightjetTmp_JetPt->Fill(leadingjetpt, weight);
-										}
-											else {
-												hNpuTightjetTmp_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
-											}
-									}*/
-								}
-								hFracJetsPt->Fill(puJetsPt/jetsPt,weight);
-							
-								if(isMC) {
-									if(*leadingjetgen != TLorentzVector(0.,0.,0.,0.)) {//check if a gen jet matches the reco jet
-										vPtRatio_GenPt[binGenPt]->Fill(recoilpt/leadingjetgenpt, weight);							
-										vRtrue_leadingJet_RecoilPt[binRecoilPt]->Fill(Rtrue, weight);
-										binJetPt = myLowPtBinning.getPtBin(leadingjetpt);
-										if(binJetPt == -1) continue;
-										vRtrue_allJets_JetPt[binJetPt]->Fill(Rtrue, weight);
-									}
-									for (int i = 0; i < n_jets_recoil; i++) {
-										if(*((TLorentzVector*)jetsgen_recoil_4vector->At(i)) != TLorentzVector(0.,0.,0.,0.)) {									
-											binJetPt = myLowPtBinning.getPtBin(((TLorentzVector*)jets_recoil_4vector->At(i))->Pt());
-											if(binJetPt == -1) continue;
-											Rtrue = ((TLorentzVector*)jets_recoil_4vector->At(i))->Pt()/((TLorentzVector*)jetsgen_recoil_4vector->At(i))->Pt();
-											vRtrue_allJets_JetPt[binJetPt]->Fill(Rtrue, weight);
-										}
-									}								
-									for (int i = 0; i < n_jets_recoil; i++) {
-										if(*((TLorentzVector*)jetsgen_recoil_4vector->At(i)) == TLorentzVector(0.,0.,0.,0.)) break;
-										recoilrecopt = recoilrecopt + ((TLorentzVector*)jets_recoil_4vector->At(i))->Pt();
-										recoilgenpt = recoilgenpt + ((TLorentzVector*)jetsgen_recoil_4vector->At(i))->Pt();
-									}
-									Rrecoil = recoilrecopt/recoilgenpt;
-									vRrecoil_RecoilPt[binRecoilPt]->Fill(Rrecoil, weight);									
-								}
+          jetsPt = 0.;
+          puJetsPt = 0.;
+          nRecoilJets_068E = 0;
+          nRecoilJets_095E = 0;
+          ptRecoil_tmp = 0.;
+      
+          int nentries_recoil_4vector = recoil_4vector->GetEntriesFast();
+          if(nentries_recoil_4vector == 0) 
+            continue;
+            
+          TLorentzVector* recoil = (TLorentzVector*) recoil_4vector->At(0);
+          recoilpt = recoil->Pt();
+          
+          TLorentzVector* leadingjet = (TLorentzVector*) leadingjet_4vector->At(0);
+          leadingjetpt = leadingjet->Pt();
 
-                 //}
-						   //}      
-             //}
+          TLorentzVector* leadingjetraw = (TLorentzVector*) leadingjetraw_4vector->At(0);
+          leadingjetrawpt = leadingjetraw->Pt();
+
+          binRecoilPt = myPtBinning.getPtBin(recoilpt);
+      
+          TLorentzVector* leadingjetgen = NULL;
+          if(isMC) {
+            leadingjetgen = (TLorentzVector*) leadingjetgen_4vector->At(0);
+            leadingjetgenpt = leadingjetgen->Pt();
+          
+            binGenPt = myPtBinning.getPtBin(leadingjetgenpt);
+            
+            Rtrue = leadingjetpt/leadingjetgenpt;
+          }
+          
+          recoilpx = recoil->Px();
+          recoilpy = recoil->Py();
+          recoileta = recoil->Eta();
+          binRecoilEta = myEtaBinning.getEtaBin(fabs(recoileta));
+          
+          if(jets_recoil_4vector->GetEntriesFast() == 0) continue;	
+          TLorentzVector* secondjet = (TLorentzVector*) jets_recoil_4vector->At(0);// first jet of the recoil system, so index is 0
+          secondjetpt = secondjet->Pt();
+          
+          TLorentzVector* met = (TLorentzVector*) met_4vector->At(0);
+          metpx = met->Px();
+          metpy = met->Py();
+          metpt = met->Pt();
+          
+          Rmpf = 1 + (recoilpx*metpx + recoilpy*metpy)/(pow(recoilpt,2));		
+          
+          recoilrecopt = 0.;
+          recoilgenpt = 0.;
+        
+          nRecoilJets = jets_recoil_4vector->GetSize();
+
+
+//*****************************************************************************************************
+//
+//                                      PU reweighting
+//
+//*****************************************************************************************************
+
+          dropEvent=false;
+
+          if(isMC) {
+            hNTrueInteractionsBeforePUReweighting->Fill(nTrueInteractions);
+            PUWeight = 1; 
+            dropEvent = true;
+            if(leadingjetrawpt >= 170. && leadingjetrawpt < 230.) {
+              PUWeight = myPUReweighter_HLT_PFJet140.weight(nTrueInteractions);
+              dropEvent = false;
+            }
+            else if(leadingjetrawpt >= 230. && leadingjetrawpt < 290.) {
+              PUWeight = myPUReweighter_HLT_PFJet200.weight(nTrueInteractions);			
+              dropEvent = false;
+            }
+            else if(leadingjetrawpt >= 290. && leadingjetrawpt < 350.) {
+              PUWeight = myPUReweighter_HLT_PFJet260.weight(nTrueInteractions);			
+              dropEvent = false;
+            }
+            else if(leadingjetrawpt >= 350.) {
+              PUWeight = myPUReweighter_HLT_PFJet320.weight(nTrueInteractions);		
+              dropEvent = false;
+            }
+          //PUWeight = myPUReweighter.weight(nTrueInteractions);
+            hNTrueInteractionsAfterPUReweighting->Fill(nTrueInteractions,PUWeight);
+            weight = lumiWeight*PUWeight;
+          }
+
+//*****************************************************************************************************
+//
+//                                      HLT prescale reweighting
+//
+//*****************************************************************************************************
+
+          if(!isMC) {
+            dropEvent = true;
+            //cout<<"leadingjetpt: "<<leadingjetpt<<endl;
+            //cout<<" HLT_vector->size(): "<< HLT_vector->size()<<endl;
+            if(leadingjetrawpt >= 170. && leadingjetrawpt < 230.) {
+              for(int i = 0; i < HLT_vector->size(); i++) {
+                //cout<<"HLT_vector->at("<<i<<")"<< HLT_vector->at(i) <<endl;
+                //cout<<"leadingjetpt"<<leadingjetpt<<endl;
+                if(TString(HLT_vector->at(i)).Contains("HLT_PFJet140")) {
+                  dropEvent = false;
+                  weight = HLT_PFJet140_prescaleFactor();
+                  hLeadingJetPt_170to230->Fill(leadingjetpt, weight);
+                  break;
+                }
+              }								
+            }
+            else if(leadingjetrawpt >= 230. && leadingjetrawpt < 290.) {
+              for(int i = 0; i < HLT_vector->size(); i++) {
+                if(TString(HLT_vector->at(i)).Contains("HLT_PFJet200")) {
+                  dropEvent = false;
+                  weight = HLT_PFJet200_prescaleFactor();
+                  hLeadingJetPt_230to290->Fill(leadingjetpt, weight);
+                  break;
+                }	
+              }								
+            }
+            else if(leadingjetrawpt >= 290. && leadingjetrawpt < 350.) {
+              for(int i = 0; i < HLT_vector->size(); i++) {
+                if(TString(HLT_vector->at(i)).Contains("HLT_PFJet260")) {
+                  dropEvent = false;
+                  weight = HLT_PFJet260_prescaleFactor();
+                  hLeadingJetPt_290to350->Fill(leadingjetpt, weight);
+                  break;
+                }	
+              }								
+            }
+            else if(leadingjetrawpt >= 350.) {
+              for(int i = 0; i < HLT_vector->size(); i++) {
+                //cout<<"HLT_vector->at("<<i<<")"<< HLT_vector->at(i) <<endl;
+                //cout<<"leadingjetpt"<<leadingjetpt<<endl;
+                if(TString(HLT_vector->at(i)).Contains("HLT_PFJet320")) {
+                  dropEvent = false;
+                  weight = HLT_PFJet320_prescaleFactor();
+                  hLeadingJetPt_350toInf->Fill(leadingjetpt, weight);
+                  break;
+                }	
+              }								
+            }
+          }
+          //cout<<"dropEvent: "<<dropEvent<<endl;
+          //if(dropEvent) continue;
+
+//*****************************************************************************************************
+//
+//                                      filling histogramms
+//
+//*****************************************************************************************************
+
+		
+          hMet_beforeSel->Fill(metpt, weight);
+          hLeadingJetPt_beforeSel->Fill(leadingjetpt, weight);
+          hRecoilPt_beforeSel->Fill(recoilpt, weight);
+          for(int i=0; i<jets_recoil_4vector->GetSize(); i++) {
+            hRecoilJetsPt_beforeSel->Fill(((TLorentzVector*)jets_recoil_4vector->At(i))->Pt(), weight);
+          }
+          hNpv_beforeSel->Fill(n_vertices, weight);
+          hAlpha_beforeSel->Fill(alpha, weight);
+          hBeta_beforeSel->Fill(beta, weight);
+          hA_beforeSel->Fill(A, weight);
+          
+          for(int i=0; i<jet_PF_4vector->GetEntriesFast(); i++) {
+            jet_PF_pt = ((TLorentzVector*) jet_PF_4vector->At(i))->Pt();
+            hNjet_Npv->Fill(n_vertices, weight);
+            hNjet_JetPt->Fill(jet_PF_pt, weight);
+            if(jet_PF_puJetFullId[i] < 6) {
+              hNrmPuJets_JetPt->Fill(jet_PF_pt, weight);
+            }
+            if(jet_PF_puJetFullId[i] == 4) {
+              hNpuLoosejetTmp_Npv->Fill(n_vertices, weight);
+              hNpuLoosejetTmp_JetPt->Fill(jet_PF_pt, weight);
+            }
+            else if(jet_PF_puJetFullId[i] == 6) {
+              hNpuMediumjetTmp_Npv->Fill(n_vertices, weight);
+              hNpuMediumjetTmp_JetPt->Fill(jet_PF_pt, weight);
+            }
+            else if(jet_PF_puJetFullId[i] == 7) {
+              hNpuTightjetTmp_Npv->Fill(n_vertices, weight);
+              hNpuTightjetTmp_JetPt->Fill(jet_PF_pt, weight);
+            }
+            if(jet_PF_puJetFullId[i] >= 4) {
+              hNpuAlljetTmp_Npv->Fill(n_vertices, weight);
+              hNpuAlljetTmp_JetPt->Fill(jet_PF_pt, weight);
+            }
+          }
+        
+          if(binRecoilPt < 0) continue;
+          if(isMC && binGenPt < 0) continue;
+		
+          //angular selection
+          if(alpha < 0.3 && beta > 1.0) {
+
+            //second jet selection
+            if(A < 0.6) {
+              if(secondjetpt < 750.) {							
+
+                //first jet selection
+                //if(leadingjetpt>350.) {
+                if(leadingjet->Eta() < 1.3) {
+
+                  //recoil selection
+                  //if(recoilpt>250.) {
+
+                    //HLT selection
+                    if(dropEvent == false) {
+
+                      hRecoilEta->Fill(fabs(recoileta), weight);
+                      hMJB_inclusive->Fill(MJB, weight);
+                      hHT->Fill(HT,weight);
+                      hNjetsRecoil->Fill(jets_recoil_4vector->GetSize(), weight);
+                      hNjetsTotal->Fill(n_totJets, weight);
+                      hNjetsGood->Fill(n_goodJets, weight);
+                      vNjetsRecoil_RecoilPt[binRecoilPt]->Fill(jets_recoil_4vector->GetSize(), weight);
+                      ptRecoil_tmp = 0;
+                      for(int i=0; i<jets_recoil_4vector->GetSize(); i++) {
+                        nRecoilJets_068E ++;
+                        ptRecoil_tmp = ptRecoil_tmp + ((TLorentzVector*)jets_recoil_4vector->At(i))->Pt();
+                        if(ptRecoil_tmp >= 0.68 * recoilpt) {
+                          vNjetsRecoil_068E_RecoilPt[binRecoilPt]->Fill(nRecoilJets_068E, weight);
+                          break;
+                        }	
+                      }
+                      ptRecoil_tmp = 0;
+                      for(int i=0; i<jets_recoil_4vector->GetSize(); i++) {
+                        nRecoilJets_095E ++;
+                        ptRecoil_tmp = ptRecoil_tmp + ((TLorentzVector*)jets_recoil_4vector->At(i))->Pt();
+                        if(ptRecoil_tmp >= 0.95 * recoilpt) {
+                          vNjetsRecoil_095E_RecoilPt[binRecoilPt]->Fill(nRecoilJets_095E, weight);
+                          break;
+                        }	
+                      }
+                
+                      hMet_afterSel->Fill(metpt, weight);
+                      hLeadingJetPt_afterSel->Fill(leadingjetpt, weight);
+                      hRecoilPt_afterSel->Fill(recoilpt, weight);
+                    
+                      recoilEtaMin = ((TLorentzVector*)jets_recoil_4vector->At(0))->Eta();
+                      recoilEtaMax = ((TLorentzVector*)jets_recoil_4vector->At(0))->Eta();
+                      for(int i=0; i<jets_recoil_4vector->GetSize(); i++) {
+                        recoilEtaMinTmp = ((TLorentzVector*)jets_recoil_4vector->At(i))->Eta();
+                        recoilEtaMaxTmp = ((TLorentzVector*)jets_recoil_4vector->At(i))->Eta();
+                        if(recoilEtaMinTmp < recoilEtaMin) {
+                          recoilEtaMin = recoilEtaMinTmp;
+                        }
+                      
+                        if (recoilEtaMaxTmp > recoilEtaMax) {
+                          recoilEtaMax = recoilEtaMaxTmp;
+                        }
+                        hRecoilJetsPt_afterSel->Fill(((TLorentzVector*)jets_recoil_4vector->At(i))->Pt(), weight);
+                        if(nRecoilJets<16) {
+                          vRecoilJetsPt_NrecoilJets[nRecoilJets]->Fill(((TLorentzVector*)jets_recoil_4vector->At(i))->Pt(), weight);
+                        }
+                      }
+                      recoilDeltaEta = fabs(recoilEtaMax - recoilEtaMin);
+                      hRecoilWidth->Fill(recoilDeltaEta, weight);
+                    
+                      hNpv_afterSel->Fill(n_vertices, weight);
+                      hAlpha_afterSel->Fill(alpha, weight);
+                      hBeta_afterSel->Fill(beta, weight);
+                      hA_afterSel->Fill(A, weight);
+                  
+                      vMJB_Npv[n_vertices]->Fill(MJB, weight);
+                      vMJB_RecoilPt[binRecoilPt]->Fill(MJB, weight);
+                      vRecoilPt_RecoilPt[binRecoilPt]->Fill(recoilpt, weight);
+                      vLeadingJetPt_RecoilPt[binRecoilPt]->Fill(leadingjetpt, weight);
+                      vMPF_RecoilPt[binRecoilPt]->Fill(Rmpf, weight);
+                      vMJB_RecoilEta[binRecoilEta]->Fill(MJB, weight);
+                    
+                      for(int i=0; i<(jets_recoil_4vector->GetEntriesFast()+1); i++) {
+                        //cout<<"jet_puJetId["<<i<<"] : "<<jet_puJetId[i]<<endl;
+                        //hNjet_Npv->Fill(n_vertices, weight);
+                        if(i == 0) {
+                          jetsPt = jetsPt + leadingjetpt;
+                          //hNjet_JetPt->Fill(leadingjetpt, weight);
+                        }
+                        else {
+                          jetsPt = jetsPt + ((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt();
+                          //hNjet_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
+                        }
+                        
+                        /*if(jet_puJetId[goodJetsIndex->at(i)] >= 4) {
+                          hNpuAlljetTmp_Npv->Fill(n_vertices, weight);
+                          if(i == 0) {
+                            puJetsPt = puJetsPt + leadingjetpt;
+                            hNpuAlljetTmp_JetPt->Fill(leadingjetpt, weight);
+                          }
+                          else {
+                            puJetsPt = puJetsPt + ((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt();
+                            hNpuAlljetTmp_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
+                          }
+                        }
+                        if(jet_puJetId[goodJetsIndex->at(i)] < 6) {
+                          if(i == 0) {
+                            hNrmPuJets_JetPt->Fill(leadingjetpt, weight);
+                          }
+                          else {
+                            hNrmPuJets_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
+                          }
+                        }
+                        if(jet_puJetId[goodJetsIndex->at(i)] == 4) {
+                          hNpuLoosejetTmp_Npv->Fill(n_vertices, weight);
+                          if(i == 0) {
+                            hNpuLoosejetTmp_JetPt->Fill(leadingjetpt, weight);                    
+                          }
+                          else {
+                            hNpuLoosejetTmp_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);                    
+                          }
+
+                        }
+                        else if(jet_puJetId[goodJetsIndex->at(i)] == 6) {
+                          hNpuMediumjetTmp_Npv->Fill(n_vertices, weight);
+                          if(i == 0) {
+                            hNpuMediumjetTmp_JetPt->Fill(leadingjetpt, weight);
+                          }
+                          else {
+                              hNpuMediumjetTmp_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
+                          }
+
+                        }
+                        else if(jet_puJetId[goodJetsIndex->at(i)] == 7) {
+                          hNpuTightjetTmp_Npv->Fill(n_vertices, weight);
+                          if(i == 0) {
+                            hNpuTightjetTmp_JetPt->Fill(leadingjetpt, weight);
+                          }
+                            else {
+                              hNpuTightjetTmp_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
+                            }
+                        }*/
+                      }
+                      hFracJetsPt->Fill(puJetsPt/jetsPt,weight);
+                    
+                      if(isMC) {
+                        if(*leadingjetgen != TLorentzVector(0.,0.,0.,0.)) {//check if a gen jet matches the reco jet
+                          vPtRatio_GenPt[binGenPt]->Fill(recoilpt/leadingjetgenpt, weight);							
+                          vRtrue_leadingJet_RecoilPt[binRecoilPt]->Fill(Rtrue, weight);
+                          binJetPt = myLowPtBinning.getPtBin(leadingjetpt);
+                          if(binJetPt == -1) continue;
+                          vRtrue_allJets_JetPt[binJetPt]->Fill(Rtrue, weight);
+                        }
+                        for (int i = 0; i < n_jets_recoil; i++) {
+                          if(*((TLorentzVector*)jetsgen_recoil_4vector->At(i)) != TLorentzVector(0.,0.,0.,0.)) {									
+                            binJetPt = myLowPtBinning.getPtBin(((TLorentzVector*)jets_recoil_4vector->At(i))->Pt());
+                            if(binJetPt == -1) continue;
+                            Rtrue = ((TLorentzVector*)jets_recoil_4vector->At(i))->Pt()/((TLorentzVector*)jetsgen_recoil_4vector->At(i))->Pt();
+                            vRtrue_allJets_JetPt[binJetPt]->Fill(Rtrue, weight);
+                          }
+                        }								
+                        for (int i = 0; i < n_jets_recoil; i++) {
+                          if(*((TLorentzVector*)jetsgen_recoil_4vector->At(i)) == TLorentzVector(0.,0.,0.,0.)) break;
+                          recoilrecopt = recoilrecopt + ((TLorentzVector*)jets_recoil_4vector->At(i))->Pt();
+                          recoilgenpt = recoilgenpt + ((TLorentzVector*)jetsgen_recoil_4vector->At(i))->Pt();
+                        }
+                        Rrecoil = recoilrecopt/recoilgenpt;
+                        vRrecoil_RecoilPt[binRecoilPt]->Fill(Rrecoil, weight);									
+                      }
+
+                     //}
+                   }      
+                 }
+              }
             }
 					//}
-				}
+          }
+        }
 			}		
 		}
 	}
