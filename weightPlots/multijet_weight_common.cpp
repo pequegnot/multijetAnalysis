@@ -435,7 +435,7 @@ int main (int argc, char** argv)
 	hJetsEta_afterSel->SetXTitle("#eta^{jet} [rad]");
 	hJetsEta_afterSel->Sumw2();
 
-  TH1F* hJetsPhi_afterSel=new TH1F("hJetsPhi_afterSel","hJetsPhi_afterSel",70,0,7.);
+  TH1F* hJetsPhi_afterSel=new TH1F("hJetsPhi_afterSel","hJetsPhi_afterSel",80,-4.,4.);
 	hJetsPhi_afterSel->SetXTitle("#phi^{jet} [rad]");
 	hJetsPhi_afterSel->Sumw2();
 	
