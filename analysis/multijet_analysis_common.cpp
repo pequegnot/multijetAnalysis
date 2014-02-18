@@ -300,7 +300,7 @@ int main (int argc, char** argv)
   TH1F* hJetsPt_beforeSel = (TH1F*)f->Get("variables/beforeSel/hJetsPt_beforeSel");
   TH1F* hJetsEta_beforeSel = (TH1F*)f->Get("variables/beforeSel/hJetsEta_beforeSel");
   TH1F* hJetsPhi_beforeSel = (TH1F*)f->Get("variables/beforeSel/hJetsPhi_beforeSel");
-  TH1F* hNjets_ptSup25_etaInf5 = (TH1F*)f->Get("variables/beforeSel/hNjets_ptSup25_etaInf5");
+  TH1F* hNjets_ptSup25_etaInf5_beforeSel = (TH1F*)f->Get("variables/beforeSel/hNjets_ptSup25_etaInf5_beforeSel");
 		
 	TH1F* hMet_afterSel = (TH1F*)f->Get("variables/afterSel/hMet_afterSel");	
 	TH1F* hLeadingJetPt_afterSel = (TH1F*)f->Get("variables/afterSel/hLeadingJetPt_afterSel");		
@@ -1137,7 +1137,7 @@ int main (int argc, char** argv)
   hJetsPt_beforeSel->Write();
   hJetsEta_beforeSel->Write();
   hJetsPhi_beforeSel->Write();
-  hNjets_ptSup25_etaInf5->Write();
+  hNjets_ptSup25_etaInf5_beforeSel->Write();
 	
 	TDirectory *afterSelDir = variablesDir->mkdir("afterSel","afterSel");
 	afterSelDir->cd();
