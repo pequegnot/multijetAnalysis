@@ -276,7 +276,13 @@ int main (int argc, char** argv)
 //*******************************************************************************************************
 
 	string saveName;
-	
+  
+  TH1::SetDefaultSumw2(true);
+
+	TH1F* hWeight=new TH1F("hWeight","hWeight",1000,0,1000);
+	hWeight->SetXTitle("Event weight");
+	hWeight->Sumw2();
+
 	TH1F* hRecoilEta=new TH1F("hRecoilEta","hRecoilEta",13,0,5.2);
 	hRecoilEta->SetXTitle("|#eta_{Recoil}|");
 	hRecoilEta->Sumw2();
@@ -389,10 +395,14 @@ int main (int argc, char** argv)
 	hNpuAlljet_Npv->Sumw2();
 //************************************************************************************************************************
 	
-	TH1F* hHT=new TH1F("hHT","hHT",250,0,2500);
-	hHT->SetXTitle("HT [GeV/c]");
-	hHT->Sumw2();
+	TH1F* hHT_afterSel=new TH1F("hHT_afterSel","hHT_afterSel",250,0,2500);
+	hHT_afterSel->SetXTitle("HT [GeV/c]");
+	hHT_afterSel->Sumw2();
 	
+	TH1F* hHT_beforeSel=new TH1F("hHT_beforeSel","hHT_beforeSel",250,0,2500);
+	hHT_beforeSel->SetXTitle("HT [GeV/c]");
+	hHT_beforeSel->Sumw2();
+
 	TH1F* hFracJetsPt=new TH1F("hFracJetsPt","hFracJetsPt",20,0,1);
 	hFracJetsPt->SetXTitle("p_{t}^{PU jets}/p_{t}^{totjets}");
 	hFracJetsPt->Sumw2();
@@ -404,7 +414,30 @@ int main (int argc, char** argv)
 	TH1F* hMet_afterSel=new TH1F("hMet_afterSel","hMet_afterSel",100,0,1000);
 	hMet_afterSel->SetXTitle("MET [GeV/c]");
 	hMet_afterSel->Sumw2();
-	
+
+	TH1F* hJetsPt_beforeSel=new TH1F("hJetsPt_beforeSel","hJetsPt_beforeSel",100,0,1000);
+	hJetsPt_beforeSel->SetXTitle("p_{t}^{jet} [GeV/c]");
+	hJetsPt_beforeSel->Sumw2();
+
+  TH1F* hJetsEta_beforeSel=new TH1F("hJetsEta_beforeSel","hJetsEta_beforeSel",80,-4.,4.);
+	hJetsEta_beforeSel->SetXTitle("#eta^{jet} [rad]");
+	hJetsEta_beforeSel->Sumw2();
+
+  TH1F* hJetsPhi_beforeSel=new TH1F("hJetsPhi_beforeSel","hJetsPhi_beforeSel",70,0,7.);
+	hJetsPhi_beforeSel->SetXTitle("#phi^{jet} [rad]");
+	hJetsPhi_beforeSel->Sumw2();
+
+	TH1F* hJetsPt_afterSel=new TH1F("hJetsPt_afterSel","hJetsPt_afterSel",100,0,1000);
+	hJetsPt_afterSel->SetXTitle("p_{t}^{jet} [GeV/c]");
+	hJetsPt_afterSel->Sumw2();
+
+  TH1F* hJetsEta_afterSel=new TH1F("hJetsEta_afterSel","hJetsEta_afterSel",80,-4.,4.);
+	hJetsEta_afterSel->SetXTitle("#eta^{jet} [rad]");
+	hJetsEta_afterSel->Sumw2();
+
+  TH1F* hJetsPhi_afterSel=new TH1F("hJetsPhi_afterSel","hJetsPhi_afterSel",70,0,7.);
+	hJetsPhi_afterSel->SetXTitle("#phi^{jet} [rad]");
+	hJetsPhi_afterSel->Sumw2();
 	
 	TH1F* hLeadingJetPt_beforeSel=new TH1F("hLeadingJetPt_beforeSel","hLeadingJetPt_beforeSel",150,0,3000);
 	hLeadingJetPt_beforeSel->SetXTitle("p_{t}^{leading jet} [GeV/c]");
@@ -486,6 +519,10 @@ int main (int argc, char** argv)
 	TH1F* hLeadingJetPt_350toInf=new TH1F("hLeadingJetPt_350toInf","hLeadingJetPt_350toInf",265,350,3000);
 	hLeadingJetPt_350toInf->SetXTitle("p_{t}^{leading jet} [GeV/c]");
 	hLeadingJetPt_350toInf->Sumw2();
+
+  TH1F* hNjets_ptSup25_etaInf5 = new TH1F("hNjets_ptSup25_etaInf5", "hNjets_ptSup25_etaInf5", 25, 0, 25);
+  hNjets_ptSup25_etaInf5->SetXTitle("N_{jets} with p_{t} > 25 GeV and |#eta| < 5.0");
+  hNjets_ptSup25_etaInf5->Sumw2();
 
 //*****************************************************************************************************
 //
@@ -642,6 +679,7 @@ int main (int argc, char** argv)
 	float recoilEtaMaxTmp;
 	float recoilDeltaEta;
 	float jet_PF_pt;
+  float Njets_ptSup25_etaInf5;
 	
 	
 	int ntot = 0;
@@ -855,6 +893,8 @@ int main (int argc, char** argv)
           }
           //cout<<"dropEvent: "<<dropEvent<<endl;
           //if(dropEvent) continue;
+          
+          hWeight->Fill(weight,1);
 
 //*****************************************************************************************************
 //
@@ -869,11 +909,31 @@ int main (int argc, char** argv)
           for(int i=0; i<jets_recoil_4vector->GetSize(); i++) {
             hRecoilJetsPt_beforeSel->Fill(((TLorentzVector*)jets_recoil_4vector->At(i))->Pt(), weight);
           }
+          for(int i=0; i<(jets_recoil_4vector->GetEntriesFast()+1); i++) {
+            if(i == 0) {
+              hJetsPt_beforeSel->Fill(leadingjetpt, weight);
+              hJetsEta_beforeSel->Fill(leadingjet->Eta(), weight);
+              hJetsPhi_beforeSel->Fill(leadingjet->Phi(), weight);
+            }
+            else {
+              TLorentzVector* jetP4 = (TLorentzVector*)jets_recoil_4vector->At(i-1); 
+              hJetsPt_beforeSel->Fill(jetP4->Pt(), weight);
+              hJetsEta_beforeSel->Fill(jetP4->Eta(), weight);
+              hJetsPhi_beforeSel->Fill(jetP4->Phi(), weight);
+            }
+          }
           hNpv_beforeSel->Fill(n_vertices, weight);
           hAlpha_beforeSel->Fill(alpha, weight);
           hBeta_beforeSel->Fill(beta, weight);
           hA_beforeSel->Fill(A, weight);
+          hHT_beforeSel->Fill(HT, weight);
           
+          Njets_ptSup25_etaInf5 = 0;
+          for(int i = 0; i < goodJetsIndex->size(); i++) {
+            TLorentzVector* goodjet_PF = (TLorentzVector*) jet_PF_4vector->At( goodJetsIndex->at(i) );
+            if(goodjet_PF->Pt() < 25. && fabs(goodjet_PF->Eta() < 5.0)) {Njets_ptSup25_etaInf5 ++;}
+          }
+          hNjets_ptSup25_etaInf5->Fill(Njets_ptSup25_etaInf5, weight);
           for(int i=0; i<jet_PF_4vector->GetEntriesFast(); i++) {
             jet_PF_pt = ((TLorentzVector*) jet_PF_4vector->At(i))->Pt();
             hNjet_Npv->Fill(n_vertices, weight);
@@ -921,7 +981,7 @@ int main (int argc, char** argv)
 
                       hRecoilEta->Fill(fabs(recoileta), weight);
                       hMJB_inclusive->Fill(MJB, weight);
-                      hHT->Fill(HT,weight);
+                      hHT_afterSel->Fill(HT,weight);
                       hNjetsRecoil->Fill(jets_recoil_4vector->GetSize(), weight);
                       hNjetsTotal->Fill(n_totJets, weight);
                       hNjetsGood->Fill(n_goodJets, weight);
@@ -986,11 +1046,16 @@ int main (int argc, char** argv)
                         //hNjet_Npv->Fill(n_vertices, weight);
                         if(i == 0) {
                           jetsPt = jetsPt + leadingjetpt;
-                          //hNjet_JetPt->Fill(leadingjetpt, weight);
+                          hJetsPt_afterSel->Fill(leadingjetpt, weight);
+                          hJetsEta_afterSel->Fill(leadingjet->Eta(), weight);
+                          hJetsPhi_afterSel->Fill(leadingjet->Phi(), weight);
                         }
                         else {
-                          jetsPt = jetsPt + ((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt();
-                          //hNjet_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
+                          TLorentzVector* jetP4 = (TLorentzVector*)jets_recoil_4vector->At(i-1); 
+                          jetsPt = jetsPt + (jetP4)->Pt();
+                          hJetsPt_afterSel->Fill(jetP4->Pt(), weight);
+                          hJetsEta_afterSel->Fill(jetP4->Eta(), weight);
+                          hJetsPhi_afterSel->Fill(jetP4->Phi(), weight);
                         }
                         
                         /*if(jet_puJetId[goodJetsIndex->at(i)] >= 4) {
@@ -1189,6 +1254,8 @@ int main (int argc, char** argv)
 	
 	TDirectory *beforeSelDir = variablesDir->mkdir("beforeSel","beforeSel");
 	beforeSelDir->cd();
+  hWeight->Write();
+  hHT_beforeSel->Write();
 	hMet_beforeSel->Write();
 	hLeadingJetPt_beforeSel->Write();
 	hRecoilPt_beforeSel->Write();
@@ -1197,6 +1264,10 @@ int main (int argc, char** argv)
 	hAlpha_beforeSel->Write();
 	hBeta_beforeSel->Write();
 	hA_beforeSel->Write();
+  hJetsPt_beforeSel->Write();
+  hJetsEta_beforeSel->Write();
+  hJetsPhi_beforeSel->Write();
+  hNjets_ptSup25_etaInf5->Write();
 	
 	TDirectory *afterSelDir = variablesDir->mkdir("afterSel","afterSel");
 	afterSelDir->cd();
@@ -1223,8 +1294,11 @@ int main (int argc, char** argv)
 	hNpuMediumjet_Npv->Write();
 	hNpuTightjet_Npv->Write();
 	hNpuAlljet_Npv->Write();
-	hHT->Write();
+	hHT_afterSel->Write();
 	hFracJetsPt->Write();
+  hJetsPt_afterSel->Write();
+  hJetsEta_afterSel->Write();
+  hJetsPhi_afterSel->Write();
 	
 	TDirectory *PUWeightDir = out->mkdir("PUWeight","PUWeight");
 	PUWeightDir->cd();
@@ -1284,7 +1358,7 @@ int main (int argc, char** argv)
 	hNpuMediumjet_Npv->Delete();
 	hNpuTightjet_Npv->Delete();
 	hNpuAlljet_Npv->Delete();
-	hHT->Delete();
+	hHT_afterSel->Delete();
 	hFracJetsPt->Delete();	
 	hMet_beforeSel->Delete();
 	hLeadingJetPt_beforeSel->Delete();

@@ -717,7 +717,6 @@ int main (int argc, char** argv)
 	
 	TH1F* hMet_afterSel_mc_lumi=(TH1F*)f_mc->Get("variables/afterSel/hMet_afterSel");
 	TH1F* hMet_afterSel_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hMet_afterSel");
-	
 	TH1F* hLeadingJetPt_beforeSel_mc_lumi=(TH1F*)f_mc->Get("variables/beforeSel/hLeadingJetPt_beforeSel");
 	TH1F* hLeadingJetPt_beforeSel_data_lumi=(TH1F*)f_data->Get("variables/beforeSel/hLeadingJetPt_beforeSel");
 	
@@ -725,8 +724,8 @@ int main (int argc, char** argv)
 	TH1F* hLeadingJetPt_afterSel_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hLeadingJetPt_afterSel");
 
 	
-	TH1F* hHT_afterSel_mc_lumi=(TH1F*)f_mc->Get("variables/afterSel/hHT");
-	TH1F* hHT_afterSel_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hHT");	
+	TH1F* hHT_afterSel_mc_lumi=(TH1F*)f_mc->Get("variables/afterSel/hHT_afterSel");
+	TH1F* hHT_afterSel_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hHT_afterSel");	
 	
 	TH1F* hRecoilPt_beforeSel_mc_lumi=(TH1F*)f_mc->Get("variables/beforeSel/hRecoilPt_beforeSel");
 	TH1F* hRecoilPt_beforeSel_data_lumi=(TH1F*)f_data->Get("variables/beforeSel/hRecoilPt_beforeSel");
