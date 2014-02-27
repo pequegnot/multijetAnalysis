@@ -482,11 +482,11 @@ int main (int argc, char** argv)
 	hAlpha_afterSel->Sumw2();
 	
 	
-	TH1F* hBeta_beforeSel=new TH1F("hBeta_beforeSel","hBeta_beforeSel",30,0,3.15);
+	TH1F* hBeta_beforeSel=new TH1F("hBeta_beforeSel","hBeta_beforeSel",60,-3.15,3.15);
 	hBeta_beforeSel->SetXTitle("#beta (rad)");
 	hBeta_beforeSel->Sumw2();
 	
-	TH1F* hBeta_afterSel=new TH1F("hBeta_afterSel","hBeta_afterSel",30,0,3.15);
+	TH1F* hBeta_afterSel=new TH1F("hBeta_afterSel","hBeta_afterSel",60,-3.15,3.15);
 	hBeta_afterSel->SetXTitle("#beta (rad)");
 	hBeta_afterSel->Sumw2();
 	
@@ -898,86 +898,92 @@ int main (int argc, char** argv)
 
 //*****************************************************************************************************
 //
+//                                     HLT selection 
+//
+//*****************************************************************************************************
+          
+          //HLT selection
+          if(dropEvent == false) {
+
+//*****************************************************************************************************
+//
 //                                      filling histogramms
 //
 //*****************************************************************************************************
 
-		
-          hMet_beforeSel->Fill(metpt, weight);
-          hLeadingJetPt_beforeSel->Fill(leadingjetpt, weight);
-          hRecoilPt_beforeSel->Fill(recoilpt, weight);
-          for(int i=0; i<jets_recoil_4vector->GetSize(); i++) {
-            hRecoilJetsPt_beforeSel->Fill(((TLorentzVector*)jets_recoil_4vector->At(i))->Pt(), weight);
-          }
-          for(int i=0; i<(jets_recoil_4vector->GetEntriesFast()+1); i++) {
-            if(i == 0) {
-              hJetsPt_beforeSel->Fill(leadingjetpt, weight);
-              hJetsEta_beforeSel->Fill(leadingjet->Eta(), weight);
-              hJetsPhi_beforeSel->Fill(leadingjet->Phi(), weight);
+
+            hMet_beforeSel->Fill(metpt, weight);
+            hLeadingJetPt_beforeSel->Fill(leadingjetpt, weight);
+            hRecoilPt_beforeSel->Fill(recoilpt, weight);
+            for(int i=0; i<jets_recoil_4vector->GetSize(); i++) {
+              hRecoilJetsPt_beforeSel->Fill(((TLorentzVector*)jets_recoil_4vector->At(i))->Pt(), weight);
             }
-            else {
-              TLorentzVector* jetP4 = (TLorentzVector*)jets_recoil_4vector->At(i-1); 
-              hJetsPt_beforeSel->Fill(jetP4->Pt(), weight);
-              hJetsEta_beforeSel->Fill(jetP4->Eta(), weight);
-              hJetsPhi_beforeSel->Fill(jetP4->Phi(), weight);
+            for(int i=0; i<(jets_recoil_4vector->GetEntriesFast()+1); i++) {
+              if(i == 0) {
+                hJetsPt_beforeSel->Fill(leadingjetpt, weight);
+                hJetsEta_beforeSel->Fill(leadingjet->Eta(), weight);
+                hJetsPhi_beforeSel->Fill(leadingjet->Phi(), weight);
+              }
+              else {
+                TLorentzVector* jetP4 = (TLorentzVector*)jets_recoil_4vector->At(i-1); 
+                hJetsPt_beforeSel->Fill(jetP4->Pt(), weight);
+                hJetsEta_beforeSel->Fill(jetP4->Eta(), weight);
+                hJetsPhi_beforeSel->Fill(jetP4->Phi(), weight);
+              }
             }
-          }
-          hNpv_beforeSel->Fill(n_vertices, weight);
-          hAlpha_beforeSel->Fill(alpha, weight);
-          hBeta_beforeSel->Fill(beta, weight);
-          hA_beforeSel->Fill(A, weight);
-          hHT_beforeSel->Fill(HT, weight);
+            hNpv_beforeSel->Fill(n_vertices, weight);
+            hAlpha_beforeSel->Fill(alpha, weight);
+            hBeta_beforeSel->Fill(beta, weight);
+            hA_beforeSel->Fill(A, weight);
+            hHT_beforeSel->Fill(HT, weight);
+            
+            Njets_ptSup25_etaInf5_beforeSel = 0;
+            for(int i = 0; i < goodJetsIndex->size(); i++) {
+              TLorentzVector* goodjet_PF = (TLorentzVector*) jet_PF_4vector->At( goodJetsIndex->at(i) );
+              if(goodjet_PF->Pt() < 25. && fabs(goodjet_PF->Eta() < 5.0)) {Njets_ptSup25_etaInf5_beforeSel ++;}
+            }
+            hNjets_ptSup25_etaInf5_beforeSel->Fill(Njets_ptSup25_etaInf5_beforeSel, weight);
+            for(int i=0; i<jet_PF_4vector->GetEntriesFast(); i++) {
+              jet_PF_pt = ((TLorentzVector*) jet_PF_4vector->At(i))->Pt();
+              hNjet_Npv->Fill(n_vertices, weight);
+              hNjet_JetPt->Fill(jet_PF_pt, weight);
+              if(jet_PF_puJetFullId[i] < 6) {
+                hNrmPuJets_JetPt->Fill(jet_PF_pt, weight);
+              }
+              if(jet_PF_puJetFullId[i] == 4) {
+                hNpuLoosejetTmp_Npv->Fill(n_vertices, weight);
+                hNpuLoosejetTmp_JetPt->Fill(jet_PF_pt, weight);
+              }
+              else if(jet_PF_puJetFullId[i] == 6) {
+                hNpuMediumjetTmp_Npv->Fill(n_vertices, weight);
+                hNpuMediumjetTmp_JetPt->Fill(jet_PF_pt, weight);
+              }
+              else if(jet_PF_puJetFullId[i] == 7) {
+                hNpuTightjetTmp_Npv->Fill(n_vertices, weight);
+                hNpuTightjetTmp_JetPt->Fill(jet_PF_pt, weight);
+              }
+              if(jet_PF_puJetFullId[i] >= 4) {
+                hNpuAlljetTmp_Npv->Fill(n_vertices, weight);
+                hNpuAlljetTmp_JetPt->Fill(jet_PF_pt, weight);
+              }
+            }
           
-          Njets_ptSup25_etaInf5_beforeSel = 0;
-          for(int i = 0; i < goodJetsIndex->size(); i++) {
-            TLorentzVector* goodjet_PF = (TLorentzVector*) jet_PF_4vector->At( goodJetsIndex->at(i) );
-            if(goodjet_PF->Pt() < 25. && fabs(goodjet_PF->Eta() < 5.0)) {Njets_ptSup25_etaInf5_beforeSel ++;}
-          }
-          hNjets_ptSup25_etaInf5_beforeSel->Fill(Njets_ptSup25_etaInf5_beforeSel, weight);
-          for(int i=0; i<jet_PF_4vector->GetEntriesFast(); i++) {
-            jet_PF_pt = ((TLorentzVector*) jet_PF_4vector->At(i))->Pt();
-            hNjet_Npv->Fill(n_vertices, weight);
-            hNjet_JetPt->Fill(jet_PF_pt, weight);
-            if(jet_PF_puJetFullId[i] < 6) {
-              hNrmPuJets_JetPt->Fill(jet_PF_pt, weight);
-            }
-            if(jet_PF_puJetFullId[i] == 4) {
-              hNpuLoosejetTmp_Npv->Fill(n_vertices, weight);
-              hNpuLoosejetTmp_JetPt->Fill(jet_PF_pt, weight);
-            }
-            else if(jet_PF_puJetFullId[i] == 6) {
-              hNpuMediumjetTmp_Npv->Fill(n_vertices, weight);
-              hNpuMediumjetTmp_JetPt->Fill(jet_PF_pt, weight);
-            }
-            else if(jet_PF_puJetFullId[i] == 7) {
-              hNpuTightjetTmp_Npv->Fill(n_vertices, weight);
-              hNpuTightjetTmp_JetPt->Fill(jet_PF_pt, weight);
-            }
-            if(jet_PF_puJetFullId[i] >= 4) {
-              hNpuAlljetTmp_Npv->Fill(n_vertices, weight);
-              hNpuAlljetTmp_JetPt->Fill(jet_PF_pt, weight);
-            }
-          }
-        
-          if(binRecoilPt < 0) continue;
-          if(isMC && binGenPt < 0) continue;
-		
-          //angular selection
-          if(alpha < 0.3 && beta > 1.0) {
+            if(binRecoilPt < 0) continue;
+            if(isMC && binGenPt < 0) continue;
+      
+            //angular selection
+            if(alpha < 0.3 && beta > 1.0) {
 
-            //second jet selection
-            if(A < 0.6) {
-              if(secondjetpt < 750.) {							
+              //second jet selection
+              if(A < 0.6) {
+                if(secondjetpt < 750.) {							
 
-                //first jet selection
-                //if(leadingjetpt>350.) {
-                if(leadingjet->Eta() < 1.3) {
+                  //first jet selection
+                  //if(leadingjetpt>350.) {
+                  if(leadingjet->Eta() < 1.3) {
 
-                  //recoil selection
-                  //if(recoilpt>250.) {
-
-                    //HLT selection
-                    if(dropEvent == false) {
+                    //recoil selection
+                    //if(recoilpt>250.) {
 
                       hRecoilEta->Fill(fabs(recoileta), weight);
                       hMJB_inclusive->Fill(MJB, weight);
