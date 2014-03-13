@@ -12,7 +12,7 @@ LD = g++
 LDFLAGS = -g -w
 
 NAME = multijet_weight_common
-ROOTLIBS = $(shell root-config --libs) 
+ROOTLIBS = $(shell root-config --libs) -lboost_regex
 
 all: $(NAME)
 
@@ -23,6 +23,10 @@ all: $(NAME)
 $(NAME):$(NAME).o ../common/ptBinning.o ../common/npvBinning.o ../common/etaBinning.o PUReweighting/PUReweighter.o
 	@echo "linking..."
 	$(LD) $(LDFLAGS) $(NAME).o -o $(NAME) ../common/ptBinning.o ../common/npvBinning.o ../common/etaBinning.o PUReweighting/PUReweighter.o $(ROOTLIBS) 
+
+listTriggers: listTriggers.o
+	@echo "linking..."
+	$(LD) $(LDFLAGS) listTriggers.o -o listTriggers $(ROOTLIBS) 
 
 clean:
 	@echo "cleaning up..."
