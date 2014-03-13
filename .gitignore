@@ -3,6 +3,9 @@
 *.root
 *.pdf
 *.png
+*.swp
+*.swo
+*.orig
 common/npvBinning_cpp.so
 common/ptBinning_cpp.so
 weightPlots/multijet_weight_common
