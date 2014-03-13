@@ -1,0 +1,560 @@
+Opening files ...
+done.
+Processing...
+Processing event #1 of 8263617 (0%)
+Processing event #50001 of 8263617 (0.605062%)
+Processing event #100001 of 8263617 (1.21012%)
+Processing event #150001 of 8263617 (1.81519%)
+Processing event #200001 of 8263617 (2.42025%)
+Processing event #250001 of 8263617 (3.02531%)
+Processing event #300001 of 8263617 (3.63037%)
+Processing event #350001 of 8263617 (4.23543%)
+Processing event #400001 of 8263617 (4.8405%)
+Processing event #450001 of 8263617 (5.44556%)
+Processing event #500001 of 8263617 (6.05062%)
+Processing event #550001 of 8263617 (6.65568%)
+Processing event #600001 of 8263617 (7.26074%)
+Processing event #650001 of 8263617 (7.86581%)
+Processing event #700001 of 8263617 (8.47087%)
+Processing event #750001 of 8263617 (9.07593%)
+Processing event #800001 of 8263617 (9.68099%)
+Processing event #850001 of 8263617 (10.2861%)
+Processing event #900001 of 8263617 (10.8911%)
+Processing event #950001 of 8263617 (11.4962%)
+Processing event #1000001 of 8263617 (12.1012%)
+Processing event #1050001 of 8263617 (12.7063%)
+Processing event #1100001 of 8263617 (13.3114%)
+Processing event #1150001 of 8263617 (13.9164%)
+Processing event #1200001 of 8263617 (14.5215%)
+Processing event #1250001 of 8263617 (15.1265%)
+Processing event #1300001 of 8263617 (15.7316%)
+Processing event #1350001 of 8263617 (16.3367%)
+Processing event #1400001 of 8263617 (16.9417%)
+Processing event #1450001 of 8263617 (17.5468%)
+Processing event #1500001 of 8263617 (18.1519%)
+Processing event #1550001 of 8263617 (18.7569%)
+Processing event #1600001 of 8263617 (19.362%)
+Processing event #1650001 of 8263617 (19.967%)
+Processing event #1700001 of 8263617 (20.5721%)
+Processing event #1750001 of 8263617 (21.1772%)
+Processing event #1800001 of 8263617 (21.7822%)
+Processing event #1850001 of 8263617 (22.3873%)
+Processing event #1900001 of 8263617 (22.9924%)
+Processing event #1950001 of 8263617 (23.5974%)
+Processing event #2000001 of 8263617 (24.2025%)
+Processing event #2050001 of 8263617 (24.8075%)
+Processing event #2100001 of 8263617 (25.4126%)
+Processing event #2150001 of 8263617 (26.0177%)
+Processing event #2200001 of 8263617 (26.6227%)
+Processing event #2250001 of 8263617 (27.2278%)
+Processing event #2300001 of 8263617 (27.8328%)
+Processing event #2350001 of 8263617 (28.4379%)
+Processing event #2400001 of 8263617 (29.043%)
+Processing event #2450001 of 8263617 (29.648%)
+Processing event #2500001 of 8263617 (30.2531%)
+Processing event #2550001 of 8263617 (30.8582%)
+Processing event #2600001 of 8263617 (31.4632%)
+Processing event #2650001 of 8263617 (32.0683%)
+Processing event #2700001 of 8263617 (32.6733%)
+Processing event #2750001 of 8263617 (33.2784%)
+Processing event #2800001 of 8263617 (33.8835%)
+Processing event #2850001 of 8263617 (34.4885%)
+Processing event #2900001 of 8263617 (35.0936%)
+Processing event #2950001 of 8263617 (35.6987%)
+Processing event #3000001 of 8263617 (36.3037%)
+Processing event #3050001 of 8263617 (36.9088%)
+Processing event #3100001 of 8263617 (37.5138%)
+Processing event #3150001 of 8263617 (38.1189%)
+Processing event #3200001 of 8263617 (38.724%)
+Processing event #3250001 of 8263617 (39.329%)
+Processing event #3300001 of 8263617 (39.9341%)
+Processing event #3350001 of 8263617 (40.5392%)
+Processing event #3400001 of 8263617 (41.1442%)
+Processing event #3450001 of 8263617 (41.7493%)
+Processing event #3500001 of 8263617 (42.3543%)
+Processing event #3550001 of 8263617 (42.9594%)
+Processing event #3600001 of 8263617 (43.5645%)
+Processing event #3650001 of 8263617 (44.1695%)
+Processing event #3700001 of 8263617 (44.7746%)
+Processing event #3750001 of 8263617 (45.3796%)
+Processing event #3800001 of 8263617 (45.9847%)
+Processing event #3850001 of 8263617 (46.5898%)
+Processing event #3900001 of 8263617 (47.1948%)
+Processing event #3950001 of 8263617 (47.7999%)
+Processing event #4000001 of 8263617 (48.405%)
+Processing event #4050001 of 8263617 (49.01%)
+Processing event #4100001 of 8263617 (49.6151%)
+Processing event #4150001 of 8263617 (50.2201%)
+Processing event #4200001 of 8263617 (50.8252%)
+Processing event #4250001 of 8263617 (51.4303%)
+Processing event #4300001 of 8263617 (52.0353%)
+Processing event #4350001 of 8263617 (52.6404%)
+Processing event #4400001 of 8263617 (53.2454%)
+Processing event #4450001 of 8263617 (53.8505%)
+Processing event #4500001 of 8263617 (54.4556%)
+Processing event #4550001 of 8263617 (55.0606%)
+Processing event #4600001 of 8263617 (55.6657%)
+Processing event #4650001 of 8263617 (56.2708%)
+Processing event #4700001 of 8263617 (56.8758%)
+Processing event #4750001 of 8263617 (57.4809%)
+Processing event #4800001 of 8263617 (58.0859%)
+Processing event #4850001 of 8263617 (58.691%)
+Processing event #4900001 of 8263617 (59.2961%)
+Processing event #4950001 of 8263617 (59.9011%)
+Processing event #5000001 of 8263617 (60.5062%)
+Processing event #5050001 of 8263617 (61.1113%)
+Processing event #5100001 of 8263617 (61.7163%)
+Processing event #5150001 of 8263617 (62.3214%)
+Processing event #5200001 of 8263617 (62.9264%)
+Processing event #5250001 of 8263617 (63.5315%)
+Processing event #5300001 of 8263617 (64.1366%)
+Processing event #5350001 of 8263617 (64.7416%)
+Processing event #5400001 of 8263617 (65.3467%)
+Processing event #5450001 of 8263617 (65.9518%)
+Processing event #5500001 of 8263617 (66.5568%)
+Processing event #5550001 of 8263617 (67.1619%)
+Processing event #5600001 of 8263617 (67.7669%)
+Processing event #5650001 of 8263617 (68.372%)
+Processing event #5700001 of 8263617 (68.9771%)
+Processing event #5750001 of 8263617 (69.5821%)
+Processing event #5800001 of 8263617 (70.1872%)
+Processing event #5850001 of 8263617 (70.7922%)
+Processing event #5900001 of 8263617 (71.3973%)
+Processing event #5950001 of 8263617 (72.0024%)
+Processing event #6000001 of 8263617 (72.6074%)
+Processing event #6050001 of 8263617 (73.2125%)
+Processing event #6100001 of 8263617 (73.8176%)
+Processing event #6150001 of 8263617 (74.4226%)
+Processing event #6200001 of 8263617 (75.0277%)
+Processing event #6250001 of 8263617 (75.6327%)
+Processing event #6300001 of 8263617 (76.2378%)
+Processing event #6350001 of 8263617 (76.8429%)
+Processing event #6400001 of 8263617 (77.4479%)
+Processing event #6450001 of 8263617 (78.053%)
+Processing event #6500001 of 8263617 (78.6581%)
+Processing event #6550001 of 8263617 (79.2631%)
+Processing event #6600001 of 8263617 (79.8682%)
+Processing event #6650001 of 8263617 (80.4732%)
+Processing event #6700001 of 8263617 (81.0783%)
+Processing event #6750001 of 8263617 (81.6834%)
+Processing event #6800001 of 8263617 (82.2884%)
+Processing event #6850001 of 8263617 (82.8935%)
+Processing event #6900001 of 8263617 (83.4985%)
+Processing event #6950001 of 8263617 (84.1036%)
+Processing event #7000001 of 8263617 (84.7087%)
+Processing event #7050001 of 8263617 (85.3137%)
+Processing event #7100001 of 8263617 (85.9188%)
+Processing event #7150001 of 8263617 (86.5239%)
+Processing event #7200001 of 8263617 (87.1289%)
+Processing event #7250001 of 8263617 (87.734%)
+Processing event #7300001 of 8263617 (88.339%)
+Processing event #7350001 of 8263617 (88.9441%)
+Processing event #7400001 of 8263617 (89.5492%)
+Processing event #7450001 of 8263617 (90.1542%)
+Processing event #7500001 of 8263617 (90.7593%)
+Processing event #7550001 of 8263617 (91.3643%)
+Processing event #7600001 of 8263617 (91.9694%)
+Processing event #7650001 of 8263617 (92.5745%)
+Processing event #7700001 of 8263617 (93.1795%)
+Processing event #7750001 of 8263617 (93.7846%)
+Processing event #7800001 of 8263617 (94.3897%)
+Processing event #7850001 of 8263617 (94.9947%)
+Processing event #7900001 of 8263617 (95.5998%)
+Processing event #7950001 of 8263617 (96.2048%)
+Processing event #8000001 of 8263617 (96.8099%)
+Processing event #8050001 of 8263617 (97.415%)
+Processing event #8100001 of 8263617 (98.02%)
+Processing event #8150001 of 8263617 (98.6251%)
+Processing event #8200001 of 8263617 (99.2302%)
+Processing event #8250001 of 8263617 (99.8352%)
+
+
+Trigger summary
+===============
+
+DST_Ele8_CaloIdL_CaloIsoVL_TrkIdVL_TrkIsoVL_HT250                                    348185
+DST_HT250                                                                            7830440
+DST_L1HTT_Or_L1MultiJet                                                              83428
+DST_Mu5_HT250                                                                        915870
+DST_Physics                                                                          826905
+HLT_Activity_Ecal_SC7                                                                4
+HLT_BTagMu_DiJet110_Mu5                                                              63021
+HLT_BTagMu_DiJet20_Mu5                                                               480
+HLT_BTagMu_DiJet40_Mu5                                                               2706
+HLT_BTagMu_DiJet70_Mu5                                                               10605
+HLT_BTagMu_Jet20_Mu4                                                                 999
+HLT_BTagMu_Jet300_Mu5                                                                257560
+HLT_BTagMu_Jet60_Mu4                                                                 8401
+HLT_CleanPFNoPUHT300_Ele15_CaloIdT_CaloIsoVL_TrkIdT_TrkIsoVL_PFMET45                 34595
+HLT_CleanPFNoPUHT300_Ele15_CaloIdT_CaloIsoVL_TrkIdT_TrkIsoVL_PFMET50                 28004
+HLT_CleanPFNoPUHT300_Ele40_CaloIdVT_TrkIdT                                           66315
+HLT_CleanPFNoPUHT300_Ele60_CaloIdVT_TrkIdT                                           54408
+HLT_CleanPFNoPUHT350_Ele5_CaloIdT_CaloIsoVL_TrkIdT_TrkIsoVL_PFMET45                  28441
+HLT_CleanPFNoPUHT350_Ele5_CaloIdT_CaloIsoVL_TrkIdT_TrkIsoVL_PFMET50                  23299
+HLT_DTErrors                                                                         11
+HLT_DiCentralJetSumpT100_dPhi05_DiCentralPFJet60_25_PFMET100_HBHENoiseCleaned        26699
+HLT_DiCentralPFJet30_PFMET80                                                         44342
+HLT_DiCentralPFJet30_PFMET80_BTagCSV07                                               70613
+HLT_DiCentralPFNoPUJet50_PFMETORPFMETNoMu80                                          272025
+HLT_DiJet35_MJJ650_AllJets_DEta3p5_VBF                                               684773
+HLT_DiJet35_MJJ700_AllJets_DEta3p5_VBF                                               637774
+HLT_DiJet35_MJJ750_AllJets_DEta3p5_VBF                                               590881
+HLT_DiJet40Eta2p6_BTagIP3DFastPV                                                     640
+HLT_DiJet80Eta2p6_BTagIP3DFastPVLoose                                                6732
+HLT_DiJet80_DiJet60_DiJet20                                                          1035716
+HLT_DiPFJet40_PFMETnoMu65_MJJ600VBF_LeadingJets                                      23042
+HLT_DiPFJet40_PFMETnoMu65_MJJ800VBF_AllJets                                          30701
+HLT_DiPFJet80_DiPFJet30_BTagCSVd07d05                                                245340
+HLT_DiPFJet80_DiPFJet30_BTagCSVd07d05d03                                             73142
+HLT_DiPFJet80_DiPFJet30_BTagCSVd07d05d05                                             32137
+HLT_DiPFJetAve140                                                                    34777
+HLT_DiPFJetAve200                                                                    146171
+HLT_DiPFJetAve260                                                                    416662
+HLT_DiPFJetAve320                                                                    491611
+HLT_DiPFJetAve40                                                                     52
+HLT_DiPFJetAve400                                                                    441699
+HLT_DiPFJetAve80                                                                     1378
+HLT_Dimuon0_Jpsi                                                                     7
+HLT_Dimuon0_Jpsi_Muon                                                                190
+HLT_Dimuon0_Jpsi_NoVertexing                                                         10
+HLT_Dimuon0_PsiPrime                                                                 4
+HLT_Dimuon0_Upsilon                                                                  6
+HLT_Dimuon0_Upsilon_Muon                                                             222
+HLT_Dimuon10_Jpsi                                                                    1465
+HLT_Dimuon11_Upsilon                                                                 633
+HLT_Dimuon3p5_SameSign                                                               3098
+HLT_Dimuon5_PsiPrime                                                                 442
+HLT_Dimuon5_Upsilon                                                                  859
+HLT_Dimuon7_PsiPrime                                                                 437
+HLT_Dimuon7_Upsilon                                                                  785
+HLT_Dimuon8_Jpsi                                                                     1269
+HLT_Dimuon8_Upsilon                                                                  759
+HLT_DisplacedPhoton65EBOnly_CaloIdVL_IsoL_PFMET30                                    8330
+HLT_DisplacedPhoton65_CaloIdVL_IsoL_PFMET25                                          15986
+HLT_DoubleDisplacedMu4_DiPFJet40Neutral                                              19558
+HLT_DoubleEle10_CaloIdL_TrkIdVL_Ele10_CaloIdT_TrkIdVL                                2593
+HLT_DoubleEle14_CaloIdT_TrkIdVL_Mass8_PFMET40                                        2703
+HLT_DoubleEle14_CaloIdT_TrkIdVL_Mass8_PFMET50                                        1954
+HLT_DoubleEle33_CaloIdL                                                              773
+HLT_DoubleEle33_CaloIdL_GsfTrkIdVL                                                   21887
+HLT_DoubleEle33_CaloIdT                                                              7229
+HLT_DoubleEle8_CaloIdT_TrkIdVL                                                       15
+HLT_DoubleEle8_CaloIdT_TrkIdVL_Mass8_PFNoPUHT175                                     3985
+HLT_DoubleEle8_CaloIdT_TrkIdVL_Mass8_PFNoPUHT225                                     3909
+HLT_DoubleMediumIsoPFTau30_Trk1_eta2p1                                               1131
+HLT_DoubleMediumIsoPFTau30_Trk1_eta2p1_Jet30                                         55495
+HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1                                               53956
+HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1                                        11044
+HLT_DoubleMu11_Acoplanarity03                                                        223
+HLT_DoubleMu14_Mass8_PFMET40                                                         7282
+HLT_DoubleMu14_Mass8_PFMET50                                                         5454
+HLT_DoubleMu3_4_Dimuon5_Bs_Central                                                   416
+HLT_DoubleMu3p5_4_Dimuon5_Bs_Central                                                 398
+HLT_DoubleMu3p5_LowMassNonResonant_Displaced                                         2342
+HLT_DoubleMu3p5_LowMass_Displaced                                                    2911
+HLT_DoubleMu4_Dimuon7_Bs_Forward                                                     400
+HLT_DoubleMu4_JpsiTk_Displaced                                                       59
+HLT_DoubleMu4_Jpsi_Displaced                                                         454
+HLT_DoubleMu5_IsoMu5                                                                 853
+HLT_DoubleMu8_Ele8_CaloIdT_TrkIdVL                                                   1544
+HLT_DoubleMu8_Mass8_PFNoPUHT175                                                      28091
+HLT_DoubleMu8_Mass8_PFNoPUHT225                                                      27695
+HLT_DoublePhoton40_CaloIdL_Rsq0p035                                                  8678
+HLT_DoublePhoton40_CaloIdL_Rsq0p06                                                   3211
+HLT_DoublePhoton48_HEVT                                                              16216
+HLT_DoublePhoton53_HEVT                                                              12900
+HLT_DoublePhoton70                                                                   27627
+HLT_DoublePhoton80                                                                   20423
+HLT_DoubleRelIso1p0Mu5_Mass8_PFNoPUHT175                                             4954
+HLT_DoubleRelIso1p0Mu5_Mass8_PFNoPUHT225                                             4110
+HLT_EightJet30_eta3p0                                                                76895
+HLT_EightJet35_eta3p0                                                                39604
+HLT_Ele12_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_DoubleCentralJet65                      5563
+HLT_Ele12_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_RsqMR30_Rsq0p04_MR200                   32107
+HLT_Ele12_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_RsqMR40_Rsq0p04_MR200                   29222
+HLT_Ele15_Ele8_Ele5_CaloIdL_TrkIdVL                                                  6261
+HLT_Ele17_CaloIdL_CaloIsoVL                                                          30
+HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL                                         253
+HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL 6108
+HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Jet30                                   252
+HLT_Ele17_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_Ele8_Mass50                             2442
+HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50                              1085
+HLT_Ele22_eta2p1_WP90NoIso_LooseIsoPFTau20                                           1060
+HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20                                             25174
+HLT_Ele23_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_HFT30                                   206
+HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30_30_20              2003
+HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFNoPUJet30                        757
+HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFNoPUJet30_BTagIPIter             12145
+HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30_30_20               22162
+HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_DiCentralPFNoPUJet30                    277
+HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30                   44356
+HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet45_35_25             21840
+HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet50_40_30             43712
+HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30_30_20                                244
+HLT_Ele27_CaloIdL_CaloIsoVL_TrkIdVL_TrkIsoVL                                         959
+HLT_Ele27_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele15_CaloIdT_CaloIsoVL_trackless       1167
+HLT_Ele27_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_HFT15                                   320
+HLT_Ele27_WP80                                                                       36503
+HLT_Ele27_WP80_CentralPFJet80                                                        33525
+HLT_Ele27_WP80_PFMET_MT50                                                            28165
+HLT_Ele27_WP80_WCandPt80                                                             28738
+HLT_Ele30_CaloIdVT_TrkIdT                                                            415
+HLT_Ele30_CaloIdVT_TrkIdT_PFNoPUJet100_PFNoPUJet25                                   80655
+HLT_Ele30_CaloIdVT_TrkIdT_PFNoPUJet150_PFNoPUJet25                                   70720
+HLT_Ele32_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_SC17_Mass50                                3878
+HLT_Ele32_WP80_CentralPFJet35_CentralPFJet25                                         28704
+HLT_Ele32_WP80_CentralPFJet35_CentralPFJet25_PFMET20                                 23241
+HLT_Ele32_WP80_PFJet30_PFJet25_Deta3                                                 832
+HLT_Ele32_WP80_PFJet30_PFJet25_Deta3_CentralPFJet30                                  7470
+HLT_Ele80_CaloIdVT_GsfTrkIdT                                                         54480
+HLT_Ele8_CaloIdL_CaloIsoVL                                                           4
+HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL                                          39
+HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Jet30                                    38
+HLT_Ele8_CaloIdT_TrkIdT_DiJet30                                                      117
+HLT_Ele8_CaloIdT_TrkIdT_QuadJet30                                                    154
+HLT_Ele8_CaloIdT_TrkIdT_TriJet30                                                     219
+HLT_Ele8_CaloIdT_TrkIdVL_EG7                                                         15
+HLT_Ele8_CaloIdT_TrkIdVL_Jet30                                                       48
+HLT_Ele90_CaloIdVT_GsfTrkIdT                                                         50374
+HLT_ExclDiJet80_HFAND                                                                3
+HLT_FatDiPFJetMass750_DR1p1_Deta1p5                                                  1452612
+HLT_HT200                                                                            384714
+HLT_HT200_AlphaT0p57                                                                 140215
+HLT_HT250                                                                            324017
+HLT_HT250_AlphaT0p55                                                                 157002
+HLT_HT250_AlphaT0p57                                                                 118566
+HLT_HT300                                                                            286595
+HLT_HT300_AlphaT0p53                                                                 203122
+HLT_HT300_AlphaT0p54                                                                 162087
+HLT_HT300_DoubleDisplacedPFJet60                                                     313816
+HLT_HT300_DoubleDisplacedPFJet60_ChgFraction10                                       138487
+HLT_HT300_SingleDisplacedPFJet60                                                     97112
+HLT_HT300_SingleDisplacedPFJet60_ChgFraction10                                       54748
+HLT_HT350                                                                            273754
+HLT_HT350_AlphaT0p52                                                                 226742
+HLT_HT350_AlphaT0p53                                                                 166410
+HLT_HT400                                                                            280844
+HLT_HT400_AlphaT0p51                                                                 285017
+HLT_HT400_AlphaT0p52                                                                 174261
+HLT_HT450                                                                            304650
+HLT_HT450_AlphaT0p51                                                                 216001
+HLT_HT500                                                                            237811
+HLT_HT550                                                                            252871
+HLT_HT650                                                                            210164
+HLT_HT650_Track50_dEdx3p6                                                            1017923
+HLT_HT650_Track60_dEdx3p7                                                            614869
+HLT_HT750                                                                            2190253
+HLT_HcalNZS                                                                          114
+HLT_HcalPhiSym                                                                       92
+HLT_IsoMu12_DoubleCentralJet65                                                       6497
+HLT_IsoMu12_RsqMR30_Rsq0p04_MR200                                                    18357
+HLT_IsoMu12_RsqMR40_Rsq0p04_MR200                                                    18005
+HLT_IsoMu15_eta2p1_L1ETM20                                                           36379
+HLT_IsoMu15_eta2p1_LooseIsoPFTau35_Trk20_Prong1_L1ETM20                              29159
+HLT_IsoMu17_eta2p1_CentralPFNoPUJet30                                                1803
+HLT_IsoMu17_eta2p1_CentralPFNoPUJet30_BTagIPIter                                     6615
+HLT_IsoMu17_eta2p1_DiCentralPFNoPUJet30                                              746
+HLT_IsoMu17_eta2p1_DiCentralPFNoPUJet30_PFNoPUHT350_PFMHT40                          12760
+HLT_IsoMu17_eta2p1_LooseIsoPFTau20                                                   25612
+HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet30                                             6289
+HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet30_30_20                                       8042
+HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet45_35_25                                       7016
+HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk1_eta2p1                                      6639
+HLT_IsoMu20_WCandPt80                                                                31917
+HLT_IsoMu20_eta2p1                                                                   144
+HLT_IsoMu20_eta2p1_CentralPFJet80                                                    32832
+HLT_IsoMu24                                                                          35395
+HLT_IsoMu24_CentralPFJet30_CentralPFJet25                                            25354
+HLT_IsoMu24_CentralPFJet30_CentralPFJet25_PFMET20                                    21448
+HLT_IsoMu24_PFJet30_PFJet25_Deta3_CentralPFJet25                                     5963
+HLT_IsoMu24_eta2p1                                                                   34474
+HLT_IsoMu30                                                                          34289
+HLT_IsoMu30_eta2p1                                                                   33396
+HLT_IsoMu34_eta2p1                                                                   32701
+HLT_IsoMu40_eta2p1                                                                   31749
+HLT_IsoTrackHB                                                                       314
+HLT_IsoTrackHE                                                                       377
+HLT_Jet160Eta2p4_Jet120Eta2p4_DiBTagIP3DFastPVLoose                                  230262
+HLT_Jet370_NoJetID                                                                   1873692
+HLT_Jet60Eta1p7_Jet53Eta1p7_DiBTagIP3DFastPV                                         6935
+HLT_Jet80Eta1p7_Jet70Eta1p7_DiBTagIP3DFastPV                                         39954
+HLT_L1DoubleJet36Central                                                             27
+HLT_L1ETM100                                                                         16280
+HLT_L1ETM30                                                                          470
+HLT_L1ETM40                                                                          3487
+HLT_L1ETM70                                                                          17709
+HLT_L1SingleEG12                                                                     134
+HLT_L1SingleEG5                                                                      1
+HLT_L1SingleJet36                                                                    12
+HLT_L1SingleMu12                                                                     47
+HLT_L1SingleMuOpen                                                                   14
+HLT_L2DoubleMu23_NoVertex                                                            565
+HLT_L2DoubleMu23_NoVertex_2Cha_Angle2p5                                              7511
+HLT_L2DoubleMu38_NoVertex_2Cha_Angle2p5                                              3713
+HLT_L2Mu20_eta2p1_NoVertex                                                           46
+HLT_L2Mu70_2Cha_eta2p1_PFMET55                                                       8879
+HLT_L2Mu70_2Cha_eta2p1_PFMET60                                                       7552
+HLT_L2Mu70_eta2p1_PFMET55                                                            9201
+HLT_L2Mu70_eta2p1_PFMET60                                                            7839
+HLT_L2TripleMu10_0_0_NoVertex_PFJet40Neutral                                         11864
+HLT_LogMonitor                                                                       469
+HLT_LooseIsoPFTau35_Trk20_Prong1                                                     814
+HLT_LooseIsoPFTau35_Trk20_Prong1_MET70                                               99298
+HLT_LooseIsoPFTau35_Trk20_Prong1_MET75                                               92974
+HLT_MET120                                                                           23961
+HLT_MET120_HBHENoiseCleaned                                                          162857
+HLT_MET200                                                                           32557
+HLT_MET200_HBHENoiseCleaned                                                          27286
+HLT_MET300                                                                           18023
+HLT_MET300_HBHENoiseCleaned                                                          13084
+HLT_MET400                                                                           7197
+HLT_MET400_HBHENoiseCleaned                                                          5112
+HLT_MET80                                                                            161525
+HLT_MET80_Track50_dEdx3p6                                                            481560
+HLT_MET80_Track60_dEdx3p7                                                            254622
+HLT_MonoCentralPFJet80_PFMETnoMu105_NHEF0p95                                         169709
+HLT_Mu12                                                                             16
+HLT_Mu12_eta2p1_DiCentral_20                                                         430
+HLT_Mu12_eta2p1_DiCentral_40_20                                                      713
+HLT_Mu12_eta2p1_DiCentral_40_20_BTagIP3D1stTrack                                     1241
+HLT_Mu12_eta2p1_DiCentral_40_20_DiBTagIP3D1stTrack                                   40395
+HLT_Mu12_eta2p1_L1Mu10erJetC12WdEtaPhi1DiJetsC                                       341
+HLT_Mu13_Mu8                                                                         31406
+HLT_Mu14_Ele14_CaloIdT_TrkIdVL_Mass8_PFMET40                                         5407
+HLT_Mu14_Ele14_CaloIdT_TrkIdVL_Mass8_PFMET50                                         4203
+HLT_Mu15_TkMu5_Onia                                                                  153
+HLT_Mu15_eta2p1_DiCentral_20                                                         7
+HLT_Mu15_eta2p1_DiCentral_40_20                                                      10
+HLT_Mu15_eta2p1_L1ETM20                                                              3531
+HLT_Mu15_eta2p1_L1Mu10erJetC12WdEtaPhi1DiJetsC                                       293
+HLT_Mu15_eta2p1_TriCentral_40_20_20                                                  1585
+HLT_Mu15_eta2p1_TriCentral_40_20_20_BTagIP3D1stTrack                                 2035
+HLT_Mu15_eta2p1_TriCentral_40_20_20_DiBTagIP3D1stTrack                               31972
+HLT_Mu17                                                                             305
+HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL                                     8312
+HLT_Mu17_Mu8                                                                         28127
+HLT_Mu17_TkMu8                                                                       40057
+HLT_Mu17_eta2p1_CentralPFNoPUJet30_BTagIPIter                                        616
+HLT_Mu17_eta2p1_LooseIsoPFTau20                                                      3082
+HLT_Mu17_eta2p1_TriCentralPFNoPUJet30_30_20                                          987
+HLT_Mu17_eta2p1_TriCentralPFNoPUJet45_35_25                                          1912
+HLT_Mu22_Photon22_CaloIdL                                                            27091
+HLT_Mu22_TkMu22                                                                      18249
+HLT_Mu22_TkMu8                                                                       46398
+HLT_Mu24                                                                             874
+HLT_Mu24_CentralPFJet30_CentralPFJet25                                               13810
+HLT_Mu24_PFJet30_PFJet25_Deta3_CentralPFJet25                                        3702
+HLT_Mu24_eta2p1                                                                      721
+HLT_Mu30                                                                             724
+HLT_Mu30_Ele30_CaloIdL                                                               13250
+HLT_Mu30_eta2p1                                                                      581
+HLT_Mu40                                                                             115273
+HLT_Mu40_HT200                                                                       63497
+HLT_Mu40_PFNoPUHT350                                                                 115281
+HLT_Mu40_eta2p1                                                                      113928
+HLT_Mu40_eta2p1_Track50_dEdx3p6                                                      29622
+HLT_Mu40_eta2p1_Track60_dEdx3p7                                                      16286
+HLT_Mu50_eta2p1                                                                      93557
+HLT_Mu5_L2Mu3_Jpsi                                                                   187
+HLT_Mu5_Track2_Jpsi                                                                  24
+HLT_Mu5_Track3p5_Jpsi                                                                19
+HLT_Mu60_PFNoPUHT350                                                                 70866
+HLT_Mu7_Track7_Jpsi                                                                  58
+HLT_Mu8                                                                              43
+HLT_Mu8_DiJet30                                                                      137
+HLT_Mu8_DoubleEle8_CaloIdT_TrkIdVL                                                   917
+HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL                                     15642
+HLT_Mu8_Ele8_CaloIdT_TrkIdVL_Ele8_CaloIdL_TrkIdVL                                    3172
+HLT_Mu8_Ele8_CaloIdT_TrkIdVL_Mass8_PFNoPUHT175                                       15409
+HLT_Mu8_Ele8_CaloIdT_TrkIdVL_Mass8_PFNoPUHT225                                       15238
+HLT_Mu8_QuadJet30                                                                    1346
+HLT_Mu8_TriJet30                                                                     625
+HLT_PFJet140                                                                         18509
+HLT_PFJet200                                                                         78972
+HLT_PFJet260                                                                         263522
+HLT_PFJet320                                                                         3603751
+HLT_PFJet40                                                                          26
+HLT_PFJet400                                                                         838048
+HLT_PFJet80                                                                          694
+HLT_PFMET150                                                                         47872
+HLT_PFMET180                                                                         33002
+HLT_PFNoPUHT350                                                                      139921
+HLT_PFNoPUHT350_Mu15_PFMET45                                                         120543
+HLT_PFNoPUHT350_Mu15_PFMET50                                                         101933
+HLT_PFNoPUHT350_PFMET100                                                             138535
+HLT_PFNoPUHT400_Mu5_PFMET45                                                          271800
+HLT_PFNoPUHT400_Mu5_PFMET50                                                          223106
+HLT_PFNoPUHT400_PFMET100                                                             129148
+HLT_PFNoPUHT650                                                                      4719788
+HLT_PFNoPUHT650_DiCentralPFNoPUJet80_CenPFNoPUJet40                                  3926625
+HLT_PFNoPUHT700                                                                      2978593
+HLT_PFNoPUHT750                                                                      1920136
+HLT_Photon135                                                                        156992
+HLT_Photon150                                                                        297482
+HLT_Photon160                                                                        275991
+HLT_Photon20_CaloIdVL_IsoL                                                           7
+HLT_Photon22_R9Id90_HE10_Iso40_EBOnly                                                180
+HLT_Photon26_CaloId10_Iso50_Photon18_CaloId10_Iso50_Mass60                           5098
+HLT_Photon26_CaloId10_Iso50_Photon18_R9Id85_Mass60                                   8225
+HLT_Photon26_Photon18                                                                125
+HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18                                       72
+HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18_R9Id85_OR_CaloId10_Iso50_Mass60       12403
+HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18_R9Id85_OR_CaloId10_Iso50_Mass70       11729
+HLT_Photon26_R9Id85_Photon18_CaloId10_Iso50_Mass60                                   8925
+HLT_Photon26_R9Id85_Photon18_R9Id85_Mass60                                           6837
+HLT_Photon300_NoHE                                                                   95442
+HLT_Photon30_CaloIdVL                                                                158
+HLT_Photon30_CaloIdVL_IsoL                                                           28
+HLT_Photon36_CaloId10_Iso50_Photon22_CaloId10_Iso50                                  5144
+HLT_Photon36_CaloId10_Iso50_Photon22_R9Id85                                          7701
+HLT_Photon36_Photon22                                                                167
+HLT_Photon36_R9Id85_OR_CaloId10_Iso50_Photon22                                       244
+HLT_Photon36_R9Id85_OR_CaloId10_Iso50_Photon22_R9Id85_OR_CaloId10_Iso50              12456
+HLT_Photon36_R9Id85_Photon22_CaloId10_Iso50                                          8425
+HLT_Photon36_R9Id85_Photon22_R9Id85                                                  7057
+HLT_Photon36_R9Id90_HE10_Iso40_EBOnly                                                522
+HLT_Photon40_CaloIdL_RsqMR35_Rsq0p09_MR150                                           1422
+HLT_Photon40_CaloIdL_RsqMR40_Rsq0p09_MR150                                           14986
+HLT_Photon40_CaloIdL_RsqMR45_Rsq0p09_MR150                                           25615
+HLT_Photon40_CaloIdL_RsqMR50_Rsq0p09_MR150                                           24420
+HLT_Photon50_CaloIdVL                                                                828
+HLT_Photon50_CaloIdVL_IsoL                                                           245
+HLT_Photon50_R9Id90_HE10_Iso40_EBOnly                                                1098
+HLT_Photon60_CaloIdL_HT300                                                           8731
+HLT_Photon60_CaloIdL_MHT70                                                           5919
+HLT_Photon70_CaloIdXL_PFMET100                                                       8803
+HLT_Photon70_CaloIdXL_PFNoPUHT400                                                    319094
+HLT_Photon70_CaloIdXL_PFNoPUHT500                                                    297041
+HLT_Photon75_CaloIdVL                                                                3688
+HLT_Photon75_CaloIdVL_IsoL                                                           499
+HLT_Photon75_R9Id90_HE10_Iso40_EBOnly                                                2660
+HLT_Photon90_CaloIdVL                                                                6879
+HLT_Photon90_CaloIdVL_IsoL                                                           1223
+HLT_Photon90_R9Id90_HE10_Iso40_EBOnly                                                4759
+HLT_Physics                                                                          1047
+HLT_QuadJet50                                                                        2400883
+HLT_QuadJet50_Jet20                                                                  1994900
+HLT_QuadJet60_DiJet20                                                                1042915
+HLT_QuadJet70                                                                        181753
+HLT_QuadJet75_55_35_20_BTagIP_VBF                                                    30103
+HLT_QuadJet75_55_38_20_BTagIP_VBF                                                    60896
+HLT_QuadJet80                                                                        991886
+HLT_QuadJet90                                                                        694975
+HLT_QuadPFJet78_61_44_31_BTagCSV_VBF                                                 16367
+HLT_QuadPFJet82_65_48_35_BTagCSV_VBF                                                 36626
+HLT_RelIso1p0Mu20                                                                    175
+HLT_RelIso1p0Mu5                                                                     2
+HLT_RelIso1p0Mu5_Ele8_CaloIdT_TrkIdVL_Mass8_PFNoPUHT175                              4297
+HLT_RelIso1p0Mu5_Ele8_CaloIdT_TrkIdVL_Mass8_PFNoPUHT225                              3686
+HLT_RsqMR40_Rsq0p04                                                                  21663
+HLT_RsqMR45_Rsq0p09                                                                  313781
+HLT_RsqMR55_Rsq0p09_MR150                                                            289380
+HLT_RsqMR60_Rsq0p09_MR150                                                            267496
+HLT_RsqMR65_Rsq0p09_MR150                                                            231948
+HLT_SixJet35                                                                         82994
+HLT_SixJet45                                                                         300702
+HLT_SixJet50                                                                         205089
+HLT_Tau2Mu_ItTrack                                                                   655
+HLT_TripleEle10_CaloIdL_TrkIdVL                                                      3092
+HLT_TripleMu5                                                                        4713
+HLT_ZeroBias                                                                         4
