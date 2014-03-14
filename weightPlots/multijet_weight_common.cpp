@@ -40,6 +40,7 @@
 #include "../common/common.h"
 
 #include "../common/ptBinning.h"
+#include "../common/HLTPtBinning.h"
 #include "../common/npvBinning.h"
 #include "../common/etaBinning.h"
 #include "PUReweighting/PUReweighter.h"
@@ -175,6 +176,7 @@ int main (int argc, char** argv)
 //*********************************************************************************************************
 
 	ptBinning myPtBinning;
+  HLTPtBinning myHLTPtBinning;
 	npvBinning myNpvBinning;
 	etaBinning myEtaBinning;
 	PUReweighter myPUReweighter;
@@ -206,6 +208,9 @@ int main (int argc, char** argv)
 
 	//ptLeadingJet per recoilpt
 	vector<TH1F*> vLeadingJetPt_RecoilPt = buildPtVectorH1(myPtBinning,"LeadingJetPt",35,200,650) ;
+
+   //LeadingJetPt per leadingjetrawpt bin (used for the HLT selection)
+	vector<TH1F*> vLeadingJetPt_LeadingJetRawPt = buildBinnedDistriVectorH1(myHLTPtBinning,"LeadingJetPt",5) ;
 	
   //RecoilPt per recoilpt bin
 	vector<TH1F*> vRecoilPt_RecoilPt = buildBinnedDistriVectorH1(myPtBinning,"RecoilPt",5) ;
@@ -228,6 +233,10 @@ int main (int argc, char** argv)
     vLeadingJetPt_RecoilPt[j]->Sumw2();
     vRecoilPt_RecoilPt[j]->Sumw2();
 
+	}
+
+  for(int j=0; j<myHLTPtBinning.getSize(); j++) {
+		vLeadingJetPt_LeadingJetRawPt[j]->Sumw2();
 	}
 	
 	for(int j=0; j<myEtaBinning.getSize(); j++) {
@@ -650,6 +659,7 @@ int main (int argc, char** argv)
 	
 	//Usefull variables
 	int binRecoilPt;//bin en recoilpt
+  int binLeadingJetRawPt;//bin en leading jet raw pt
 	int binRecoilEta;//bin en recoileta		
 	int binGenPt;//bin en firstjetgenpt
 	int binJetPt;//bin en pt des jets		
@@ -770,6 +780,7 @@ int main (int argc, char** argv)
           leadingjetrawpt = leadingjetraw->Pt();
 
           binRecoilPt = myPtBinning.getPtBin(recoilpt);
+          binLeadingJetRawPt = myHLTPtBinning.getPtBin(leadingjetrawpt);
       
           TLorentzVector* leadingjetgen = NULL;
           if(isMC) {
@@ -936,6 +947,10 @@ int main (int argc, char** argv)
             hBeta_beforeSel->Fill(beta, weight);
             hA_beforeSel->Fill(A, weight);
             hHT_beforeSel->Fill(HT, weight);
+
+            if(binLeadingJetRawPt >= 0) {
+              vLeadingJetPt_LeadingJetRawPt[binLeadingJetRawPt]->Fill(leadingjetpt);
+            }
             
             Njets_ptSup25_etaInf5_beforeSel = 0;
             for(int i = 0; i < goodJetsIndex->size(); i++) {
@@ -1209,6 +1224,11 @@ int main (int argc, char** argv)
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vLeadingJetPt_RecoilPt[j]->Write();
 	}
+  TDirectory *leadingjetrawptbin_jet1Dir = leadingJetDir->mkdir("1stJetRawPtBin", "1stJetRawPtBin");
+  leadingjetrawptbin_jet1Dir->cd();
+  for(int j=0; j<myHLTPtBinning.getSize(); j++) {
+    vLeadingJetPt_LeadingJetRawPt[j]->Write();
+  }
 	
 	if(isMC) {
 		TDirectory *trueDir = out->mkdir("Rtrue","Rtrue");
@@ -1235,8 +1255,8 @@ int main (int argc, char** argv)
     hLeadingJetPt_230to290->Write();
 		hLeadingJetPt_290to350->Write();
 		hLeadingJetPt_350toInf->Write();
-
 	}	
+
 	TDirectory *recoilJetsDir = out->mkdir("recoilJets","recoilJets");
 	recoilJetsDir->cd();	
 	for(int j=0; j<myPtBinning.getSize(); j++) {

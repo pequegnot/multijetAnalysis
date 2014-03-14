@@ -39,6 +39,7 @@
 #include "../common/common.h"
 
 #include "../common/ptBinning.h"
+#include "../common/HLTPtBinning.h"
 #include "../common/npvBinning.h"
 #include "../common/etaBinning.h"
 
@@ -138,11 +139,13 @@ int main (int argc, char** argv)
 //*********************************************************************************************************
 
 	ptBinning myPtBinning;
+  HLTPtBinning myHLTPtBinning;
 	npvBinning myNpvBinning;
 	ptBinning myLowPtBinning(true);
 	etaBinning myEtaBinning;
 	
 	int numberPtBins = myPtBinning.getSize();
+  int numberHLTPtBins = myHLTPtBinning.getSize();
 	int numberNpvBins = myNpvBinning.getSize();
 	int numberEtaBins = myEtaBinning.getSize();
 	
@@ -173,6 +176,10 @@ int main (int argc, char** argv)
 	//leadingJetPt per recoilpt
 	vector<TH1F*> vLeadingJetPt_RecoilPt;
 	vLeadingJetPt_RecoilPt.resize(numberPtBins);
+
+  //leadingJetPt per recoilpt
+	vector<TH1F*> vLeadingJetPt_LeadingJetRawPt;
+	vLeadingJetPt_LeadingJetRawPt.resize(numberHLTPtBins);
 
  	//RecoilPt per recoilpt
 	vector<TH1F*> vRecoilPt_RecoilPt;
@@ -206,7 +213,13 @@ int main (int argc, char** argv)
 		vectorName = "MPF/MPF_" + ptBinName;
 		vMPF_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());	
 	}
-	
+
+  for(int j=0; j<myHLTPtBinning.getSize(); j++) {
+		ptBinName = myHLTPtBinning.getName(j);
+    vectorName = "leadingJet/1stJetRawPtBin/LeadingJetPt_" + ptBinName;
+		vLeadingJetPt_LeadingJetRawPt[j] = (TH1F*)f->Get(vectorName.c_str());
+	}
+
 	for(int j=0; j<myEtaBinning.getSize(); j++) {
 		etaBinName = myEtaBinning.getName(j);
 		vectorName = "MJB/recoilEtaBin/MJB_" + etaBinName;
@@ -1079,7 +1092,12 @@ int main (int argc, char** argv)
 	ptbin_jet1Dir->cd();
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vLeadingJetPt_RecoilPt[j]->Write();
-	}	
+	}
+  TDirectory *leadingjetrawptbin_jet1Dir = leadingJetDir->mkdir("1stJetRawPtBin", "1stJetRawPtBin");
+  leadingjetrawptbin_jet1Dir->cd();
+  for(int j=0; j<myHLTPtBinning.getSize(); j++) {
+    vLeadingJetPt_LeadingJetRawPt[j]->Write();
+  }
 
 	if(isMC) {
 		TDirectory *trueDir = out->mkdir("Rtrue","Rtrue");

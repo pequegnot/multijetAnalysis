@@ -18,6 +18,7 @@ class ptBinning
     ~ptBinning();
     void fillPtBins();
     void fillLowPtBins();
+    void fillHLTPtBins();
     int getPtBin(float pt);
     size_t getSize();
     std::string getName(int bin);
@@ -26,7 +27,7 @@ class ptBinning
     float getBinValueSup(int bin);
 
 
-    private:
+    protected:
     std::vector<std::pair<float,float> > mPtBins;
 
 

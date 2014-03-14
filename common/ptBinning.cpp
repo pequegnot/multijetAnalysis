@@ -87,24 +87,16 @@ void ptBinning::fillLowPtBins()
 	mPtBins.push_back(std::make_pair(2000., 3000.));
 }
 
+void ptBinning::fillHLTPtBins() 
+{
+  mPtBins.push_back(std::make_pair(170., 230.));
+  mPtBins.push_back(std::make_pair(230., 290.));
+  mPtBins.push_back(std::make_pair(290., 350.));
+	mPtBins.push_back(std::make_pair(350., 3000.));
+}
+
 void ptBinning::fillPtBins() 
 {
-// 	mPtBins.push_back(std::make_pair(40., 50.));
-// 	mPtBins.push_back(std::make_pair(50., 60.));
-// 	mPtBins.push_back(std::make_pair(60., 75.));
-// 	mPtBins.push_back(std::make_pair(75., 100.));
-// 	mPtBins.push_back(std::make_pair(100., 125.));
-// 	mPtBins.push_back(std::make_pair(125., 155.));
-// 	mPtBins.push_back(std::make_pair(155., 180.));
-// 	mPtBins.push_back(std::make_pair(180., 210.));
-// 	mPtBins.push_back(std::make_pair(210., 250.));
-// 	mPtBins.push_back(std::make_pair(250., 300.));
-// 	mPtBins.push_back(std::make_pair(300., 350.));
-// 	mPtBins.push_back(std::make_pair(350., 400.));
-// 	mPtBins.push_back(std::make_pair(400., 500.));
-// 	mPtBins.push_back(std::make_pair(500., 600.));
-// 	mPtBins.push_back(std::make_pair(600., 800.));
-	
   mPtBins.push_back(std::make_pair(150., 200.));
   mPtBins.push_back(std::make_pair(200., 250.));
   mPtBins.push_back(std::make_pair(250., 300.));
