@@ -5,6 +5,7 @@
 *.png
 *.swp
 *.swo
+*.swn
 *.orig
 common/npvBinning_cpp.so
 common/ptBinning_cpp.so
