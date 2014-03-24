@@ -18,7 +18,6 @@ class ptBinning
     ~ptBinning();
     void fillPtBins();
     void fillLowPtBins();
-    void fillHLTPtBins();
     int getPtBin(float pt);
     size_t getSize();
     std::string getName(int bin);
