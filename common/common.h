@@ -99,7 +99,7 @@ int getFlavourNumber () {
 
 
 float getLumi () {
-	return (876.225 + 4.412*pow(10.,3.) +  7.051*pow(10.,3.) + 7.369l*pow(10.,3.));
+	return (876.225 + 4.412*pow(10.,3.) +  7.051*pow(10.,3.) + 7.369*pow(10.,3.));
 }
 
 int getHistoNbinsx() {
