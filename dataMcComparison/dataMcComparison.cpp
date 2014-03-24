@@ -1475,6 +1475,7 @@ int main (int argc, char** argv)
       }
 
       for(int j=0; j<myHLTPtBinning.getSize(); j++) {
+        binName = myHLTPtBinning.getName(j);
         myName = "pT^{Leading Jet}_{data}/pT^{Leading Jet}_{MC} for " + binName;
         myXName = "pT^{Leading Jet} for " + binName + " [GeV/c]";
         mySaveName = "images/LeadingJetPtperLeadingJetRawPt/LeadingJetPt_" + binName + "_lumi_inLinScale" + extension;
@@ -1582,7 +1583,7 @@ int main (int argc, char** argv)
 		Nentries_LeadingJetPt_LeadingJetRawPt_Data = vLeadingJetPt_LeadingJetRawPt_data_shape[j]->Integral();
 		vLeadingJetPt_LeadingJetRawPt_mc_shape[j]->Scale(Nentries_LeadingJetPt_LeadingJetRawPt_Data/Nentries_LeadingJetPt_LeadingJetRawPt_mc);
 
-		binName = myPtBinning.getName(j);
+		binName = myHLTPtBinning.getName(j);
 		myName = "pT^{Leading Jet}_{data}/pT^{Leading Jet}_{MC} for " + binName;
 		myXName = "pT^{Leading Jet} for " + binName + " [GeV/c]";
 		mySaveName = "images/LeadingJetPtperLeadingJetRawPt/LeadingJetPt_" + binName + "_shape_inLogScale" + extension;
@@ -2281,9 +2282,10 @@ int main (int argc, char** argv)
         drawDataMcComparison(myName.c_str(), vRecoilPt_RecoilPt_mc_shape[j], vRecoilPt_RecoilPt_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
       }
       for(int j=0; j<myHLTPtBinning.getSize(); j++) {
+        binName = myHLTPtBinning.getName(j);
         myName = "pT^{Leading Jet}_{data}/pT^{Leading Jet}_{MC} for " + binName;
         myXName = "pT^{Leading Jet} for " + binName + " [GeV/c]";
-        mySaveName = "images/LeadingJetPtperPtRecoil/LeadingJetPtperPt_" + binName + "_shape_inLinScale" + extension;
+        mySaveName = "images/LeadingJetPtperLeadingJetRawPt/LeadingJetPt_" + binName + "_shape_inLinScale" + extension;
         drawDataMcComparison(myName.c_str(), vLeadingJetPt_LeadingJetRawPt_mc_shape[j], vLeadingJetPt_LeadingJetRawPt_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
       }
 
