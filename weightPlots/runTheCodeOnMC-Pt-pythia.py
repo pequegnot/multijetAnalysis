@@ -6,13 +6,13 @@ d = datetime.datetime.now().strftime("%d%b%y")
 
 inputs = [
         # QCD Pt Pythia
-        ['MULTIJET_MC_QCD_Pt-120to170_pythia_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-120to170_pythia_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 1000000, 156293.3],
-        ['MULTIJET_MC_QCD_Pt-170to300_pythia_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-170to300_pythia_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 1000000, 34138.15],
-        ['MULTIJET_MC_QCD_Pt-300to470_pythia_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-300to470_pythia_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 1000000, 1759.549],
-        ['MULTIJET_MC_QCD_Pt-470to600_pythia_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-470to600_pythia_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 1000000, 113.8791],
-        ['MULTIJET_MC_QCD_Pt-600to800_pythia_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-600to800_pythia_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 1000000, 26.9921],
-        ['MULTIJET_MC_QCD_Pt-800to1000_pythia_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-800to1000_pythia_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 500000, 3.550036],
-        ['MULTIJET_MC_QCD_Pt-1000to1400_pythia_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-1000to1400_pythia_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 500000, 0.737844],
+        ['MULTIJET_MC_QCD_Pt-120to170_pythia_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-120to170_pythia_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 5935732, 156293.3],
+        ['MULTIJET_MC_QCD_Pt-170to300_pythia_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-170to300_pythia_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 5814398, 34138.15],
+        ['MULTIJET_MC_QCD_Pt-300to470_pythia_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-300to470_pythia_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 5978500, 1759.549],
+        ['MULTIJET_MC_QCD_Pt-470to600_pythia_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-470to600_pythia_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 3844848, 113.8791],
+        ['MULTIJET_MC_QCD_Pt-600to800_pythia_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-600to800_pythia_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 3996864, 26.9921],
+        ['MULTIJET_MC_QCD_Pt-800to1000_pythia_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-800to1000_pythia_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 3998563, 3.550036],
+        ['MULTIJET_MC_QCD_Pt-1000to1400_pythia_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-1000to1400_pythia_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 1964088, 0.737844],
         ]
 
 def launch(input, output, nevents, xsection):
@@ -37,7 +37,7 @@ for input in inputs:
 
 tmpfile.flush()
 
-args = ["parallel", "-u", "-a", tmpfile.name, "-j", "6"]
+args = ["parallel", "-u", "-a", tmpfile.name, "-j", "2"]
 subprocess.call(args)
 #print args
 

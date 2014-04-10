@@ -6,13 +6,13 @@ d = datetime.datetime.now().strftime("%d%b%y")
 
 inputs = [
         # QCD Pt Herwig
-        ['MULTIJET_MC_QCD_Pt-120to170_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-120to170_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 2000000, 126490],
-        ['MULTIJET_MC_QCD_Pt-170to300_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-170to300_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 2000000, 27935],
-        ['MULTIJET_MC_QCD_Pt-300to470_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-300to470_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 2000000, 1461],
-        ['MULTIJET_MC_QCD_Pt-470to600_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-470to600_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 2000000, 95.25],
-        ['MULTIJET_MC_QCD_Pt-600to800_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-600to800_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 1000000, 22.73],
-        ['MULTIJET_MC_QCD_Pt-800to1000_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-800to1000_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 1000000, 2.997],
-        ['MULTIJET_MC_QCD_Pt-1000toInf_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-1000toInf_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 500000, 0.665],
+        ['MULTIJET_MC_QCD_Pt-120to170_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-120to170_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 1493670, 126490],
+        ['MULTIJET_MC_QCD_Pt-170to300_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-170to300_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 1497220, 27935],
+        ['MULTIJET_MC_QCD_Pt-300to470_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-300to470_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 1987929, 1461],
+        ['MULTIJET_MC_QCD_Pt-470to600_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-470to600_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 1945737, 95.25],
+        ['MULTIJET_MC_QCD_Pt-600to800_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-600to800_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 983991, 22.73],
+        ['MULTIJET_MC_QCD_Pt-800to1000_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-800to1000_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 962795, 2.997],
+        ['MULTIJET_MC_QCD_Pt-1000toInf_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-1000toInf_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 498073, 0.665],
         ]
 
 def launch(input, output, nevents, xsection):
@@ -37,7 +37,7 @@ for input in inputs:
 
 tmpfile.flush()
 
-args = ["parallel", "-u", "-a", tmpfile.name, "-j", "6"]
+args = ["parallel", "-u", "-a", tmpfile.name, "-j", "2"]
 subprocess.call(args)
 #print args
 

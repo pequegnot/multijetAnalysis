@@ -6,8 +6,10 @@ d = datetime.datetime.now().strftime("%d%b%y")
 
 inputs = [
         # QCD HT
-        ['MULTIJET_MC_QCD_HT-500To1000_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_HT-500To1000_woPU_pt25_eta50_puJetIdMT_18Feb14.list', 32000000, 8426],
-        ['MULTIJET_MC_QCD_HT-1000ToInf_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_HT-1000ToInf_woPU_pt25_eta50_puJetIdMT_18Feb14.list', 13960000, 204],
+        ['MULTIJET_QCD_HT-100To250_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_HT-100To250_woPU_pt25_eta50_puJetIdMT_26Mar14.list', 50097518, 10360000],
+        ['MULTIJET_QCD_HT-250To500_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_HT-250To500_woPU_pt25_eta50_puJetIdMT_26Mar14.list', 27062078, 276000],
+        ['MULTIJET_MC_QCD_HT-500To1000_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_HT-500To1000_woPU_pt25_eta50_puJetIdMT_18Feb14.list', 30249292, 8426],
+        ['MULTIJET_MC_QCD_HT-1000ToInf_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_HT-1000ToInf_woPU_pt25_eta50_puJetIdMT_18Feb14.list', 13808863,204],
         ]
 
 def launch(input, output, nevents, xsection):
@@ -32,7 +34,7 @@ for input in inputs:
 
 tmpfile.flush()
 
-args = ["parallel", "-u", "-a", tmpfile.name, "-j", "6"]
+args = ["parallel", "-u", "-a", tmpfile.name, "-j", "4"]
 subprocess.call(args)
 #print args
 

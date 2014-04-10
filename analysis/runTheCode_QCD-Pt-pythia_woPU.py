@@ -5,8 +5,8 @@ import os, subprocess, datetime, tempfile
 d = datetime.datetime.now().strftime("%d%b%y")
 
 inputs = [
-    ['MULTIJET_MC_QCD-Pt-pythia-120To1400_analysis_woPU_pt25_eta50_puJetIdMT_HLTsel_woPtRecoilCut.root', '../weightPlots/output_rootfile/14Mar14/MC/MULTIJET_MC_QCD-Pt-pythia_merged_woPU_pt25_eta50_puJetIdMT_14Mar14.root', "isMC", "_pt25_eta50_puJetIdMT_HLTsel_woPtRecoilCut_QCD-Pt-pythia", ".pdf"],
-    ['MULTIJET_Run2012ABCD-22Jan2013_analysis_woPU_pt25_eta50_puJetIdMT_HLTsel_woPtRecoilCut.root', '../weightPlots/output_rootfile/14Mar14/data/MULTIJET_Data_merged_2012_woPU_pt25_eta50_puJetIdMT_HLTsel_woPtRecoilCut_14Mar14.root', "isData", "_pt25_eta50_puJetIdMT_HLTsel_woPtRecoilCut", ".pdf"],
+    ['MULTIJET_MC_QCD-Pt-pythia-120To1400_analysis_woPU_pt25_eta50_puJetIdMT_HLTsel_woPtRecoilCut.root', '../weightPlots/output_rootfile/31Mar14/MC/MULTIJET_MC_QCD-Pt-pythia_merged_woPU_pt25_eta50_puJetIdMT_31Mar14.root', "isMC", "_pt25_eta50_puJetIdMT_HLTsel_woPtRecoilCut_QCD-Pt-pythia", ".pdf"],
+    ['MULTIJET_Run2012ABCD-22Jan2013_analysis_woPU_pt25_eta50_puJetIdMT_HLTsel_woPtRecoilCut.root', '../weightPlots/output_rootfile/31Mar14/data/MULTIJET_Data_merged_2012_woPU_pt25_eta50_puJetIdMT_HLTsel_woPtRecoilCut_31Mar14.root', "isData", "_pt25_eta50_puJetIdMT_HLTsel_woPtRecoilCut", ".pdf"],
 
         ]
 
