@@ -178,8 +178,8 @@ int main (int argc, char** argv)
 	vLeadingJetPt_RecoilPt.resize(numberPtBins);
 
   //leadingJetPt per recoilpt
-	vector<TH1F*> vLeadingJetPt_LeadingJetRawPt;
-	vLeadingJetPt_LeadingJetRawPt.resize(numberHLTPtBins);
+	vector<TH1F*> vLeadingJetPt_LeadingJetPtHLT;
+	vLeadingJetPt_LeadingJetPtHLT.resize(numberHLTPtBins);
 
  	//RecoilPt per recoilpt
 	vector<TH1F*> vRecoilPt_RecoilPt;
@@ -216,8 +216,8 @@ int main (int argc, char** argv)
 
   for(int j=0; j<myHLTPtBinning.getSize(); j++) {
 		ptBinName = myHLTPtBinning.getName(j);
-    vectorName = "leadingJet/1stJetRawPtBin/LeadingJetPt_" + ptBinName;
-		vLeadingJetPt_LeadingJetRawPt[j] = (TH1F*)f->Get(vectorName.c_str());
+    vectorName = "leadingJet/1stJetPtHLTBin/LeadingJetPt_" + ptBinName;
+		vLeadingJetPt_LeadingJetPtHLT[j] = (TH1F*)f->Get(vectorName.c_str());
 	}
 
 	for(int j=0; j<myEtaBinning.getSize(); j++) {
@@ -1093,10 +1093,10 @@ int main (int argc, char** argv)
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vLeadingJetPt_RecoilPt[j]->Write();
 	}
-  TDirectory *leadingjetrawptbin_jet1Dir = leadingJetDir->mkdir("1stJetRawPtBin", "1stJetRawPtBin");
+  TDirectory *leadingjetrawptbin_jet1Dir = leadingJetDir->mkdir("1stJetPtHLTBin", "1stJetPtHLTBin");
   leadingjetrawptbin_jet1Dir->cd();
   for(int j=0; j<myHLTPtBinning.getSize(); j++) {
-    vLeadingJetPt_LeadingJetRawPt[j]->Write();
+    vLeadingJetPt_LeadingJetPtHLT[j]->Write();
   }
 
 	if(isMC) {
