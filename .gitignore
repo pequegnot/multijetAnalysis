@@ -4,12 +4,15 @@
 *.pdf
 *.png
 *.swp
+*.gif
 *.swo
 *.swn
 *.orig
 common/npvBinning_cpp.so
 common/ptBinning_cpp.so
 weightPlots/multijet_weight_common
+weightPlots/list
+weightPlots/listTriggers
 dataMcComparison/dataMcComparison
 analysis/multijet_analysis_common
 /dataMcComparison/images/
