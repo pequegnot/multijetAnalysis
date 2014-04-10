@@ -87,7 +87,10 @@ int main (int argc, char** argv)
 	float Xsection = 1.;
 	std::vector<std::string> inputFiles;
 	string outputName;
-
+  float HLT_PFJet140_prescaleFactor;
+  float HLT_PFJet200_prescaleFactor;
+  float HLT_PFJet260_prescaleFactor;
+  float HLT_PFJet320_prescaleFactor;
 
 //********************************************************************************************************* 	
 
@@ -107,6 +110,10 @@ int main (int argc, char** argv)
     TCLAP::ValueArg<std::string> inputFileArg("i", "input-file", "The input file", true, "", "string");
     TCLAP::ValueArg<int> NeventsArg("", "Nevents", "Nevents", false, -1, "int", cmd);
     TCLAP::ValueArg<float> XsectionArg("", "Xsection", "Xsection", false, -1., "float", cmd);
+    TCLAP::ValueArg<float> HLT_PFJet140_prescaleFactorArg("", "HLT_PFJet140", "HLT_PFJet140 prescaleFactor: put -1 if you don't want to test this trigger", false, -1., "float", cmd);
+    TCLAP::ValueArg<float> HLT_PFJet200_prescaleFactorArg("", "HLT_PFJet200", "HLT_PFJet200 prescaleFactor", false, -1., "float", cmd);
+    TCLAP::ValueArg<float> HLT_PFJet260_prescaleFactorArg("", "HLT_PFJet260", "HLT_PFJet260 prescaleFactor", false, -1., "float", cmd);
+    TCLAP::ValueArg<float> HLT_PFJet320_prescaleFactorArg("", "HLT_PFJet320", "HLT_PFJet320 prescaleFactor", false, -1., "float", cmd);
 
 
     // Add the argument to the CmdLine object. The CmdLine object
@@ -137,11 +144,15 @@ int main (int argc, char** argv)
     outputName = outputFileArg.getValue();
     Nevents = NeventsArg.getValue();
     Xsection = XsectionArg.getValue();
+    HLT_PFJet140_prescaleFactor = HLT_PFJet140_prescaleFactorArg.getValue();
+    HLT_PFJet200_prescaleFactor = HLT_PFJet200_prescaleFactorArg.getValue();
+    HLT_PFJet260_prescaleFactor = HLT_PFJet260_prescaleFactorArg.getValue();
+    HLT_PFJet320_prescaleFactor = HLT_PFJet320_prescaleFactorArg.getValue();
     
     if (!isMC) {
       weight = 1.;
       //typeName = "_data";
-      plotColor = getDataColor();    
+      plotColor = getDataColor();
     }
     else {
       if(Nevents == -1 || Xsection == -1) {
@@ -209,8 +220,8 @@ int main (int argc, char** argv)
 	//ptLeadingJet per recoilpt
 	vector<TH1F*> vLeadingJetPt_RecoilPt = buildPtVectorH1(myPtBinning,"LeadingJetPt",35,200,650) ;
 
-   //LeadingJetPt per leadingjetrawpt bin (used for the HLT selection)
-	vector<TH1F*> vLeadingJetPt_LeadingJetRawPt = buildBinnedDistriVectorH1(myHLTPtBinning,"LeadingJetPt",5) ;
+   //LeadingJetPt per leadingjetpt bin (used for the HLT selection)
+	vector<TH1F*> vLeadingJetPt_LeadingJetPtHLT = buildBinnedDistriVectorH1(myHLTPtBinning,"LeadingJetPt",5) ;
 	
   //RecoilPt per recoilpt bin
 	vector<TH1F*> vRecoilPt_RecoilPt = buildBinnedDistriVectorH1(myPtBinning,"RecoilPt",5) ;
@@ -236,7 +247,7 @@ int main (int argc, char** argv)
 	}
 
   for(int j=0; j<myHLTPtBinning.getSize(); j++) {
-		vLeadingJetPt_LeadingJetRawPt[j]->Sumw2();
+		vLeadingJetPt_LeadingJetPtHLT[j]->Sumw2();
 	}
 	
 	for(int j=0; j<myEtaBinning.getSize(); j++) {
@@ -521,13 +532,13 @@ int main (int argc, char** argv)
 	hLeadingJetPt_230to290->SetXTitle("p_{t}^{leading jet} [GeV/c]");
 	hLeadingJetPt_230to290->Sumw2();
 
-  TH1F* hLeadingJetPt_290to350=new TH1F("hLeadingJetPt_290to350","hLeadingJetPt_290to350",6,290,350);
-	hLeadingJetPt_290to350->SetXTitle("p_{t}^{leading jet} [GeV/c]");
-	hLeadingJetPt_290to350->Sumw2();
+  TH1F* hLeadingJetPt_290to360=new TH1F("hLeadingJetPt_290to360","hLeadingJetPt_290to360",6,290,360);
+	hLeadingJetPt_290to360->SetXTitle("p_{t}^{leading jet} [GeV/c]");
+	hLeadingJetPt_290to360->Sumw2();
 	
-	TH1F* hLeadingJetPt_350toInf=new TH1F("hLeadingJetPt_350toInf","hLeadingJetPt_350toInf",265,350,3000);
-	hLeadingJetPt_350toInf->SetXTitle("p_{t}^{leading jet} [GeV/c]");
-	hLeadingJetPt_350toInf->Sumw2();
+	TH1F* hLeadingJetPt_360toInf=new TH1F("hLeadingJetPt_360toInf","hLeadingJetPt_360toInf",265,360,3000);
+	hLeadingJetPt_360toInf->SetXTitle("p_{t}^{leading jet} [GeV/c]");
+	hLeadingJetPt_360toInf->Sumw2();
 
   TH1F* hNjets_ptSup25_etaInf5_beforeSel = new TH1F("hNjets_ptSup25_etaInf5_beforeSel", "hNjets_ptSup25_etaInf5_beforeSel", 25, 0, 25);
   hNjets_ptSup25_etaInf5_beforeSel->SetXTitle("N_{jets} with p_{t} > 25 GeV and |#eta| < 5.0");
@@ -538,6 +549,7 @@ int main (int argc, char** argv)
 //                                      reading the root file 
 //
 //*****************************************************************************************************
+
 
 //retrieve the trees
 	TChain* t_multijet = NULL;
@@ -550,7 +562,6 @@ int main (int argc, char** argv)
 	loadChain(inputFiles, "event", t_event);
 	loadChain(inputFiles, "jet_PF", t_jet_PF);
 	loadChain(inputFiles, "HLT", t_HLT);
-
 
 
 //retrieve the variables
@@ -651,15 +662,16 @@ int main (int argc, char** argv)
 	
 	int jet_PF_puJetFullId[100];
 	t_jet_PF->SetBranchAddress("jet_puJetFullId",&jet_PF_puJetFullId);
-
-	//HLT
+	
+  //HLT
 	std::vector<std::string>* HLT_vector = NULL;
   t_HLT->SetBranchAddress("HLT_vector",&HLT_vector);
-	
+
 	
 	//Usefull variables
 	int binRecoilPt;//bin en recoilpt
   int binLeadingJetRawPt;//bin en leading jet raw pt
+  int binLeadingJetPt;
 	int binRecoilEta;//bin en recoileta		
 	int binGenPt;//bin en firstjetgenpt
 	int binJetPt;//bin en pt des jets		
@@ -703,11 +715,10 @@ int main (int argc, char** argv)
 	
 	int numberPtBins = myPtBinning.getSize();	
 	int numberEtaBins = myEtaBinning.getSize();
-	
+
 	//count events in the tree
 	unsigned int nEvents = (int)t_multijet->GetEntries();
 
-	
 	//loop over them
 	for(unsigned int ievt=0; ievt<nEvents; ievt++) {
 		//cout<<"event # "<<ievt<<endl;
@@ -781,6 +792,7 @@ int main (int argc, char** argv)
 
           binRecoilPt = myPtBinning.getPtBin(recoilpt);
           binLeadingJetRawPt = myHLTPtBinning.getPtBin(leadingjetrawpt);
+          binLeadingJetPt = myHLTPtBinning.getPtBin(leadingjetpt);
       
           TLorentzVector* leadingjetgen = NULL;
           if(isMC) {
@@ -826,19 +838,19 @@ int main (int argc, char** argv)
             hNTrueInteractionsBeforePUReweighting->Fill(nTrueInteractions);
             PUWeight = 1; 
             dropEvent = true;
-            if(leadingjetrawpt >= 170. && leadingjetrawpt < 230.) {
+            if(leadingjetpt >= 170. && leadingjetpt < 230.) {
               PUWeight = myPUReweighter_HLT_PFJet140.weight(nTrueInteractions);
               dropEvent = false;
             }
-            else if(leadingjetrawpt >= 230. && leadingjetrawpt < 290.) {
+            else if(leadingjetpt >= 230. && leadingjetpt < 290.) {
               PUWeight = myPUReweighter_HLT_PFJet200.weight(nTrueInteractions);			
               dropEvent = false;
             }
-            else if(leadingjetrawpt >= 290. && leadingjetrawpt < 350.) {
+            else if(leadingjetpt >= 290. && leadingjetpt < 360.) {
               PUWeight = myPUReweighter_HLT_PFJet260.weight(nTrueInteractions);			
               dropEvent = false;
             }
-            else if(leadingjetrawpt >= 350.) {
+            else if(leadingjetpt >= 360.) {
               PUWeight = myPUReweighter_HLT_PFJet320.weight(nTrueInteractions);		
               dropEvent = false;
             }
@@ -853,50 +865,50 @@ int main (int argc, char** argv)
 //
 //*****************************************************************************************************
 
-          if(!isMC) {
+          if (!isMC) {
             dropEvent = true;
             //cout<<"leadingjetpt: "<<leadingjetpt<<endl;
             //cout<<" HLT_vector->size(): "<< HLT_vector->size()<<endl;
-            if(leadingjetrawpt >= 170. && leadingjetrawpt < 230.) {
-              for(int i = 0; i < HLT_vector->size(); i++) {
+            if ((leadingjetpt >= 170. && leadingjetpt < 230.) && HLT_PFJet140_prescaleFactor != -1){
+              for (int i = 0; i < HLT_vector->size(); i++) {
                 //cout<<"HLT_vector->at("<<i<<")"<< HLT_vector->at(i) <<endl;
                 //cout<<"leadingjetpt"<<leadingjetpt<<endl;
-                if(TString(HLT_vector->at(i)).Contains("HLT_PFJet140")) {
+                if (TString(HLT_vector->at(i)).Contains("HLT_PFJet140")) {
                   dropEvent = false;
-                  weight = HLT_PFJet140_prescaleFactor();
+                  weight = HLT_PFJet140_prescaleFactor;
                   hLeadingJetPt_170to230->Fill(leadingjetpt, weight);
                   break;
                 }
               }								
             }
-            else if(leadingjetrawpt >= 230. && leadingjetrawpt < 290.) {
-              for(int i = 0; i < HLT_vector->size(); i++) {
-                if(TString(HLT_vector->at(i)).Contains("HLT_PFJet200")) {
+            else if ((leadingjetpt >= 230. && leadingjetpt < 290.) && HLT_PFJet200_prescaleFactor != -1) {
+              for (int i = 0; i < HLT_vector->size(); i++) {
+                if (TString(HLT_vector->at(i)).Contains("HLT_PFJet200")) {
                   dropEvent = false;
-                  weight = HLT_PFJet200_prescaleFactor();
+                  weight = HLT_PFJet200_prescaleFactor;
                   hLeadingJetPt_230to290->Fill(leadingjetpt, weight);
                   break;
                 }	
               }								
             }
-            else if(leadingjetrawpt >= 290. && leadingjetrawpt < 350.) {
-              for(int i = 0; i < HLT_vector->size(); i++) {
-                if(TString(HLT_vector->at(i)).Contains("HLT_PFJet260")) {
+            else if ((leadingjetpt >= 290. && leadingjetpt < 360.) && HLT_PFJet260_prescaleFactor != -1) {
+              for (int i = 0; i < HLT_vector->size(); i++) {
+                if (TString(HLT_vector->at(i)).Contains("HLT_PFJet260")) {
                   dropEvent = false;
-                  weight = HLT_PFJet260_prescaleFactor();
-                  hLeadingJetPt_290to350->Fill(leadingjetpt, weight);
+                  weight = HLT_PFJet260_prescaleFactor;
+                  hLeadingJetPt_290to360->Fill(leadingjetpt, weight);
                   break;
                 }	
               }								
             }
-            else if(leadingjetrawpt >= 350.) {
-              for(int i = 0; i < HLT_vector->size(); i++) {
+            else if (leadingjetpt >= 360. && HLT_PFJet320_prescaleFactor != -1) {
+              for (int i = 0; i < HLT_vector->size(); i++) {
                 //cout<<"HLT_vector->at("<<i<<")"<< HLT_vector->at(i) <<endl;
                 //cout<<"leadingjetpt"<<leadingjetpt<<endl;
-                if(TString(HLT_vector->at(i)).Contains("HLT_PFJet320")) {
+                if (TString(HLT_vector->at(i)).Contains("HLT_PFJet320")) {
                   dropEvent = false;
-                  weight = HLT_PFJet320_prescaleFactor();
-                  hLeadingJetPt_350toInf->Fill(leadingjetpt, weight);
+                  weight = HLT_PFJet320_prescaleFactor;
+                  hLeadingJetPt_360toInf->Fill(leadingjetpt, weight);
                   break;
                 }	
               }								
@@ -948,8 +960,8 @@ int main (int argc, char** argv)
             hA_beforeSel->Fill(A, weight);
             hHT_beforeSel->Fill(HT, weight);
 
-            if(binLeadingJetRawPt >= 0) {
-              vLeadingJetPt_LeadingJetRawPt[binLeadingJetRawPt]->Fill(leadingjetpt);
+            if(binLeadingJetPt >= 0) {
+              vLeadingJetPt_LeadingJetPtHLT[binLeadingJetPt]->Fill(leadingjetpt);
             }
             
             Njets_ptSup25_etaInf5_beforeSel = 0;
@@ -994,7 +1006,7 @@ int main (int argc, char** argv)
                 if(secondjetpt < 750.) {							
 
                   //first jet selection
-                  //if(leadingjetpt>350.) {
+                  //if(leadingjetpt>360.) {
                   if(leadingjet->Eta() < 1.3) {
 
                     //recoil selection
@@ -1224,10 +1236,10 @@ int main (int argc, char** argv)
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vLeadingJetPt_RecoilPt[j]->Write();
 	}
-  TDirectory *leadingjetrawptbin_jet1Dir = leadingJetDir->mkdir("1stJetRawPtBin", "1stJetRawPtBin");
+  TDirectory *leadingjetrawptbin_jet1Dir = leadingJetDir->mkdir("1stJetPtHLTBin", "1stJetPtHLTBin");
   leadingjetrawptbin_jet1Dir->cd();
   for(int j=0; j<myHLTPtBinning.getSize(); j++) {
-    vLeadingJetPt_LeadingJetRawPt[j]->Write();
+    vLeadingJetPt_LeadingJetPtHLT[j]->Write();
   }
 	
 	if(isMC) {
@@ -1253,8 +1265,8 @@ int main (int argc, char** argv)
 		checkHLTDir->cd();
     hLeadingJetPt_170to230->Write();
     hLeadingJetPt_230to290->Write();
-		hLeadingJetPt_290to350->Write();
-		hLeadingJetPt_350toInf->Write();
+		hLeadingJetPt_290to360->Write();
+		hLeadingJetPt_360toInf->Write();
 	}	
 
 	TDirectory *recoilJetsDir = out->mkdir("recoilJets","recoilJets");
@@ -1416,7 +1428,7 @@ int main (int argc, char** argv)
 	t_vertices->Delete();
 	t_event->Delete();
 	
-	return 0;
+	//return 0;
 }
 
 
