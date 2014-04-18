@@ -89,7 +89,6 @@ void ptBinning::fillLowPtBins()
 
 void ptBinning::fillPtBins() 
 {
-  mPtBins.push_back(std::make_pair(150., 200.));
   mPtBins.push_back(std::make_pair(200., 250.));
   mPtBins.push_back(std::make_pair(250., 300.));
   mPtBins.push_back(std::make_pair(300., 360.));
