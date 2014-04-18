@@ -191,11 +191,15 @@ int main (int argc, char** argv)
 	npvBinning myNpvBinning;
 	etaBinning myEtaBinning;
 	PUReweighter myPUReweighter;
-  PUReweighter myPUReweighter_HLT_PFJet140("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet140.root");
-  PUReweighter myPUReweighter_HLT_PFJet200("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet200.root");
-  PUReweighter myPUReweighter_HLT_PFJet260("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet260.root");
-  PUReweighter myPUReweighter_HLT_PFJet320("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet320.root");
-	ptBinning myLowPtBinning(true);
+  //PUReweighter myPUReweighter_HLT_PFJet140("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet140.root");
+  //PUReweighter myPUReweighter_HLT_PFJet200("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet200.root");
+  //PUReweighter myPUReweighter_HLT_PFJet260("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet260.root");
+  //PUReweighter myPUReweighter_HLT_PFJet320("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet320.root");
+	PUReweighter myPUReweighter_HLT_PFJet140("PUDistribution/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet140.root");
+  PUReweighter myPUReweighter_HLT_PFJet200("PUDistribution/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet200.root");
+  PUReweighter myPUReweighter_HLT_PFJet260("PUDistribution/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet260.root");
+  PUReweighter myPUReweighter_HLT_PFJet320("PUDistribution/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet320.root");
+  ptBinning myLowPtBinning(true);
 
 	
 //usefull variables
@@ -459,28 +463,28 @@ int main (int argc, char** argv)
 	hJetsPhi_afterSel->SetXTitle("#phi^{jet} [rad]");
 	hJetsPhi_afterSel->Sumw2();
 	
-	TH1F* hLeadingJetPt_beforeSel=new TH1F("hLeadingJetPt_beforeSel","hLeadingJetPt_beforeSel",150,0,3000);
+	TH1F* hLeadingJetPt_beforeSel=new TH1F("hLeadingJetPt_beforeSel","hLeadingJetPt_beforeSel",50,0,2000);
 	hLeadingJetPt_beforeSel->SetXTitle("p_{t}^{leading jet} [GeV/c]");
 	hLeadingJetPt_beforeSel->Sumw2();
 	
-	TH1F* hLeadingJetPt_afterSel=new TH1F("hLeadingJetPt_afterSel","hLeadingJetPt_afterSel",150,0,3000);
+	TH1F* hLeadingJetPt_afterSel=new TH1F("hLeadingJetPt_afterSel","hLeadingJetPt_afterSel",50,0,2000);
 	hLeadingJetPt_afterSel->SetXTitle("p_{t}^{leading jet} [GeV/c]");
 	hLeadingJetPt_afterSel->Sumw2();
 	
 	
-	TH1F* hRecoilPt_beforeSel=new TH1F("hRecoilPt_beforeSel","hRecoilPt_beforeSel",150,0,3000);
+	TH1F* hRecoilPt_beforeSel=new TH1F("hRecoilPt_beforeSel","hRecoilPt_beforeSel",50,0,2000);
 	hRecoilPt_beforeSel->SetXTitle("p_{t}^{Recoil} [GeV/c]");
 	hRecoilPt_beforeSel->Sumw2();
 	
-	TH1F* hRecoilPt_afterSel=new TH1F("hRecoilPt_afterSel","hRecoilPt_afterSel",150,0,3000);
+	TH1F* hRecoilPt_afterSel=new TH1F("hRecoilPt_afterSel","hRecoilPt_afterSel",50,0,2000);
 	hRecoilPt_afterSel->SetXTitle("p_{t}^{Recoil} [GeV/c]");
 	hRecoilPt_afterSel->Sumw2();
 	
-	TH1F* hRecoilJetsPt_beforeSel=new TH1F("hRecoilJetsPt_beforeSel","hRecoilJetsPt_beforeSel",150,0,3000);
+	TH1F* hRecoilJetsPt_beforeSel=new TH1F("hRecoilJetsPt_beforeSel","hRecoilJetsPt_beforeSel",50,0,2000);
 	hRecoilJetsPt_beforeSel->SetXTitle("p_{t}^{Recoil jets} [GeV/c]");
 	hRecoilJetsPt_beforeSel->Sumw2();
 	
-	TH1F* hRecoilJetsPt_afterSel=new TH1F("hRecoilJetsPt_afterSel","hRecoilJetsPt_afterSel",150,0,3000);
+	TH1F* hRecoilJetsPt_afterSel=new TH1F("hRecoilJetsPt_afterSel","hRecoilJetsPt_afterSel",50,0,2000);
 	hRecoilJetsPt_afterSel->SetXTitle("p_{t}^{Recoil jets} [GeV/c]");
 	hRecoilJetsPt_afterSel->Sumw2();	
 	
@@ -961,7 +965,7 @@ int main (int argc, char** argv)
             hHT_beforeSel->Fill(HT, weight);
 
             if(binLeadingJetPt >= 0) {
-              vLeadingJetPt_LeadingJetPtHLT[binLeadingJetPt]->Fill(leadingjetpt);
+              vLeadingJetPt_LeadingJetPtHLT[binLeadingJetPt]->Fill(leadingjetpt, weight);
             }
             
             Njets_ptSup25_etaInf5_beforeSel = 0;
