@@ -34,7 +34,7 @@ for input in inputs:
 
 tmpfile.flush()
 
-args = ["parallel", "-u", "-a", tmpfile.name, "-j", "4"]
+args = ["parallel", "-u", "-a", tmpfile.name, "-j", "8"]
 subprocess.call(args)
 #print args
 

@@ -7,26 +7,26 @@ d = datetime.datetime.now().strftime("%d%b%y")
 inputs = [
         # RunA
         [
-        ['MULTIJET_Jet_Run2012A-22Jan2013.root', 'list/MULTIJET_Jet_Run2012A-22Jan2013_woPU_pt25_eta50_puJetIdMT_08Apr.list', '232.363', '46.129', '10.701', '1', 'runA']
+        ['MULTIJET_Jet_Run2012A-22Jan2013.root', 'list/MULTIJET_Jet_Run2012A-22Jan2013_woPU_pt25_eta50_puJetIdMT_15Apr.list', '232.363', '46.129', '10.701', '1', 'runA']
         ],
 
         # RunB
         [
-            ['MULTIJET_JetHT_Run2012B-22Jan2013.root', 'list/MULTIJET_JetHT_Run2012B-22Jan2013_woPU_pt25_eta50_puJetIdMT_08Apr.list', '-1', '-1', '-1', '1', 'runB'],
-            ['MULTIJET_JetMon_Run2012B-22Jan2013.root', 'list/MULTIJET_JetMon_Run2012B-22Jan2013_woPU_pt25_eta50_puJetIdMT_08Apr.list', '271.730', '69.120', '16.634', '-1', 'runB']
+            ['MULTIJET_JetHT_Run2012B-22Jan2013.root', 'list/MULTIJET_JetHT_Run2012B-22Jan2013_woPU_pt25_eta50_puJetIdMT_15Apr.list', '-1', '-1', '-1', '1', 'runB'],
+            ['MULTIJET_JetMon_Run2012B-22Jan2013.root', 'list/MULTIJET_JetMon_Run2012B-22Jan2013_woPU_pt25_eta50_puJetIdMT_15Apr.list', '271.730', '69.120', '16.634', '-1', 'runB']
         ],
 
         # RunC
         [
-            ['MULTIJET_JetHT_Run2012C-22Jan2013.root', 'list/MULTIJET_JetHT_Run2012C-22Jan2013_woPU_pt25_eta50_puJetIdMT_08Apr.list', '-1', '-1', '-1', '1', 'runC'],
-            ['MULTIJET_JetMon_Run2012C-22Jan2013.root', 'list/MULTIJET_JetMon_Run2012C-22Jan2013_woPU_pt25_eta50_puJetIdMT_08Apr.list', '404.194', '80.840', '20.143', '-1', 'runC']
+            ['MULTIJET_JetHT_Run2012C-22Jan2013.root', 'list/MULTIJET_JetHT_Run2012C-22Jan2013_woPU_pt25_eta50_puJetIdMT_15Apr.list', '-1', '-1', '-1', '1', 'runC'],
+            ['MULTIJET_JetMon_Run2012C-22Jan2013.root', 'list/MULTIJET_JetMon_Run2012C-22Jan2013_woPU_pt25_eta50_puJetIdMT_15Apr.list', '404.194', '80.840', '20.143', '-1', 'runC']
             
         ],
 
         # RunD
         [
-            ['MULTIJET_JetHT_Run2012D-22Jan2013.root', 'list/MULTIJET_JetHT_Run2012D-22Jan2013_woPU_pt25_eta50_puJetIdMT_08Apr.list', '-1', '-1', '-1', '1', 'runD'],
-            ['MULTIJET_JetMon_Run2012D-22Jan2013.root', 'list/MULTIJET_JetMon_Run2012D-22Jan2013_woPU_pt25_eta50_puJetIdMT_08Apr.list', '409.434', '81.885', '20.471', '-1', 'runD']
+            ['MULTIJET_JetHT_Run2012D-22Jan2013.root', 'list/MULTIJET_JetHT_Run2012D-22Jan2013_woPU_pt25_eta50_puJetIdMT_15Apr.list', '-1', '-1', '-1', '1', 'runD'],
+            ['MULTIJET_JetMon_Run2012D-22Jan2013.root', 'list/MULTIJET_JetMon_Run2012D-22Jan2013_woPU_pt25_eta50_puJetIdMT_15Apr.list', '409.434', '81.885', '20.471', '-1', 'runD']
         ]
         
     ]
@@ -54,7 +54,7 @@ for input in inputs:
 
 tmpfile.flush()
 
-args = ["parallel", "-u", "-a", tmpfile.name, "-j", "6"]
+args = ["parallel", "-u", "-a", tmpfile.name, "-j", "8"]
 subprocess.call(args)
 #print args
 
