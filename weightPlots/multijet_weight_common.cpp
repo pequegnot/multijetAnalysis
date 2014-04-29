@@ -889,7 +889,12 @@ int main (int argc, char** argv)
             dropEvent = true;
             //cout<<"leadingjetpt: "<<leadingjetpt<<endl;
             //cout<<" HLT_vector->size(): "<< HLT_vector->size()<<endl;
+            // Nominal
             if ((leadingjetpt >= 170. && leadingjetpt < 230.) && HLT_PFJet140_prescaleFactor != -1){
+            // Test 1: only 2 triggers
+            //if ((leadingjetpt >= 170. && leadingjetpt < 360.) && HLT_PFJet140_prescaleFactor != -1){
+            // Test 2 : only 1 trigger
+            //if (leadingjetpt >= 170. && HLT_PFJet140_prescaleFactor != -1) {
               for (int i = 0; i < HLT_vector->size(); i++) {
                 //cout<<"HLT_vector->at("<<i<<")"<< HLT_vector->at(i) <<endl;
                 //cout<<"leadingjetpt"<<leadingjetpt<<endl;
@@ -931,7 +936,7 @@ int main (int argc, char** argv)
                   hLeadingJetPt_360toInf->Fill(leadingjetpt, weight);
                   break;
                 }	
-              }								
+              }							
             }
           }
           //cout<<"dropEvent: "<<dropEvent<<endl;
