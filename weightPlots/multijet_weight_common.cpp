@@ -1270,6 +1270,8 @@ int main (int argc, char** argv)
 	
 	TDirectory *mpfDir = out->mkdir("MPF","MPF");
 	mpfDir->cd();
+	TDirectory *ptbinmpfDir = mpfDir->mkdir("recoilPtBin","recoilPtBin");
+	ptbinmpfDir->cd();
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vMPF_RecoilPt[j]->Write();
 	}
