@@ -139,13 +139,13 @@ int main (int argc, char** argv)
 //*********************************************************************************************************
 
 	ptBinning myPtBinning;
-  HLTPtBinning myHLTPtBinning;
+    HLTPtBinning myHLTPtBinning;
 	npvBinning myNpvBinning;
 	ptBinning myLowPtBinning(true);
 	etaBinning myEtaBinning;
 	
 	int numberPtBins = myPtBinning.getSize();
-  int numberHLTPtBins = myHLTPtBinning.getSize();
+    int numberHLTPtBins = myHLTPtBinning.getSize();
 	int numberNpvBins = myNpvBinning.getSize();
 	int numberEtaBins = myEtaBinning.getSize();
 	
@@ -297,13 +297,13 @@ int main (int argc, char** argv)
     TH1F* hTrueNotPuTightJetPt = (TH1F*)f->Get("variables/afterSel/hTrueNotPuTightJetPt");
     TH1F* hOtherJetPt = (TH1F*)f->Get("variables/afterSel/hOtherJetPt");
 	TH1F* hFracJetsPt = (TH1F*)f->Get("variables/afterSel/hFracJetsPt");
-  TH1F* hHT_beforeSel = (TH1F*)f->Get("variables/beforeSel/hHT_beforeSel");
+    TH1F* hHT_beforeSel = (TH1F*)f->Get("variables/beforeSel/hHT_beforeSel");
 	TH1F* hHT_afterSel = (TH1F*)f->Get("variables/afterSel/hHT_afterSel");
 	TH1F* hNjetsRecoil = (TH1F*)f->Get("variables/afterSel/hNjetsRecoil");
 	TH1F* hNjetsTotal =  (TH1F*)f->Get("variables/afterSel/hNjetsTotal");	
-  TH1F* hJetsPt_afterSel = (TH1F*)f->Get("variables/afterSel/hJetsPt_afterSel");
-  TH1F* hJetsEta_afterSel = (TH1F*)f->Get("variables/afterSel/hJetsEta_afterSel");
-  TH1F* hJetsPhi_afterSel = (TH1F*)f->Get("variables/afterSel/hJetsPhi_afterSel");
+    TH1F* hJetsPt_afterSel = (TH1F*)f->Get("variables/afterSel/hJetsPt_afterSel");
+    TH1F* hJetsEta_afterSel = (TH1F*)f->Get("variables/afterSel/hJetsEta_afterSel");
+    TH1F* hJetsPhi_afterSel = (TH1F*)f->Get("variables/afterSel/hJetsPhi_afterSel");
 
 	TH1F* hMet_beforeSel = (TH1F*)f->Get("variables/beforeSel/hMet_beforeSel");
 	TH1F* hLeadingJetPt_beforeSel = (TH1F*)f->Get("variables/beforeSel/hLeadingJetPt_beforeSel");	
@@ -313,10 +313,10 @@ int main (int argc, char** argv)
 	TH1F* hBeta_beforeSel = (TH1F*)f->Get("variables/beforeSel/hBeta_beforeSel");	
 	TH1F* hA_beforeSel = (TH1F*)f->Get("variables/beforeSel/hA_beforeSel");	
 	TH1F* hRecoilJetsPt_beforeSel = (TH1F*)f->Get("variables/beforeSel/hRecoilJetsPt_beforeSel");	
-  TH1F* hJetsPt_beforeSel = (TH1F*)f->Get("variables/beforeSel/hJetsPt_beforeSel");
-  TH1F* hJetsEta_beforeSel = (TH1F*)f->Get("variables/beforeSel/hJetsEta_beforeSel");
-  TH1F* hJetsPhi_beforeSel = (TH1F*)f->Get("variables/beforeSel/hJetsPhi_beforeSel");
-  TH1F* hNjets_ptSup25_etaInf5_beforeSel = (TH1F*)f->Get("variables/beforeSel/hNjets_ptSup25_etaInf5_beforeSel");
+    TH1F* hJetsPt_beforeSel = (TH1F*)f->Get("variables/beforeSel/hJetsPt_beforeSel");
+    TH1F* hJetsEta_beforeSel = (TH1F*)f->Get("variables/beforeSel/hJetsEta_beforeSel");
+    TH1F* hJetsPhi_beforeSel = (TH1F*)f->Get("variables/beforeSel/hJetsPhi_beforeSel");
+    TH1F* hNjets_ptSup25_etaInf5_beforeSel = (TH1F*)f->Get("variables/beforeSel/hNjets_ptSup25_etaInf5_beforeSel");
 		
 	TH1F* hMet_afterSel = (TH1F*)f->Get("variables/afterSel/hMet_afterSel");	
 	TH1F* hLeadingJetPt_afterSel = (TH1F*)f->Get("variables/afterSel/hLeadingJetPt_afterSel");		
