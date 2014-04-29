@@ -6,13 +6,13 @@ d = datetime.datetime.now().strftime("%d%b%y")
 
 inputs = [
         # QCD Pt Herwig
-        ['MULTIJET_MC_QCD_Pt-120to170_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-120to170_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 1493670, 126490],
-        ['MULTIJET_MC_QCD_Pt-170to300_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-170to300_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 1497220, 27935],
-        ['MULTIJET_MC_QCD_Pt-300to470_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-300to470_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 1987929, 1461],
-        ['MULTIJET_MC_QCD_Pt-470to600_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-470to600_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 1945737, 95.25],
-        ['MULTIJET_MC_QCD_Pt-600to800_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-600to800_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 983991, 22.73],
-        ['MULTIJET_MC_QCD_Pt-800to1000_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-800to1000_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 962795, 2.997],
-        ['MULTIJET_MC_QCD_Pt-1000toInf_herwig_woPU_pt25_eta50_puJetIdMT.root', '/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/Extractors/MultijetExtractorAnalysis/test/MULTIJET_QCD_Pt-1000toInf_herwig_woPU_pt25_eta50_puJetIdMT_05Mar14.list', 498073, 0.665],
+        ['MULTIJET_MC_QCD_Pt-120to170_herwig_woPU_pt30_eta50_puJetIdT.root', 'list/MULTIJET_QCD_Pt-120to170_herwig_woPU_pt30_eta50_puJetIdT_24Apr14.list', 1493670, 126490],
+        ['MULTIJET_MC_QCD_Pt-170to300_herwig_woPU_pt30_eta50_puJetIdT.root', 'list/MULTIJET_QCD_Pt-170to300_herwig_woPU_pt30_eta50_puJetIdT_23Apr14.list', 1497220, 27935],
+        ['MULTIJET_MC_QCD_Pt-300to470_herwig_woPU_pt30_eta50_puJetIdT.root', 'list/MULTIJET_QCD_Pt-300to470_herwig_woPU_pt30_eta50_puJetIdT_23Apr14.list', 1987929, 1461],
+        ['MULTIJET_MC_QCD_Pt-470to600_herwig_woPU_pt30_eta50_puJetIdT.root', 'list/MULTIJET_QCD_Pt-470to600_herwig_woPU_pt30_eta50_puJetIdT_23Apr14.list', 1945737, 95.25],
+        ['MULTIJET_MC_QCD_Pt-600to800_herwig_woPU_pt30_eta50_puJetIdT.root', 'list/MULTIJET_QCD_Pt-600to800_herwig_woPU_pt30_eta50_puJetIdT_23Apr14.list', 983991, 22.73],
+        ['MULTIJET_MC_QCD_Pt-800to1000_herwig_woPU_pt30_eta50_puJetIdT.root', 'list/MULTIJET_QCD_Pt-800to1000_herwig_woPU_pt30_eta50_puJetIdT_23Apr14.list', 962795, 2.997],
+        ['MULTIJET_MC_QCD_Pt-1000toInf_herwig_woPU_pt30_eta50_puJetIdT.root', 'list/MULTIJET_QCD_Pt-1000toInf_herwig_woPU_pt30_eta50_puJetIdT_23Apr14.list', 498073, 0.665],
         ]
 
 def launch(input, output, nevents, xsection):
@@ -44,7 +44,7 @@ subprocess.call(args)
 ## All is done, merge
 
 print("Merging ...")
-args = ["hadd","-f", "output_rootfile/%s/MC/MULTIJET_MC_QCD-Pt-herwig_merged_woPU_pt25_eta50_puJetIdMT_%s.root" % (d,d)]
+args = ["hadd","-f", "output_rootfile/%s/MC/MULTIJET_MC_QCD-Pt-herwig_merged_woPU_pt30_eta50_puJetIdT_%s.root" % (d,d)]
 path = "output_rootfile/%s/MC" % (d)
 for output in inputs:
   args.append(os.path.join(path,output[0]))
