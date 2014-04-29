@@ -222,7 +222,7 @@ int main (int argc, char** argv)
 	vector<TH1F*> vMJB_RecoilPt = buildPtVectorH1(myPtBinning,"MJB",nbinsx,xlow,xup) ;
 
 	//ptLeadingJet per recoilpt
-	vector<TH1F*> vLeadingJetPt_RecoilPt = buildPtVectorH1(myPtBinning,"LeadingJetPt",35,200,650) ;
+	vector<TH1F*> vLeadingJetPt_RecoilPt = buildPtVectorH1(myPtBinning,"LeadingJetPt",190, 100, 2000) ;
 
    //LeadingJetPt per leadingjetpt bin (used for the HLT selection)
 	vector<TH1F*> vLeadingJetPt_LeadingJetPtHLT = buildBinnedDistriVectorH1(myHLTPtBinning,"LeadingJetPt",5) ;
@@ -335,21 +335,21 @@ int main (int argc, char** argv)
 	hNjetsGood->SetXTitle("N_{good jets}");
 	hNjetsGood->Sumw2();
 
-	TH1F* hNjet_JetPt=new TH1F("hNjet_JetPt","hNjet_JetPt",100,0,1000);
+	TH1F* hNjet_JetPt=new TH1F("hNjet_JetPt","hNjet_JetPt",150,0,3000);
 	hNjet_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
 	hNjet_JetPt->SetYTitle("N_{jets}");
 	hNjet_JetPt->Sumw2();
 	
-	TH1F* hNpuLoosejetTmp_JetPt=new TH1F("hNpuLoosejetTmp_JetPt","hNpuLoosejetTmp_JetPt",100,0,1000);
+	TH1F* hNpuLoosejetTmp_JetPt=new TH1F("hNpuLoosejetTmp_JetPt","hNpuLoosejetTmp_JetPt",150,0,3000);
 	hNpuLoosejetTmp_JetPt->Sumw2();
 	
-	TH1F* hNpuMediumjetTmp_JetPt=new TH1F("hNpuMediumjetTmp_JetPt","hNpuMediumjetTmp_JetPt",100,0,1000);
+	TH1F* hNpuMediumjetTmp_JetPt=new TH1F("hNpuMediumjetTmp_JetPt","hNpuMediumjetTmp_JetPt",150,0,3000);
 	hNpuMediumjetTmp_JetPt->Sumw2();
 	
-	TH1F* hNpuTightjetTmp_JetPt=new TH1F("hNpuTightjetTmp_JetPt","hNpuTightjetTmp_JetPt",100,0,1000);
+	TH1F* hNpuTightjetTmp_JetPt=new TH1F("hNpuTightjetTmp_JetPt","hNpuTightjetTmp_JetPt",150,0,3000);
 	hNpuTightjetTmp_JetPt->Sumw2();
 	
-	TH1F* hNpuAlljetTmp_JetPt=new TH1F("hNpuAlljetTmp_JetPt","hNpuAlljetTmp_JetPt",100,0,1000);
+	TH1F* hNpuAlljetTmp_JetPt=new TH1F("hNpuAlljetTmp_JetPt","hNpuAlljetTmp_JetPt",150,0,3000);
 	hNpuAlljetTmp_JetPt->Sumw2();
 	
 	TH1F* hNjet_Npv=new TH1F("hNjet_Npv","hNjet_Npv",70,0,70);
@@ -371,23 +371,23 @@ int main (int argc, char** argv)
 	
 	
 //************************************************************************************************************************
-	TH1F* hNrmPuJets_JetPt=new TH1F("hNrmPuJets_JetPt","hNrmPuJets_JetPt",100,0,1000);
+	TH1F* hNrmPuJets_JetPt=new TH1F("hNrmPuJets_JetPt","hNrmPuJets_JetPt",150,0,3000);
 	hNrmPuJets_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
 	hNrmPuJets_JetPt->SetYTitle("N_{PU jets}");
 	hNrmPuJets_JetPt->Sumw2();
 	
 
-	TH1F* hNpuLoosejet_JetPt=new TH1F("hNpuLoosejet_JetPt","hNpuLoosejet_JetPt",100,0,1000);
+	TH1F* hNpuLoosejet_JetPt=new TH1F("hNpuLoosejet_JetPt","hNpuLoosejet_JetPt",150,0,3000);
 	hNpuLoosejet_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
 	hNpuLoosejet_JetPt->SetYTitle("N_{PU loose jets}");
 	hNpuLoosejet_JetPt->Sumw2();
 	
-	TH1F* hNpuMediumjet_JetPt=new TH1F("hNpuMediumjet_JetPt","hNpuMediumjet_JetPt",100,0,1000);
+	TH1F* hNpuMediumjet_JetPt=new TH1F("hNpuMediumjet_JetPt","hNpuMediumjet_JetPt",150,0,3000);
 	hNpuMediumjet_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
 	hNpuMediumjet_JetPt->SetYTitle("N_{PU medium jets}");
 	hNpuMediumjet_JetPt->Sumw2();
 	
-	TH1F* hNpuTightjet_JetPt=new TH1F("hNpuTightjet_JetPt","hNpuTightjet_JetPt",100,0,1000);
+	TH1F* hNpuTightjet_JetPt=new TH1F("hNpuTightjet_JetPt","hNpuTightjet_JetPt",150,0,3000);
 	hNpuTightjet_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
 	hNpuTightjet_JetPt->SetYTitle("N_{PU tight jets}");
 	hNpuTightjet_JetPt->Sumw2();
@@ -435,31 +435,31 @@ int main (int argc, char** argv)
 	hMet_beforeSel->SetXTitle("MET [GeV/c]");
 	hMet_beforeSel->Sumw2();
 	
-	TH1F* hMet_afterSel=new TH1F("hMet_afterSel","hMet_afterSel",100,0,1000);
+	TH1F* hMet_afterSel=new TH1F("hMet_afterSel","hMet_afterSel",150,0,3000);
 	hMet_afterSel->SetXTitle("MET [GeV/c]");
 	hMet_afterSel->Sumw2();
 
-	TH1F* hJetsPt_beforeSel=new TH1F("hJetsPt_beforeSel","hJetsPt_beforeSel",100,0,1000);
+	TH1F* hJetsPt_beforeSel=new TH1F("hJetsPt_beforeSel","hJetsPt_beforeSel",150,0,3000);
 	hJetsPt_beforeSel->SetXTitle("p_{t}^{jet} [GeV/c]");
 	hJetsPt_beforeSel->Sumw2();
 
-  TH1F* hJetsEta_beforeSel=new TH1F("hJetsEta_beforeSel","hJetsEta_beforeSel",80,-4.,4.);
+    TH1F* hJetsEta_beforeSel=new TH1F("hJetsEta_beforeSel","hJetsEta_beforeSel",80,-4.,4.);
 	hJetsEta_beforeSel->SetXTitle("#eta^{jet} [rad]");
 	hJetsEta_beforeSel->Sumw2();
 
-  TH1F* hJetsPhi_beforeSel=new TH1F("hJetsPhi_beforeSel","hJetsPhi_beforeSel",70,0,7.);
+    TH1F* hJetsPhi_beforeSel=new TH1F("hJetsPhi_beforeSel","hJetsPhi_beforeSel",70,0,7.);
 	hJetsPhi_beforeSel->SetXTitle("#phi^{jet} [rad]");
 	hJetsPhi_beforeSel->Sumw2();
 
-	TH1F* hJetsPt_afterSel=new TH1F("hJetsPt_afterSel","hJetsPt_afterSel",100,0,1000);
+	TH1F* hJetsPt_afterSel=new TH1F("hJetsPt_afterSel","hJetsPt_afterSel",150,0,3000);
 	hJetsPt_afterSel->SetXTitle("p_{t}^{jet} [GeV/c]");
 	hJetsPt_afterSel->Sumw2();
 
-  TH1F* hJetsEta_afterSel=new TH1F("hJetsEta_afterSel","hJetsEta_afterSel",80,-4.,4.);
+    TH1F* hJetsEta_afterSel=new TH1F("hJetsEta_afterSel","hJetsEta_afterSel",80,-4.,4.);
 	hJetsEta_afterSel->SetXTitle("#eta^{jet} [rad]");
 	hJetsEta_afterSel->Sumw2();
 
-  TH1F* hJetsPhi_afterSel=new TH1F("hJetsPhi_afterSel","hJetsPhi_afterSel",80,-4.,4.);
+    TH1F* hJetsPhi_afterSel=new TH1F("hJetsPhi_afterSel","hJetsPhi_afterSel",80,-4.,4.);
 	hJetsPhi_afterSel->SetXTitle("#phi^{jet} [rad]");
 	hJetsPhi_afterSel->Sumw2();
 	
@@ -467,24 +467,24 @@ int main (int argc, char** argv)
 	hLeadingJetPt_beforeSel->SetXTitle("p_{t}^{leading jet} [GeV/c]");
 	hLeadingJetPt_beforeSel->Sumw2();
 	
-	TH1F* hLeadingJetPt_afterSel=new TH1F("hLeadingJetPt_afterSel","hLeadingJetPt_afterSel",50,0,2000);
+	TH1F* hLeadingJetPt_afterSel=new TH1F("hLeadingJetPt_afterSel","hLeadingJetPt_afterSel",150,0,3000);
 	hLeadingJetPt_afterSel->SetXTitle("p_{t}^{leading jet} [GeV/c]");
 	hLeadingJetPt_afterSel->Sumw2();
 	
 	
-	TH1F* hRecoilPt_beforeSel=new TH1F("hRecoilPt_beforeSel","hRecoilPt_beforeSel",50,0,2000);
+	TH1F* hRecoilPt_beforeSel=new TH1F("hRecoilPt_beforeSel","hRecoilPt_beforeSel",150,0,3000);
 	hRecoilPt_beforeSel->SetXTitle("p_{t}^{Recoil} [GeV/c]");
 	hRecoilPt_beforeSel->Sumw2();
 	
-	TH1F* hRecoilPt_afterSel=new TH1F("hRecoilPt_afterSel","hRecoilPt_afterSel",50,0,2000);
+	TH1F* hRecoilPt_afterSel=new TH1F("hRecoilPt_afterSel","hRecoilPt_afterSel",150,0,3000);
 	hRecoilPt_afterSel->SetXTitle("p_{t}^{Recoil} [GeV/c]");
 	hRecoilPt_afterSel->Sumw2();
 	
-	TH1F* hRecoilJetsPt_beforeSel=new TH1F("hRecoilJetsPt_beforeSel","hRecoilJetsPt_beforeSel",50,0,2000);
+	TH1F* hRecoilJetsPt_beforeSel=new TH1F("hRecoilJetsPt_beforeSel","hRecoilJetsPt_beforeSel",150,0,3000);
 	hRecoilJetsPt_beforeSel->SetXTitle("p_{t}^{Recoil jets} [GeV/c]");
 	hRecoilJetsPt_beforeSel->Sumw2();
 	
-	TH1F* hRecoilJetsPt_afterSel=new TH1F("hRecoilJetsPt_afterSel","hRecoilJetsPt_afterSel",50,0,2000);
+	TH1F* hRecoilJetsPt_afterSel=new TH1F("hRecoilJetsPt_afterSel","hRecoilJetsPt_afterSel",150,0,3000);
 	hRecoilJetsPt_afterSel->SetXTitle("p_{t}^{Recoil jets} [GeV/c]");
 	hRecoilJetsPt_afterSel->Sumw2();	
 	
@@ -560,7 +560,7 @@ int main (int argc, char** argv)
 	TChain* t_vertices = NULL;
 	TChain* t_event = NULL;
 	TChain* t_jet_PF = NULL;
-  TChain* t_HLT = NULL;
+    TChain* t_HLT = NULL;
 	loadChain(inputFiles, "Multijet", t_multijet);
 	loadChain(inputFiles, "Vertices", t_vertices);
 	loadChain(inputFiles, "event", t_event);
@@ -595,7 +595,7 @@ int main (int argc, char** argv)
 	t_multijet->SetBranchAddress("jetsgen_recoil_4vector",&jetsgen_recoil_4vector);
 	
 	std::vector<int>* goodJetsIndex = NULL;
-  t_multijet->SetBranchAddress("goodJetsIndex",&goodJetsIndex);
+    t_multijet->SetBranchAddress("goodJetsIndex",&goodJetsIndex);
 	
 	float A;
 	t_multijet->SetBranchAddress("A",&A);
@@ -669,13 +669,13 @@ int main (int argc, char** argv)
 	
   //HLT
 	std::vector<std::string>* HLT_vector = NULL;
-  t_HLT->SetBranchAddress("HLT_vector",&HLT_vector);
+    t_HLT->SetBranchAddress("HLT_vector",&HLT_vector);
 
 	
 	//Usefull variables
 	int binRecoilPt;//bin en recoilpt
-  int binLeadingJetRawPt;//bin en leading jet raw pt
-  int binLeadingJetPt;
+    int binLeadingJetRawPt;//bin en leading jet raw pt
+    int binLeadingJetPt;
 	int binRecoilEta;//bin en recoileta		
 	int binGenPt;//bin en firstjetgenpt
 	int binJetPt;//bin en pt des jets		
@@ -688,7 +688,7 @@ int main (int argc, char** argv)
 	float metpt;
 	float secondjetpt;	
 	float leadingjetgenpt;
-  float leadingjetrawpt;
+    float leadingjetrawpt;
 	float leadingjetpt;
 	float Rmpf = -1.;
 	float Rtrue = -1.;
