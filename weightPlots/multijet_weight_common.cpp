@@ -1017,7 +1017,7 @@ int main (int argc, char** argv)
               jet_PF_pt = ((TLorentzVector*) jet_PF_4vector->At(i))->Pt();
               hNjet_Npv->Fill(n_vertices, weight);
               hNjet_JetPt->Fill(jet_PF_pt, weight);
-              if(jet_PF_puJetFullId[i] < 6) {
+              if(jet_PF_puJetFullId[i] < 7) {
                 hNrmPuJets_JetPt->Fill(jet_PF_pt, weight);
               }
               if(jet_PF_puJetFullId[i] == 4) {
@@ -1224,15 +1224,15 @@ int main (int argc, char** argv)
 		}
 	}
 	
-	hNpuLoosejetTmp_Npv->Add(hNjet_Npv, hNpuLoosejetTmp_Npv, 1, -1);
-	hNpuMediumjetTmp_Npv->Add(hNjet_Npv, hNpuMediumjetTmp_Npv, 1, -1);
-	hNpuTightjetTmp_Npv->Add(hNjet_Npv, hNpuTightjetTmp_Npv, 1, -1);
-	hNpuAlljetTmp_Npv->Add(hNjet_Npv, hNpuAlljetTmp_Npv, 1, -1);
+	hNpuLoosejet_Npv->Add(hNjet_Npv, hNpuLoosejetTmp_Npv, 1, -1);
+	hNpuMediumjet_Npv->Add(hNjet_Npv, hNpuMediumjetTmp_Npv, 1, -1);
+	hNpuTightjet_Npv->Add(hNjet_Npv, hNpuTightjetTmp_Npv, 1, -1);
+	hNpuAlljet_Npv->Add(hNjet_Npv, hNpuAlljetTmp_Npv, 1, -1);
 	
-	hNpuLoosejetTmp_JetPt->Add(hNjet_JetPt, hNpuLoosejetTmp_JetPt, 1, -1);
-	hNpuMediumjetTmp_JetPt->Add(hNjet_JetPt, hNpuMediumjetTmp_JetPt, 1, -1);
-	hNpuTightjetTmp_JetPt->Add(hNjet_JetPt, hNpuTightjetTmp_JetPt, 1, -1);
-	hNpuAlljetTmp_JetPt->Add(hNjet_JetPt, hNpuAlljetTmp_JetPt, 1, -1);
+	hNpuLoosejet_JetPt->Add(hNjet_JetPt, hNpuLoosejetTmp_JetPt, 1, -1);
+	hNpuMediumjet_JetPt->Add(hNjet_JetPt, hNpuMediumjetTmp_JetPt, 1, -1);
+	hNpuTightjet_JetPt->Add(hNjet_JetPt, hNpuTightjetTmp_JetPt, 1, -1);
+	hNpuAlljet_JetPt->Add(hNjet_JetPt, hNpuAlljetTmp_JetPt, 1, -1);
 	
  
 
