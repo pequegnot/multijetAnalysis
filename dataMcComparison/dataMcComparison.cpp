@@ -800,6 +800,12 @@ int main (int argc, char** argv)
 	
 	TH1F* hA_afterSel_mc_lumi=(TH1F*)f_mc->Get("variables/afterSel/hA_afterSel");
 	TH1F* hA_afterSel_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hA_afterSel");
+
+	TH1F* hDeltaPhi_METJet1_afterSel_mc_lumi=(TH1F*)f_mc->Get("variables/afterSel/hDeltaPhi_METJet1_afterSel");
+	TH1F* hDeltaPhi_METJet1_afterSel_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hDeltaPhi_METJet1_afterSel");
+	
+    TH1F* hDeltaPhi_METRecoil_afterSel_mc_lumi=(TH1F*)f_mc->Get("variables/afterSel/hDeltaPhi_METRecoil_afterSel");
+	TH1F* hDeltaPhi_METRecoil_afterSel_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hDeltaPhi_METRecoil_afterSel");
 	
 	TH1F* hFracRmPuJets_JetPt_mc_lumi=(TH1F*)f_mc->Get("variables/afterSel/hFracRmPuJets_JetPt");
 	TH1F* hFracRmPuJets_JetPt_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hFracRmPuJets_JetPt");
@@ -1392,6 +1398,37 @@ int main (int argc, char** argv)
 	myHistoName = "images/variables/A_afterSel_lumi_inLogScale" + extension;
 	drawDataMcComparison("A_afterSel", hA_afterSel_mc_lumi, hA_afterSel_data_lumi, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", myHistoName.c_str());
 		
+//************************************************************************************************************
+//
+//                                      DeltaPhi_METRecoil afterSel 
+//
+//************************************************************************************************************	
+	
+	
+	h1_style(hDeltaPhi_METRecoil_afterSel_mc_lumi);
+	h1_style(hDeltaPhi_METRecoil_afterSel_data_lumi);
+		
+	//rescale the Monte Carlo histogramm with luminosity
+	hDeltaPhi_METRecoil_afterSel_mc_lumi->Scale(getLumi());
+
+	myHistoName = "images/variables/DeltaPhi_METRecoil_afterSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("DeltaPhi_METRecoil_afterSel", hDeltaPhi_METRecoil_afterSel_mc_lumi, hDeltaPhi_METRecoil_afterSel_data_lumi, "|#Delta#phi (MET,Recoil)|", myHistoName.c_str());
+
+//************************************************************************************************************
+//
+//                                      DeltaPhi_METJet1 afterSel 
+//
+//************************************************************************************************************	
+	
+	
+	h1_style(hDeltaPhi_METJet1_afterSel_mc_lumi);
+	h1_style(hDeltaPhi_METJet1_afterSel_data_lumi);
+		
+	//rescale the Monte Carlo histogramm with luminosity
+	hDeltaPhi_METJet1_afterSel_mc_lumi->Scale(getLumi());
+
+	myHistoName = "images/variables/DeltaPhi_METJet1_afterSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("DeltaPhi_METJet1_afterSel", hDeltaPhi_METJet1_afterSel_mc_lumi, hDeltaPhi_METJet1_afterSel_data_lumi, "|#Delta#phi (MET,1^{st}jet)|", myHistoName.c_str());
 
 //*******************************************************************************************************
 
@@ -1456,6 +1493,10 @@ int main (int argc, char** argv)
       drawDataMcComparison("A_beforeSel", hA_beforeSel_mc_lumi, hA_beforeSel_data_lumi, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/A_afterSel_lumi_inLinScale" + extension;
       drawDataMcComparison("A_afterSel", hA_afterSel_mc_lumi, hA_afterSel_data_lumi, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/DeltaPhi_METRecoil_afterSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("DeltaPhi_METRecoil_afterSel", hDeltaPhi_METRecoil_afterSel_mc_lumi, hDeltaPhi_METRecoil_afterSel_data_lumi, "#Delta#phi (MET,Recoil)", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/DeltaPhi_METJet1_afterSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("DeltaPhi_METJet1_afterSel", hDeltaPhi_METJet1_afterSel_mc_lumi, hDeltaPhi_METJet1_afterSel_data_lumi, "#Delta#phi (MET,1^{st}jet)", myHistoName.c_str(), inLinScale);
       for(int j=0; j<myPtBinning.getSize(); j++) {
         binName = myPtBinning.getName(j);
         myName = "MJB_{data}/MJB_{MC} for " + binName;
@@ -2202,6 +2243,46 @@ int main (int argc, char** argv)
 	myHistoName = "images/variables/A_afterSel_shape_inLogScale" + extension;
 	drawDataMcComparison("A_afterSel", hA_afterSel_mc_shape, hA_afterSel_data_shape, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", myHistoName.c_str());
 
+//************************************************************************************************************
+//
+//                                      DeltaPhi_METRecoil afterSel 
+//
+//************************************************************************************************************	
+	
+	TH1F* hDeltaPhi_METRecoil_afterSel_mc_shape=(TH1F*)hDeltaPhi_METRecoil_afterSel_mc_lumi->Clone();
+	TH1F* hDeltaPhi_METRecoil_afterSel_data_shape=(TH1F*)hDeltaPhi_METRecoil_afterSel_data_lumi->Clone();
+
+	h1_style(hDeltaPhi_METRecoil_afterSel_mc_shape);
+	h1_style(hDeltaPhi_METRecoil_afterSel_data_shape);
+		
+	//rescale the Monte Carlo histogramm with number of entries
+	float Nentries_DeltaPhi_METRecoil_afterSel_mc = hDeltaPhi_METRecoil_afterSel_mc_shape->Integral();
+	float Nentries_DeltaPhi_METRecoil_afterSel_Data = hDeltaPhi_METRecoil_afterSel_data_shape->Integral();	
+	hDeltaPhi_METRecoil_afterSel_mc_shape->Scale(Nentries_DeltaPhi_METRecoil_afterSel_Data/Nentries_DeltaPhi_METRecoil_afterSel_mc);
+
+	myHistoName = "images/variables/DeltaPhi_METRecoil_afterSel_shape_inLogScale" + extension;
+	drawDataMcComparison("DeltaPhi_METRecoil_afterSel", hDeltaPhi_METRecoil_afterSel_mc_shape, hDeltaPhi_METRecoil_afterSel_data_shape, "|#Delta#phi (MET,Recoil)|", myHistoName.c_str());
+
+//************************************************************************************************************
+//
+//                                      DeltaPhi_METJet1 afterSel 
+//
+//************************************************************************************************************	
+	
+	TH1F* hDeltaPhi_METJet1_afterSel_mc_shape=(TH1F*)hDeltaPhi_METJet1_afterSel_mc_lumi->Clone();
+	TH1F* hDeltaPhi_METJet1_afterSel_data_shape=(TH1F*)hDeltaPhi_METJet1_afterSel_data_lumi->Clone();
+
+	h1_style(hDeltaPhi_METJet1_afterSel_mc_shape);
+	h1_style(hDeltaPhi_METJet1_afterSel_data_shape);
+		
+	//rescale the Monte Carlo histogramm with number of entries
+	float Nentries_DeltaPhi_METJet1_afterSel_mc = hDeltaPhi_METJet1_afterSel_mc_shape->Integral();
+	float Nentries_DeltaPhi_METJet1_afterSel_Data = hDeltaPhi_METJet1_afterSel_data_shape->Integral();	
+	hDeltaPhi_METJet1_afterSel_mc_shape->Scale(Nentries_DeltaPhi_METJet1_afterSel_Data/Nentries_DeltaPhi_METJet1_afterSel_mc);
+
+	myHistoName = "images/variables/DeltaPhi_METJet1_afterSel_shape_inLogScale" + extension;
+	drawDataMcComparison("DeltaPhi_METJet1_afterSel", hDeltaPhi_METJet1_afterSel_mc_shape, hDeltaPhi_METJet1_afterSel_data_shape, "|#Delta#phi (MET,1^{st}jet)|", myHistoName.c_str());
+
 //*******************************************************************************************************
 
     if(inLinScale) {
@@ -2264,6 +2345,10 @@ int main (int argc, char** argv)
       drawDataMcComparison("A_beforeSel", hA_beforeSel_mc_shape, hA_beforeSel_data_shape, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/A_afterSel_shape_inLinScale" + extension;
       drawDataMcComparison("A_afterSel", hA_afterSel_mc_shape, hA_afterSel_data_shape, "A = p_{t}^{jet 2}/p_{t}^{Recoil}", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/DeltaPhi_METRecoil_afterSel_shape_inLinScale" + extension;
+      drawDataMcComparison("DeltaPhi_METRecoil_afterSel", hDeltaPhi_METRecoil_afterSel_mc_shape, hDeltaPhi_METRecoil_afterSel_data_shape, "|#Delta#phi (MET,Recoil)|", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/DeltaPhi_METJet1_afterSel_shape_inLinScale" + extension;
+      drawDataMcComparison("DeltaPhi_METJet1_afterSel", hDeltaPhi_METJet1_afterSel_mc_shape, hDeltaPhi_METJet1_afterSel_data_shape, "|#Delta#phi (MET,Jet1)|", myHistoName.c_str(), inLinScale);
       for(int j=0; j<myPtBinning.getSize(); j++) {
         binName = myPtBinning.getName(j);
         myName = "MJB_{data}/MJB_{MC} for " + binName;

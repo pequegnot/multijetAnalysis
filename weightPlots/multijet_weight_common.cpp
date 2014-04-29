@@ -431,7 +431,7 @@ int main (int argc, char** argv)
 	hFracJetsPt->SetXTitle("p_{t}^{PU jets}/p_{t}^{totjets}");
 	hFracJetsPt->Sumw2();
 	
-	TH1F* hMet_beforeSel=new TH1F("hMet_beforeSel","hMet_beforeSel",100,0,1000);
+	TH1F* hMet_beforeSel=new TH1F("hMet_beforeSel","hMet_beforeSel",150,0,3000);
 	hMet_beforeSel->SetXTitle("MET [GeV/c]");
 	hMet_beforeSel->Sumw2();
 	
@@ -462,8 +462,16 @@ int main (int argc, char** argv)
     TH1F* hJetsPhi_afterSel=new TH1F("hJetsPhi_afterSel","hJetsPhi_afterSel",80,-4.,4.);
 	hJetsPhi_afterSel->SetXTitle("#phi^{jet} [rad]");
 	hJetsPhi_afterSel->Sumw2();
-	
-	TH1F* hLeadingJetPt_beforeSel=new TH1F("hLeadingJetPt_beforeSel","hLeadingJetPt_beforeSel",50,0,2000);
+
+    TH1F* hDeltaPhi_METRecoil_afterSel=new TH1F("hDeltaPhi_METRecoil_afterSel","hDeltaPhi_METRecoil_afterSel",40,0,4);
+	hDeltaPhi_METRecoil_afterSel->SetXTitle("|#Delta#phi (MET,Recoil)|");
+	hDeltaPhi_METRecoil_afterSel->Sumw2();
+
+    TH1F* hDeltaPhi_METJet1_afterSel=new TH1F("hDeltaPhi_METJet1_afterSel","hDeltaPhi_METJet1_afterSel",40,0,4);
+	hDeltaPhi_METJet1_afterSel->SetXTitle("|#Delta#phi (MET,1^{st}jet)|");
+	hDeltaPhi_METJet1_afterSel->Sumw2();
+
+	TH1F* hLeadingJetPt_beforeSel=new TH1F("hLeadingJetPt_beforeSel","hLeadingJetPt_beforeSel",150,0,3000);
 	hLeadingJetPt_beforeSel->SetXTitle("p_{t}^{leading jet} [GeV/c]");
 	hLeadingJetPt_beforeSel->Sumw2();
 	
@@ -705,7 +713,12 @@ int main (int argc, char** argv)
 	float recoilEtaMaxTmp;
 	float recoilDeltaEta;
 	float jet_PF_pt;
-  float Njets_ptSup25_etaInf5_beforeSel;
+    float Njets_ptSup25_etaInf5_beforeSel;
+    float metphi;
+    float leadingjetphi;
+    float recoilphi;
+    Double_t DeltaPhi_METRecoil;
+    Double_t DeltaPhi_METJet1;
 	
 	
 	int ntot = 0;
@@ -787,9 +800,11 @@ int main (int argc, char** argv)
             
           TLorentzVector* recoil = (TLorentzVector*) recoil_4vector->At(0);
           recoilpt = recoil->Pt();
+          recoilphi = recoil->Phi();
           
           TLorentzVector* leadingjet = (TLorentzVector*) leadingjet_4vector->At(0);
           leadingjetpt = leadingjet->Pt();
+          leadingjetphi = leadingjet->Phi();
 
           TLorentzVector* leadingjetraw = (TLorentzVector*) leadingjetraw_4vector->At(0);
           leadingjetrawpt = leadingjetraw->Pt();
@@ -821,6 +836,7 @@ int main (int argc, char** argv)
           metpx = met->Px();
           metpy = met->Py();
           metpt = met->Pt();
+          metphi = met->Phi();
           
           Rmpf = 1 + (recoilpx*metpx + recoilpy*metpy)/(pow(recoilpt,2));		
           
@@ -932,6 +948,24 @@ int main (int argc, char** argv)
           //HLT selection
           if(dropEvent == false) {
 
+//************************************************************************************************************
+//
+//                                      deltaPhi calculation
+//
+//************************************************************************************************************
+
+               //DeltaPhi between MET and the recoil
+                DeltaPhi_METRecoil = TMath::Abs((metphi) - (recoilphi));
+                if(DeltaPhi_METRecoil>TMath::Pi()){
+                    DeltaPhi_METRecoil = 2*TMath::Pi()-DeltaPhi_METRecoil;
+                }
+
+               //DeltaPhi between MET and the leading jet 
+                DeltaPhi_METJet1 = TMath::Abs((metphi) - (leadingjetphi));
+                if(DeltaPhi_METJet1>TMath::Pi()){
+                    DeltaPhi_METJet1 = 2*TMath::Pi()-DeltaPhi_METJet1;
+                }
+
 //*****************************************************************************************************
 //
 //                                      filling histogramms
@@ -1017,6 +1051,8 @@ int main (int argc, char** argv)
                     //if(recoilpt>250.) {
 
                       hRecoilEta->Fill(fabs(recoileta), weight);
+                      hDeltaPhi_METRecoil_afterSel->Fill(DeltaPhi_METRecoil, weight);
+                      hDeltaPhi_METJet1_afterSel->Fill(DeltaPhi_METJet1, weight);
                       hMJB_inclusive->Fill(MJB, weight);
                       hHT_afterSel->Fill(HT,weight);
                       hNjetsRecoil->Fill(jets_recoil_4vector->GetSize(), weight);
@@ -1336,11 +1372,16 @@ int main (int argc, char** argv)
 	hNpuMediumjet_Npv->Write();
 	hNpuTightjet_Npv->Write();
 	hNpuAlljet_Npv->Write();
+    hTrueNotPuTightJetPt->Write();
+    hOtherJetPt->Write();
 	hHT_afterSel->Write();
 	hFracJetsPt->Write();
-  hJetsPt_afterSel->Write();
-  hJetsEta_afterSel->Write();
-  hJetsPhi_afterSel->Write();
+    hJetsPt_afterSel->Write();
+    hJetsEta_afterSel->Write();
+    hJetsPhi_afterSel->Write();
+    hDeltaPhi_METRecoil_afterSel->Write();
+    hDeltaPhi_METJet1_afterSel->Write();
+
 	
 	TDirectory *PUWeightDir = out->mkdir("PUWeight","PUWeight");
 	PUWeightDir->cd();
