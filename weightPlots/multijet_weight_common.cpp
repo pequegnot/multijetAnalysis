@@ -392,7 +392,15 @@ int main (int argc, char** argv)
 	hNpuTightjet_JetPt->SetYTitle("N_{PU tight jets}");
 	hNpuTightjet_JetPt->Sumw2();
 	
-	TH1F* hNpuAlljet_JetPt=new TH1F("hNpuAlljet_JetPt","hNpuAlljet_JetPt",100,0,1000);
+	TH1F* hTrueNotPuTightJetPt=new TH1F("hTrueNotPuTightJetPt","hTrueNotPuTightJetPt",150,0,3000);
+	hTrueNotPuTightJetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
+	hTrueNotPuTightJetPt->Sumw2();
+
+	TH1F* hOtherJetPt=new TH1F("hOtherJetPt","hOtherJetPt",150,0,3000);
+	hOtherJetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
+	hOtherJetPt->Sumw2();
+
+	TH1F* hNpuAlljet_JetPt=new TH1F("hNpuAlljet_JetPt","hNpuAlljet_JetPt",150,0,3000);
 	hNpuAlljet_JetPt->SetXTitle("p_{t}^{jet} [GeV/c]");
 	hNpuAlljet_JetPt->SetYTitle("N_{PU jets}");
 	hNpuAlljet_JetPt->Sumw2();
@@ -1035,6 +1043,13 @@ int main (int argc, char** argv)
               if(jet_PF_puJetFullId[i] >= 4) {
                 hNpuAlljetTmp_Npv->Fill(n_vertices, weight);
                 hNpuAlljetTmp_JetPt->Fill(jet_PF_pt, weight);
+              }
+
+              if(jet_PF_puJetFullId[i] == 7) {
+                hTrueNotPuTightJetPt->Fill(jet_PF_pt, weight);
+              }
+              else {
+                hOtherJetPt->Fill(jet_PF_pt, weight);
               }
             }
           

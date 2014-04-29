@@ -294,6 +294,8 @@ int main (int argc, char** argv)
 	TH1F* hNpuMediumjet_Npv = (TH1F*)f->Get("variables/afterSel/hNpuMediumjet_Npv");
 	TH1F* hNpuTightjet_Npv = (TH1F*)f->Get("variables/afterSel/hNpuTightjet_Npv");
 	TH1F* hNpuAlljet_Npv = (TH1F*)f->Get("variables/afterSel/hNpuAlljet_Npv");
+    TH1F* hTrueNotPuTightJetPt = (TH1F*)f->Get("variables/afterSel/hTrueNotPuTightJetPt");
+    TH1F* hOtherJetPt = (TH1F*)f->Get("variables/afterSel/hOtherJetPt");
 	TH1F* hFracJetsPt = (TH1F*)f->Get("variables/afterSel/hFracJetsPt");
   TH1F* hHT_beforeSel = (TH1F*)f->Get("variables/beforeSel/hHT_beforeSel");
 	TH1F* hHT_afterSel = (TH1F*)f->Get("variables/afterSel/hHT_afterSel");
@@ -498,6 +500,38 @@ int main (int argc, char** argv)
 	saveName = "images/Njets/FracPuAllJets_JetPt" + typeName + extension;
 	cNjets_JetPt->SaveAs(saveName.c_str());
 	
+
+//************************************************************************************************************
+//
+//                                      NtrueNotPuTightJet and NotherJet as a function of ptjet
+//
+//************************************************************************************************************
+
+    h1_style(hTrueNotPuTightJetPt);
+    h1_style(hOtherJetPt);
+
+    TCanvas *cTrueJet = new TCanvas();
+    cTrueJet->cd();
+    hTrueNotPuTightJetPt->SetFillColor(2);
+    hOtherJetPt->SetFillColor(5);
+    hTrueNotPuTightJetPt->SetLineColor(1);
+    hOtherJetPt->SetLineColor(1);
+    THStack* hsJetsPt = new THStack("hsJetsPt", "hsJetsPt");
+    hsJetsPt->Add(hTrueNotPuTightJetPt);
+    hsJetsPt->Add(hOtherJetPt);
+    hsJetsPt->Draw("hist");
+    hsJetsPt->GetXaxis()->SetTitle("Jet p_{t} [GeV]");
+    hsJetsPt->GetXaxis()->SetRangeUser(0., 700.);
+    TLegend *myLegend = new TLegend(0.74,0.70,0.88,0.88);
+    myLegend->SetBorderSize(0);
+	myLegend->AddEntry(hTrueNotPuTightJetPt,"True (not PU Tight) jets","f");
+	myLegend->AddEntry(hOtherJetPt,"Others","f");
+	myLegend->SetFillColor(0);
+	myLegend->Draw("SAME");
+    cTrueJet->SetLogy();
+    saveName = "images/Njets/NTrueJet_jetPt" + typeName + extension;
+    cTrueJet->SaveAs(saveName.c_str());
+
 //************************************************************************************************************
 //
 //                                      Njet and NpuLooseJets as a function of Npv
