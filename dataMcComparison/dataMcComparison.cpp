@@ -686,6 +686,53 @@ int main (int argc, char** argv)
 
 //************************************************************************************************************
 //
+//                                      MJB as a function of ptrecoil without 1 ptbin
+//
+//************************************************************************************************************
+
+	Double_t aMJB_RecoilPt_data_Mean[numberPtBins-1];
+	Double_t aMJB_RecoilPt_data_MeanError[numberPtBins-1];
+	Double_t aMJB_RecoilPt_mc_Mean[numberPtBins-1];
+	Double_t aMJB_RecoilPt_mc_MeanError[numberPtBins-1];
+	Double_t aRecoilPtBins_Mean[numberPtBins-1];
+	Double_t aRecoilPtBins_MeanError[numberPtBins-1];
+	Double_t aMJBRatio_Mean[numberPtBins-1];
+	Double_t aMJBRatio_MeanError[numberPtBins-1];
+	
+	for(int i=1; i<numberPtBins; i++) {
+    gMJB_RecoilPt_data->GetPoint(i,aRecoilPtBins_Mean[i-1],aMJB_RecoilPt_data_Mean[i-1]);
+    gMJB_RecoilPt_mc->GetPoint(i,aRecoilPtBins_Mean[i-1],aMJB_RecoilPt_mc_Mean[i-1]);
+    gMJB_RecoilPt_ratio->GetPoint(i,aRecoilPtBins_Mean[i-1],aMJBRatio_Mean[i-1]);
+    aMJB_RecoilPt_data_MeanError[i-1] = gMJB_RecoilPt_data->GetErrorY(i);
+    aMJB_RecoilPt_mc_MeanError[i-1] = gMJB_RecoilPt_mc->GetErrorY(i);
+    aRecoilPtBins_MeanError[i-1] = gMJB_RecoilPt_data->GetErrorX(i);
+    aMJBRatio_MeanError[i-1] = gMJB_RecoilPt_ratio->GetErrorY(i);
+	}
+
+	TGraphErrors* gMJB_RecoilPt_data_resize = new TGraphErrors(numberPtBins-1,aRecoilPtBins_Mean, aMJB_RecoilPt_data_Mean, aRecoilPtBins_MeanError, aMJB_RecoilPt_data_MeanError);
+	TGraphErrors* gMJB_RecoilPt_mc_resize = new TGraphErrors(numberPtBins-1,aRecoilPtBins_Mean, aMJB_RecoilPt_mc_Mean, aRecoilPtBins_MeanError, aMJB_RecoilPt_mc_MeanError);	
+	TGraph_data_style (gMJB_RecoilPt_data_resize);
+	TGraph_mc_style (gMJB_RecoilPt_mc_resize);
+	
+	TMultiGraph *mgMJB_RecoilPt_resize = new TMultiGraph();
+	mgMJB_RecoilPt_resize->Add(gMJB_RecoilPt_mc_resize,"pe");
+	mgMJB_RecoilPt_resize->Add(gMJB_RecoilPt_data_resize,"pe");
+	mgMJB_RecoilPt_resize->SetTitle("MJB as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];MJB");
+	
+	TGraphErrors *gMJB_RecoilPt_ratio_resize = getDataMcResponseRatio(gMJB_RecoilPt_data_resize,gMJB_RecoilPt_mc_resize,numberPtBins, "p_{t}^{Recoil} [GeV/c]");
+	gMJB_RecoilPt_ratio_resize->GetYaxis()->SetTitle("MJB^{data}/MJB^{MC}");
+	gMJB_RecoilPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+	gMJB_RecoilPt_ratio_resize->SetName("Data/MC");
+	gMJB_RecoilPt_ratio_resize->SetTitle("Data/MC");
+	gMJB_RecoilPt_ratio_resize->SetMarkerSize(1.0);
+	gMJB_RecoilPt_ratio_resize->Fit("func","","",gMJB_RecoilPt_data_resize->GetXaxis()->GetXmin(),gMJB_RecoilPt_data_resize->GetXaxis()->GetXmax());
+	
+	myHistoName = "images/response/MJB_RecoilPt_resize" + extension;	
+	drawComparisonResponse("r1", mgMJB_RecoilPt_resize, gMJB_RecoilPt_mc_resize, gMJB_RecoilPt_data_resize, gMJB_RecoilPt_ratio_resize,"MC", myHistoName.c_str());
+
+
+//************************************************************************************************************
+//
 //                                      MPF as a function of ptrecoil
 //
 //************************************************************************************************************
@@ -711,6 +758,51 @@ int main (int argc, char** argv)
 	
 	myHistoName = "images/response/MPF_RecoilPt" + extension;	
 	drawComparisonResponse("r1", mgMPF_RecoilPt, gMPF_RecoilPt_mc, gMPF_RecoilPt_data, gMPF_RecoilPt_ratio,"MC", myHistoName.c_str());
+
+
+//************************************************************************************************************
+//
+//                                      MPF as a function of ptrecoil without 1 ptbin
+//
+//************************************************************************************************************
+
+	Double_t aMPF_RecoilPt_data_Mean[numberPtBins-1];
+	Double_t aMPF_RecoilPt_data_MeanError[numberPtBins-1];
+	Double_t aMPF_RecoilPt_mc_Mean[numberPtBins-1];
+	Double_t aMPF_RecoilPt_mc_MeanError[numberPtBins-1];
+	Double_t aMPFRatio_Mean[numberPtBins-1];
+	Double_t aMPFRatio_MeanError[numberPtBins-1];
+	
+	for(int i=1; i<numberPtBins; i++) {
+    gMPF_RecoilPt_data->GetPoint(i,aRecoilPtBins_Mean[i-1],aMPF_RecoilPt_data_Mean[i-1]);
+    gMPF_RecoilPt_mc->GetPoint(i,aRecoilPtBins_Mean[i-1],aMPF_RecoilPt_mc_Mean[i-1]);
+    gMPF_RecoilPt_ratio->GetPoint(i,aRecoilPtBins_Mean[i-1],aMPFRatio_Mean[i-1]);
+    aMPF_RecoilPt_data_MeanError[i-1] = gMPF_RecoilPt_data->GetErrorY(i);
+    aMPF_RecoilPt_mc_MeanError[i-1] = gMPF_RecoilPt_mc->GetErrorY(i);
+    aRecoilPtBins_MeanError[i-1] = gMPF_RecoilPt_data->GetErrorX(i);
+    aMPFRatio_MeanError[i-1] = gMPF_RecoilPt_ratio->GetErrorY(i);
+	}
+
+	TGraphErrors* gMPF_RecoilPt_data_resize = new TGraphErrors(numberPtBins-1,aRecoilPtBins_Mean, aMPF_RecoilPt_data_Mean, aRecoilPtBins_MeanError, aMPF_RecoilPt_data_MeanError);
+	TGraphErrors* gMPF_RecoilPt_mc_resize = new TGraphErrors(numberPtBins-1,aRecoilPtBins_Mean, aMPF_RecoilPt_mc_Mean, aRecoilPtBins_MeanError, aMPF_RecoilPt_mc_MeanError);	
+	TGraph_data_style (gMPF_RecoilPt_data_resize);
+	TGraph_mc_style (gMPF_RecoilPt_mc_resize);
+	
+	TMultiGraph *mgMPF_RecoilPt_resize = new TMultiGraph();
+	mgMPF_RecoilPt_resize->Add(gMPF_RecoilPt_mc_resize,"pe");
+	mgMPF_RecoilPt_resize->Add(gMPF_RecoilPt_data_resize,"pe");
+	mgMPF_RecoilPt_resize->SetTitle("MPF as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];MPF");
+	
+	TGraphErrors *gMPF_RecoilPt_ratio_resize = getDataMcResponseRatio(gMPF_RecoilPt_data_resize,gMPF_RecoilPt_mc_resize,numberPtBins, "p_{t}^{Recoil} [GeV/c]");
+	gMPF_RecoilPt_ratio_resize->GetYaxis()->SetTitle("MPF^{data}/MPF^{MC}");
+	gMPF_RecoilPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+	gMPF_RecoilPt_ratio_resize->SetName("Data/MC");
+	gMPF_RecoilPt_ratio_resize->SetTitle("Data/MC");
+	gMPF_RecoilPt_ratio_resize->SetMarkerSize(1.0);
+	gMPF_RecoilPt_ratio_resize->Fit("func","","",gMPF_RecoilPt_data_resize->GetXaxis()->GetXmin(),gMPF_RecoilPt_data_resize->GetXaxis()->GetXmax());
+	
+	myHistoName = "images/response/MPF_RecoilPt_resize" + extension;	
+	drawComparisonResponse("r1", mgMPF_RecoilPt_resize, gMPF_RecoilPt_mc_resize, gMPF_RecoilPt_data_resize, gMPF_RecoilPt_ratio_resize,"MC", myHistoName.c_str());
 	
 //************************************************************************************************************
 //
