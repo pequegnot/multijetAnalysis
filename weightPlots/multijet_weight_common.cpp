@@ -264,10 +264,10 @@ int main (int argc, char** argv)
   //Rmpf per recoilpt
   vector<TH1F*> vMPF_RecoilPt = buildPtVectorH1(myPtBinning,"MPF",nbinsx,xlow,xup) ;
 	
-	//NjetsRecoil per recoilpt
-	vector<TH1F*> vNjetsRecoil_RecoilPt = buildPtVectorH1(myPtBinning,"NjetsRecoil",35,0,35) ;
-	vector<TH1F*> vNjetsRecoil_068E_RecoilPt = buildPtVectorH1(myPtBinning,"NjetsRecoil_068E",35,0,35) ;
-	vector<TH1F*> vNjetsRecoil_095E_RecoilPt = buildPtVectorH1(myPtBinning,"NjetsRecoil_095E",35,0,35) ;
+  //NjetsRecoil per recoilpt
+  vector<TH1F*> vNjetsRecoil_RecoilPt = buildPtVectorH1(myPtBinning,"NjetsRecoil",35,0,35) ;
+  vector<TH1F*> vNjetsRecoil_068E_RecoilPt = buildPtVectorH1(myPtBinning,"NjetsRecoil_068E",35,0,35) ;
+  vector<TH1F*> vNjetsRecoil_095E_RecoilPt = buildPtVectorH1(myPtBinning,"NjetsRecoil_095E",35,0,35) ;
 
 	
   for(int j=0; j<myPtBinning.getSize(); j++) {
@@ -467,11 +467,11 @@ int main (int argc, char** argv)
 	hFracJetsPt->SetXTitle("p_{t}^{PU jets}/p_{t}^{totjets}");
 	hFracJetsPt->Sumw2();
 	
-	TH1F* hMet_beforeSel=new TH1F("hMet_beforeSel","hMet_beforeSel",150,0,3000);
+	TH1F* hMet_beforeSel=new TH1F("hMet_beforeSel","hMet_beforeSel",150,0,700);
 	hMet_beforeSel->SetXTitle("MET [GeV/c]");
 	hMet_beforeSel->Sumw2();
 	
-	TH1F* hMet_afterSel=new TH1F("hMet_afterSel","hMet_afterSel",150,0,3000);
+	TH1F* hMet_afterSel=new TH1F("hMet_afterSel","hMet_afterSel",150,0,700);
 	hMet_afterSel->SetXTitle("MET [GeV/c]");
 	hMet_afterSel->Sumw2();
 
@@ -588,9 +588,9 @@ int main (int argc, char** argv)
 	hLeadingJetPt_360toInf->SetXTitle("p_{t}^{leading jet} [GeV/c]");
 	hLeadingJetPt_360toInf->Sumw2();
 
-  TH1F* hNjets_ptSup25_etaInf5_beforeSel = new TH1F("hNjets_ptSup25_etaInf5_beforeSel", "hNjets_ptSup25_etaInf5_beforeSel", 25, 0, 25);
-  hNjets_ptSup25_etaInf5_beforeSel->SetXTitle("N_{jets} with p_{t} > 25 GeV and |#eta| < 5.0");
-  hNjets_ptSup25_etaInf5_beforeSel->Sumw2();
+  TH1F* hNjets_ptSup30_etaInf5_beforeSel = new TH1F("hNjets_ptSup30_etaInf5_beforeSel", "hNjets_ptSup30_etaInf5_beforeSel", 25, 0, 25);
+  hNjets_ptSup30_etaInf5_beforeSel->SetXTitle("N_{jets} with p_{t} > 30 GeV and |#eta| < 5.0");
+  hNjets_ptSup30_etaInf5_beforeSel->Sumw2();
 
 //*****************************************************************************************************
 //
@@ -749,7 +749,7 @@ int main (int argc, char** argv)
 	float recoilEtaMaxTmp;
 	float recoilDeltaEta;
 	float jet_PF_pt;
-    float Njets_ptSup25_etaInf5_beforeSel;
+    float Njets_ptSup30_etaInf5_beforeSel;
     float metphi;
     float leadingjetphi;
     float recoilphi;
@@ -1043,12 +1043,12 @@ int main (int argc, char** argv)
               vLeadingJetPt_LeadingJetPtHLT[binLeadingJetPt]->Fill(leadingjetpt, weight);
             }
             
-            Njets_ptSup25_etaInf5_beforeSel = 0;
+            Njets_ptSup30_etaInf5_beforeSel = 0;
             for(int i = 0; i < goodJetsIndex->size(); i++) {
               TLorentzVector* goodjet_PF = (TLorentzVector*) jet_PF_4vector->At( goodJetsIndex->at(i) );
-              if(goodjet_PF->Pt() < 25. && fabs(goodjet_PF->Eta() < 5.0)) {Njets_ptSup25_etaInf5_beforeSel ++;}
+              if(goodjet_PF->Pt() < 30. && fabs(goodjet_PF->Eta() < 5.0)) {Njets_ptSup30_etaInf5_beforeSel ++;}
             }
-            hNjets_ptSup25_etaInf5_beforeSel->Fill(Njets_ptSup25_etaInf5_beforeSel, weight);
+            hNjets_ptSup30_etaInf5_beforeSel->Fill(Njets_ptSup30_etaInf5_beforeSel, weight);
             for(int i=0; i<jet_PF_4vector->GetEntriesFast(); i++) {
               jet_PF_pt = ((TLorentzVector*) jet_PF_4vector->At(i))->Pt();
               hNjet_Npv->Fill(n_vertices, weight);
@@ -1395,7 +1395,7 @@ int main (int argc, char** argv)
   hJetsPt_beforeSel->Write();
   hJetsEta_beforeSel->Write();
   hJetsPhi_beforeSel->Write();
-  hNjets_ptSup25_etaInf5_beforeSel->Write();
+  hNjets_ptSup30_etaInf5_beforeSel->Write();
 	
 	TDirectory *afterSelDir = variablesDir->mkdir("afterSel","afterSel");
 	afterSelDir->cd();
