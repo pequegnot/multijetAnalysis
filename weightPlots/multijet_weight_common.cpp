@@ -87,10 +87,11 @@ int main (int argc, char** argv)
 	float Xsection = 1.;
 	std::vector<std::string> inputFiles;
 	string outputName;
-  float HLT_PFJet140_prescaleFactor;
-  float HLT_PFJet200_prescaleFactor;
-  float HLT_PFJet260_prescaleFactor;
-  float HLT_PFJet320_prescaleFactor;
+    float HLT_PFJet140_prescaleFactor;
+    float HLT_PFJet200_prescaleFactor;
+    float HLT_PFJet260_prescaleFactor;
+    float HLT_PFJet320_prescaleFactor;
+    std::string PUReweighting;
 
 //********************************************************************************************************* 	
 
@@ -111,9 +112,11 @@ int main (int argc, char** argv)
     TCLAP::ValueArg<int> NeventsArg("", "Nevents", "Nevents", false, -1, "int", cmd);
     TCLAP::ValueArg<float> XsectionArg("", "Xsection", "Xsection", false, -1., "float", cmd);
     TCLAP::ValueArg<float> HLT_PFJet140_prescaleFactorArg("", "HLT_PFJet140", "HLT_PFJet140 prescaleFactor: put -1 if you don't want to test this trigger", false, -1., "float", cmd);
-    TCLAP::ValueArg<float> HLT_PFJet200_prescaleFactorArg("", "HLT_PFJet200", "HLT_PFJet200 prescaleFactor", false, -1., "float", cmd);
-    TCLAP::ValueArg<float> HLT_PFJet260_prescaleFactorArg("", "HLT_PFJet260", "HLT_PFJet260 prescaleFactor", false, -1., "float", cmd);
-    TCLAP::ValueArg<float> HLT_PFJet320_prescaleFactorArg("", "HLT_PFJet320", "HLT_PFJet320 prescaleFactor", false, -1., "float", cmd);
+    TCLAP::ValueArg<float> HLT_PFJet200_prescaleFactorArg("", "HLT_PFJet200", "HLT_PFJet200 prescaleFactor: put -1 if you don't want to test this trigger", false, -1., "float", cmd);
+    TCLAP::ValueArg<float> HLT_PFJet260_prescaleFactorArg("", "HLT_PFJet260", "HLT_PFJet260 prescaleFactor: put -1 if you don't want to test this trigger", false, -1., "float", cmd);
+    TCLAP::ValueArg<float> HLT_PFJet320_prescaleFactorArg("", "HLT_PFJet320", "HLT_PFJet320 prescaleFactor: put -1 if you don't want to test this trigger", false, -1., "float", cmd);
+
+    TCLAP::ValueArg<string> PUReweightingArg("", "PU", "Data PU distribution used for PU reweighting: nominal? up? down?", false, "nominal", "string", cmd);
 
 
     // Add the argument to the CmdLine object. The CmdLine object
@@ -148,6 +151,7 @@ int main (int argc, char** argv)
     HLT_PFJet200_prescaleFactor = HLT_PFJet200_prescaleFactorArg.getValue();
     HLT_PFJet260_prescaleFactor = HLT_PFJet260_prescaleFactorArg.getValue();
     HLT_PFJet320_prescaleFactor = HLT_PFJet320_prescaleFactorArg.getValue();
+    PUReweighting = PUReweightingArg.getValue();
     
     if (!isMC) {
       weight = 1.;
