@@ -190,55 +190,79 @@ int main (int argc, char** argv)
 //
 //*********************************************************************************************************
 
-	ptBinning myPtBinning;
+  ptBinning myPtBinning; 
   HLTPtBinning myHLTPtBinning;
-	npvBinning myNpvBinning;
-	etaBinning myEtaBinning;
-	PUReweighter myPUReweighter;
+  npvBinning myNpvBinning;
+  etaBinning myEtaBinning;
+  ptBinning myLowPtBinning(true);
+
+  PUReweighter myPUReweighter;
   //PUReweighter myPUReweighter_HLT_PFJet140("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet140.root");
   //PUReweighter myPUReweighter_HLT_PFJet200("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet200.root");
   //PUReweighter myPUReweighter_HLT_PFJet260("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet260.root");
   //PUReweighter myPUReweighter_HLT_PFJet320("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet320.root");
-	PUReweighter myPUReweighter_HLT_PFJet140("PUDistribution/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet140.root");
-  PUReweighter myPUReweighter_HLT_PFJet200("PUDistribution/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet200.root");
-  PUReweighter myPUReweighter_HLT_PFJet260("PUDistribution/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet260.root");
-  PUReweighter myPUReweighter_HLT_PFJet320("PUDistribution/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet320.root");
-  ptBinning myLowPtBinning(true);
+  
+  std::string DataPileupHistogram_HLT_PFJet140_FileName;
+  std::string DataPileupHistogram_HLT_PFJet200_FileName;
+  std::string DataPileupHistogram_HLT_PFJet260_FileName;
+  std::string DataPileupHistogram_HLT_PFJet320_FileName;
 
+  if (PUReweighting == "nominal") {
+      DataPileupHistogram_HLT_PFJet140_FileName = "PUDistribution/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet140.root";
+      DataPileupHistogram_HLT_PFJet200_FileName = "PUDistribution/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet200.root";
+      DataPileupHistogram_HLT_PFJet260_FileName = "PUDistribution/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet260.root";
+      DataPileupHistogram_HLT_PFJet320_FileName = "PUDistribution/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet320.root";  
+  }
+  else if (PUReweighting == "up") {
+      DataPileupHistogram_HLT_PFJet140_FileName = "PUDistribution/Systematics/PUup/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet140.root";
+      DataPileupHistogram_HLT_PFJet200_FileName = "PUDistribution/Systematics/PUup/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet200.root";
+      DataPileupHistogram_HLT_PFJet260_FileName = "PUDistribution/Systematics/PUup/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet260.root";
+      DataPileupHistogram_HLT_PFJet320_FileName = "PUDistribution/Systematics/PUup/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet320.root";    
+  }
+  else if (PUReweighting == "down") {
+      DataPileupHistogram_HLT_PFJet140_FileName = "PUDistribution/Systematics/PUdown/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet140.root";
+      DataPileupHistogram_HLT_PFJet200_FileName = "PUDistribution/Systematics/PUdown/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet200.root";
+      DataPileupHistogram_HLT_PFJet260_FileName = "PUDistribution/Systematics/PUdown/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet260.root";
+      DataPileupHistogram_HLT_PFJet320_FileName = "PUDistribution/Systematics/PUdown/DataPileupHistogram_merged_Run2012ABCD_HLT_PFJet320.root";
+  }
+
+  PUReweighter myPUReweighter_HLT_PFJet140(DataPileupHistogram_HLT_PFJet140_FileName);
+  PUReweighter myPUReweighter_HLT_PFJet200(DataPileupHistogram_HLT_PFJet200_FileName);
+  PUReweighter myPUReweighter_HLT_PFJet260(DataPileupHistogram_HLT_PFJet260_FileName);
+  PUReweighter myPUReweighter_HLT_PFJet320(DataPileupHistogram_HLT_PFJet320_FileName);    
 	
 //usefull variables
-	Double_t xlow = getHistoXlow();
-	Double_t xup = getHistoXup();
-	//Double_t    binrange = 0.1;
-	//Int_t    nbinsx = (xup - xlow)/binrange;
-	Int_t    nbinsx = getHistoNbinsx();
-
-	int nflavours = getFlavourNumber(); //uds, g, c, b, noMatched, all
+  Double_t xlow = getHistoXlow();
+  Double_t xup = getHistoXup();
+  //Double_t    binrange = 0.1;
+  //Int_t    nbinsx = (xup - xlow)/binrange;
+  Int_t    nbinsx = getHistoNbinsx();
+  int nflavours = getFlavourNumber(); //uds, g, c, b, noMatched, all
 
 //vectors for multijet study
-	//recoilJetsPt spectrum for different Njetsrecoil values
-	vector<TH1F*> vRecoilJetsPt_NrecoilJets =buildNrecoiljetsVectorH1("RecoilJetsPt",40,0.,800.);
+  //recoilJetsPt spectrum for different Njetsrecoil values
+  vector<TH1F*> vRecoilJetsPt_NrecoilJets =buildNrecoiljetsVectorH1("RecoilJetsPt",40,0.,800.);
 
-	//MJB per Npv
-	vector<TH1F*> vMJB_Npv = buildNpvVectorH1(myNpvBinning,"MJB",nbinsx,xlow,xup) ;
+  //MJB per Npv
+  vector<TH1F*> vMJB_Npv = buildNpvVectorH1(myNpvBinning,"MJB",nbinsx,xlow,xup) ;
 
-	//MJB per recoilpt
-	vector<TH1F*> vMJB_RecoilPt = buildPtVectorH1(myPtBinning,"MJB",nbinsx,xlow,xup) ;
+  //MJB per recoilpt
+  vector<TH1F*> vMJB_RecoilPt = buildPtVectorH1(myPtBinning,"MJB",nbinsx,xlow,xup) ;
 
-	//ptLeadingJet per recoilpt
-	vector<TH1F*> vLeadingJetPt_RecoilPt = buildPtVectorH1(myPtBinning,"LeadingJetPt",190, 100, 2000) ;
+  //ptLeadingJet per recoilpt
+  vector<TH1F*> vLeadingJetPt_RecoilPt = buildPtVectorH1(myPtBinning,"LeadingJetPt",190, 100, 2000) ;
 
-   //LeadingJetPt per leadingjetpt bin (used for the HLT selection)
-	vector<TH1F*> vLeadingJetPt_LeadingJetPtHLT = buildBinnedDistriVectorH1(myHLTPtBinning,"LeadingJetPt",5) ;
+  //LeadingJetPt per leadingjetpt bin (used for the HLT selection)
+  vector<TH1F*> vLeadingJetPt_LeadingJetPtHLT = buildBinnedDistriVectorH1(myHLTPtBinning,"LeadingJetPt",5) ;
 	
   //RecoilPt per recoilpt bin
-	vector<TH1F*> vRecoilPt_RecoilPt = buildBinnedDistriVectorH1(myPtBinning,"RecoilPt",5) ;
+  vector<TH1F*> vRecoilPt_RecoilPt = buildBinnedDistriVectorH1(myPtBinning,"RecoilPt",5) ;
 	
   //MJB per recoileta
-	vector<TH1F*> vMJB_RecoilEta = buildEtaVectorH1(myEtaBinning,"MJB",nbinsx,xlow,xup) ;
+  vector<TH1F*> vMJB_RecoilEta = buildEtaVectorH1(myEtaBinning,"MJB",nbinsx,xlow,xup) ;
 	
-	//Rmpf per recoilpt
-	vector<TH1F*> vMPF_RecoilPt = buildPtVectorH1(myPtBinning,"MPF",nbinsx,xlow,xup) ;
+  //Rmpf per recoilpt
+  vector<TH1F*> vMPF_RecoilPt = buildPtVectorH1(myPtBinning,"MPF",nbinsx,xlow,xup) ;
 	
 	//NjetsRecoil per recoilpt
 	vector<TH1F*> vNjetsRecoil_RecoilPt = buildPtVectorH1(myPtBinning,"NjetsRecoil",35,0,35) ;
@@ -246,13 +270,13 @@ int main (int argc, char** argv)
 	vector<TH1F*> vNjetsRecoil_095E_RecoilPt = buildPtVectorH1(myPtBinning,"NjetsRecoil_095E",35,0,35) ;
 
 	
-	for(int j=0; j<myPtBinning.getSize(); j++) {
-		vMJB_RecoilPt[j]->Sumw2();
-		vMPF_RecoilPt[j]->Sumw2();
+  for(int j=0; j<myPtBinning.getSize(); j++) {
+    vMJB_RecoilPt[j]->Sumw2();
+    vMPF_RecoilPt[j]->Sumw2();
     vLeadingJetPt_RecoilPt[j]->Sumw2();
     vRecoilPt_RecoilPt[j]->Sumw2();
 
-	}
+  }
 
   for(int j=0; j<myHLTPtBinning.getSize(); j++) {
 		vLeadingJetPt_LeadingJetPtHLT[j]->Sumw2();
