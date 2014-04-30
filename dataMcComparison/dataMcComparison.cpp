@@ -898,8 +898,8 @@ int main (int argc, char** argv)
 	TH1F* hJetsPhi_afterSel_mc_lumi=(TH1F*)f_mc->Get("variables/afterSel/hJetsPhi_afterSel");
 	TH1F* hJetsPhi_afterSel_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hJetsPhi_afterSel");
 
-	TH1F* hNjets_ptSup25_etaInf5_beforeSel_mc_lumi=(TH1F*)f_mc->Get("variables/beforeSel/hNjets_ptSup25_etaInf5_beforeSel");
-	TH1F* hNjets_ptSup25_etaInf5_beforeSel_data_lumi=(TH1F*)f_data->Get("variables/beforeSel/hNjets_ptSup25_etaInf5_beforeSel");
+	TH1F* hNjets_ptSup30_etaInf5_beforeSel_mc_lumi=(TH1F*)f_mc->Get("variables/beforeSel/hNjets_ptSup30_etaInf5_beforeSel");
+	TH1F* hNjets_ptSup30_etaInf5_beforeSel_data_lumi=(TH1F*)f_data->Get("variables/beforeSel/hNjets_ptSup30_etaInf5_beforeSel");
 
 	TH1F* hHT_afterSel_mc_lumi=(TH1F*)f_mc->Get("variables/afterSel/hHT_afterSel");
 	TH1F* hHT_afterSel_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hHT_afterSel");	
@@ -1280,19 +1280,19 @@ int main (int argc, char** argv)
 
  //************************************************************************************************************
 //
-//                                      Njets_ptSup25_etaInf5 beforeSel 
+//                                      Njets_ptSup30_etaInf5 beforeSel 
 //
 //************************************************************************************************************	
 			
 	
-	h1_style(hNjets_ptSup25_etaInf5_beforeSel_mc_lumi);
-	h1_style(hNjets_ptSup25_etaInf5_beforeSel_data_lumi);
+	h1_style(hNjets_ptSup30_etaInf5_beforeSel_mc_lumi);
+	h1_style(hNjets_ptSup30_etaInf5_beforeSel_data_lumi);
 		
 	//rescale the Monte Carlo histogramm with luminosity
-	hNjets_ptSup25_etaInf5_beforeSel_mc_lumi->Scale(getLumi());
+	hNjets_ptSup30_etaInf5_beforeSel_mc_lumi->Scale(getLumi());
 	
-	myHistoName = "images/variables/Njets_ptSup25_etaInf5_beforeSel_lumi_inLogScale" + extension;
-	drawDataMcComparison("Njets_ptSup25_etaInf5_beforeSel", hNjets_ptSup25_etaInf5_beforeSel_mc_lumi, hNjets_ptSup25_etaInf5_beforeSel_data_lumi, "N_{jets} with p_{t} > 25 GeV and |#eta| < 5.0", myHistoName.c_str());
+	myHistoName = "images/variables/Njets_ptSup30_etaInf5_beforeSel_lumi_inLogScale" + extension;
+	drawDataMcComparison("Njets_ptSup30_etaInf5_beforeSel", hNjets_ptSup30_etaInf5_beforeSel_mc_lumi, hNjets_ptSup30_etaInf5_beforeSel_data_lumi, "N_{jets} with p_{t} > 25 GeV and |#eta| < 5.0", myHistoName.c_str());
 		
 
 
@@ -1612,8 +1612,8 @@ int main (int argc, char** argv)
       myHistoName = "images/variables/JetsPhi_afterSel_lumi_inLinScale" + extension;
       drawDataMcComparison("JetsPhi_afterSel", hJetsPhi_afterSel_mc_lumi, hJetsPhi_afterSel_data_lumi, "#phi^{jet} [rad]", myHistoName.c_str(), inLinScale);
 
-      myHistoName = "images/variables/Njets_ptSup25_etaInf5_beforeSel_lumi_inLinScale" + extension;
-      drawDataMcComparison("Njets_ptSup25_etaInf5_beforeSel", hNjets_ptSup25_etaInf5_beforeSel_mc_lumi, hNjets_ptSup25_etaInf5_beforeSel_data_lumi, "N_{jets} with p_{t} > 25 GeV and |#eta| < 5.0", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/Njets_ptSup30_etaInf5_beforeSel_lumi_inLinScale" + extension;
+      drawDataMcComparison("Njets_ptSup30_etaInf5_beforeSel", hNjets_ptSup30_etaInf5_beforeSel_mc_lumi, hNjets_ptSup30_etaInf5_beforeSel_data_lumi, "N_{jets} with p_{t} > 25 GeV and |#eta| < 5.0", myHistoName.c_str(), inLinScale);
 
       myHistoName = "images/variables/HT_afterSel_lumi_inLinScale" + extension;
       drawDataMcComparison("HT_afterSel", hHT_afterSel_mc_lumi, hHT_afterSel_data_lumi, "HT [GeV/c]", myHistoName.c_str(), inLinScale);
@@ -2106,23 +2106,23 @@ int main (int argc, char** argv)
 	drawDataMcComparison("JetsPhi_afterSel", hJetsPhi_afterSel_mc_shape, hJetsPhi_afterSel_data_shape, "#phi^{jet} [rad]", myHistoName.c_str()); 
 //************************************************************************************************************
 //
-//                                      Njets_ptSup25_etaInf5 beforeSel 
+//                                      Njets_ptSup30_etaInf5 beforeSel 
 //
 //************************************************************************************************************	
 	
-	TH1F* hNjets_ptSup25_etaInf5_beforeSel_mc_shape=(TH1F*)hNjets_ptSup25_etaInf5_beforeSel_mc_lumi->Clone();
-	TH1F* hNjets_ptSup25_etaInf5_beforeSel_data_shape=(TH1F*)hNjets_ptSup25_etaInf5_beforeSel_data_lumi->Clone();
+	TH1F* hNjets_ptSup30_etaInf5_beforeSel_mc_shape=(TH1F*)hNjets_ptSup30_etaInf5_beforeSel_mc_lumi->Clone();
+	TH1F* hNjets_ptSup30_etaInf5_beforeSel_data_shape=(TH1F*)hNjets_ptSup30_etaInf5_beforeSel_data_lumi->Clone();
 
-	h1_style(hNjets_ptSup25_etaInf5_beforeSel_mc_shape);
-	h1_style(hNjets_ptSup25_etaInf5_beforeSel_data_shape);
+	h1_style(hNjets_ptSup30_etaInf5_beforeSel_mc_shape);
+	h1_style(hNjets_ptSup30_etaInf5_beforeSel_data_shape);
 		
 	//rescale the Monte Carlo histogramm with number of entries
-	float Nentries_Njets_ptSup25_etaInf5_beforeSel_mc = hNjets_ptSup25_etaInf5_beforeSel_mc_shape->Integral();
-	float Nentries_Njets_ptSup25_etaInf5_beforeSel_Data = hNjets_ptSup25_etaInf5_beforeSel_data_shape->Integral();	
-	hNjets_ptSup25_etaInf5_beforeSel_mc_shape->Scale(Nentries_Njets_ptSup25_etaInf5_beforeSel_Data/Nentries_Njets_ptSup25_etaInf5_beforeSel_mc);
+	float Nentries_Njets_ptSup30_etaInf5_beforeSel_mc = hNjets_ptSup30_etaInf5_beforeSel_mc_shape->Integral();
+	float Nentries_Njets_ptSup30_etaInf5_beforeSel_Data = hNjets_ptSup30_etaInf5_beforeSel_data_shape->Integral();	
+	hNjets_ptSup30_etaInf5_beforeSel_mc_shape->Scale(Nentries_Njets_ptSup30_etaInf5_beforeSel_Data/Nentries_Njets_ptSup30_etaInf5_beforeSel_mc);
 	
-	myHistoName = "images/variables/Njets_ptSup25_etaInf5_beforeSel_shape_inLogScale" + extension;
-	drawDataMcComparison("Njets_ptSup25_etaInf5_beforeSel", hNjets_ptSup25_etaInf5_beforeSel_mc_shape, hNjets_ptSup25_etaInf5_beforeSel_data_shape, "N_{jets} with p_{t} > 25 GeV and |#eta| < 5.0", myHistoName.c_str());
+	myHistoName = "images/variables/Njets_ptSup30_etaInf5_beforeSel_shape_inLogScale" + extension;
+	drawDataMcComparison("Njets_ptSup30_etaInf5_beforeSel", hNjets_ptSup30_etaInf5_beforeSel_mc_shape, hNjets_ptSup30_etaInf5_beforeSel_data_shape, "N_{jets} with p_{t} > 25 GeV and |#eta| < 5.0", myHistoName.c_str());
 
 //************************************************************************************************************
 //
@@ -2495,8 +2495,8 @@ int main (int argc, char** argv)
       myHistoName = "images/variables/JetsPhi_afterSel_shape_inLinScale" + extension;
       drawDataMcComparison("JetsPhi_afterSel", hJetsPhi_afterSel_mc_shape, hJetsPhi_afterSel_data_shape, "#phi^{jet} [rad]", myHistoName.c_str(), inLinScale); 
 
-       myHistoName = "images/variables/Njets_ptSup25_etaInf5_beforeSel_shape_inLinScale" + extension;
-      drawDataMcComparison("Njets_ptSup25_etaInf5_beforeSel", hNjets_ptSup25_etaInf5_beforeSel_mc_shape, hNjets_ptSup25_etaInf5_beforeSel_data_shape, "N_{jets} with p_{t} < 25 GeV and |#eta| < 5.0", myHistoName.c_str(), inLinScale);
+       myHistoName = "images/variables/Njets_ptSup30_etaInf5_beforeSel_shape_inLinScale" + extension;
+      drawDataMcComparison("Njets_ptSup30_etaInf5_beforeSel", hNjets_ptSup30_etaInf5_beforeSel_mc_shape, hNjets_ptSup30_etaInf5_beforeSel_data_shape, "N_{jets} with p_{t} < 30 GeV and |#eta| < 5.0", myHistoName.c_str(), inLinScale);
 
       myHistoName = "images/variables/HT_afterSel_shape_inLinScale" + extension;
       drawDataMcComparison("HT_afterSel", hHT_afterSel_mc_shape, hHT_afterSel_data_shape, "HT [GeV/c]", myHistoName.c_str(), inLinScale);
