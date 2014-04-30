@@ -96,7 +96,7 @@ double getHistoXlow() {
 }
 
 double getHistoXup() {
-	return 2.;
+	return 3.;
 }
 
 std::vector<TH1F*> buildPtVectorH1(ptBinning& aPtBinning,const std::string& aName,Int_t nbinsx,Double_t xlow,Double_t xup)
@@ -205,6 +205,7 @@ void TMultiGraph_style (TMultiGraph* h) {
 }
 
 void TGraph_style (TGraph* h) {
+  h->SetMarkerStyle(20);
 	h->GetXaxis()->SetLabelOffset(0.005);
 	h->GetXaxis()->SetLabelFont(42);
 	h->GetXaxis()->SetLabelSize(0.055);
