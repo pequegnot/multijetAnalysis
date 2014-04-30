@@ -1093,7 +1093,7 @@ int main (int argc, char** argv)
 
                   //first jet selection
                   //if(leadingjetpt>360.) {
-                  if(leadingjet->Eta() < 1.3) {
+                  if(fabs(leadingjet->Eta()) < 1.3) {
 
                     //recoil selection
                     //if(recoilpt>250.) {
