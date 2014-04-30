@@ -216,7 +216,9 @@ void drawDataMcComparison(const string& canvasName, TH1 *hMc, TH1 *hData, const 
 		h->SetStats(1);
 		h->SetTitle("Data/MC");
 		h->SetXTitle(Xtitle.c_str());
-		h->SetYTitle(Ytitle.c_str());
+    if(Ytitle != "") {
+      h->SetYTitle("Data/MC");
+    }
 		h->SetMarkerSize(0.5);
 		
 		//for(int i=1;i<h->GetEntries();i++){
@@ -248,6 +250,7 @@ void drawDataMcComparison(const string& canvasName, TH1 *hMc, TH1 *hData, const 
 	gStyle->SetOptStat(0);
 	hMc->Draw("hist");
 	hMc->GetXaxis()->SetTitle(Xtitle.c_str());
+	hMc->GetYaxis()->SetTitle(Ytitle.c_str());
 	hData->Draw("pe1same");
 	hData->SetMarkerColor(getDataColor());
 	hData->SetLineColor(1);
