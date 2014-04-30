@@ -39,7 +39,7 @@ for input in inputs:
 
 tmpfile.flush()
 
-args = ["parallel", "-u", "-a", tmpfile.name, "-j", "1"]
+args = ["parallel", "-u", "-a", tmpfile.name, "-j", "16"]
 subprocess.call(args)
 #print args
 
@@ -48,7 +48,7 @@ subprocess.call(args)
 print("Merging ...")
 
 for syst in systs:
-    args = ["hadd","-f", "output_rootfile/%s/MC/Systematics/MULTIJET_MC_QCD-HT_merged_woPU_pt30_eta50_puJetIdT_%s_%s.root" % (d, syst, d)]
+    args = ["hadd","-f", "output_rootfile/%s/MC/Systematics/MULTIJET_MC_QCD-HT_merged_woPU_pt30_eta50_puJetIdT_%s.root" % (d, syst)]
     path = "output_rootfile/%s/MC/Systematics" % (d)
     for output in inputs:
         file = os.path.join(path, output[0] % syst)

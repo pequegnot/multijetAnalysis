@@ -37,14 +37,14 @@ for input in inputs:
 
 tmpfile.flush()
 
-args = ["parallel", "-u", "-a", tmpfile.name, "-j", "8"]
+args = ["parallel", "-u", "-a", tmpfile.name, "-j", "7"]
 subprocess.call(args)
 #print args
 
 ## All is done, merge
 
 print("Merging ...")
-args = ["hadd","-f", "output_rootfile/%s/MC/MULTIJET_MC_QCD-Pt-herwig_merged_woPU_pt30_eta50_puJetIdT_%s.root" % (d,d)]
+args = ["hadd","-f", "output_rootfile/%s/MC/MULTIJET_MC_QCD-Pt-herwig_merged_woPU_pt30_eta50_puJetIdT.root" % (d)]
 path = "output_rootfile/%s/MC" % (d)
 for output in inputs:
   args.append(os.path.join(path,output[0]))
