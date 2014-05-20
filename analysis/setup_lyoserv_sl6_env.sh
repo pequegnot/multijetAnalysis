@@ -10,4 +10,3 @@ source /cvmfs/cms.cern.ch/slc6_amd64_gcc472/external/python/2.6.4/etc/profile.d/
 source /cvmfs/cms.cern.ch/slc6_amd64_gcc472/external/boost/1.51.0-cms5/etc/profile.d/init.sh
 
 export BOOST_ROOT
-export PYTHON_ROOT

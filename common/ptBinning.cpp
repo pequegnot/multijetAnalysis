@@ -46,12 +46,18 @@ std::pair<float, float> ptBinning::getBinValue(int bin)
 
 float ptBinning::getBinValueInf(int bin)  
 {
-	return mPtBins[bin].first;
+    if(bin >= mPtBins.size())
+        return -1;
+    else
+	    return mPtBins[bin].first;
 }
 
 float ptBinning::getBinValueSup(int bin)  
 {
-	return mPtBins[bin].second;
+    if(bin >= mPtBins.size())
+        return -1;
+    else
+	    return mPtBins[bin].second;
 }
 
 std::string ptBinning::getName(int bin) {
