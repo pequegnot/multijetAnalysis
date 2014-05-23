@@ -10,6 +10,11 @@ HLTPtBinning::~HLTPtBinning()
 
 }
 
+std::string HLTPtBinning::getHLTName(int bin) {
+  return mPtNames[bin];
+}
+
+
 void HLTPtBinning::fillHLTPtBins() 
 {
   mPtBins.clear();
@@ -17,6 +22,12 @@ void HLTPtBinning::fillHLTPtBins()
   mPtBins.push_back(std::make_pair(230., 290.));
   mPtBins.push_back(std::make_pair(290., 360.));
   mPtBins.push_back(std::make_pair(360., 3000.));
+
+  mPtNames.clear();
+  mPtNames.push_back("HLT_PFJet140");
+  mPtNames.push_back("HLT_PFJet200");
+  mPtNames.push_back("HLT_PFJet260");
+  mPtNames.push_back("HLT_PFJet320");
 }
 
 

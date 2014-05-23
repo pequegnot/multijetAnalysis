@@ -17,7 +17,11 @@ class HLTPtBinning : public ptBinning
 
     HLTPtBinning();
     ~HLTPtBinning();
+    std::string getHLTName(int bin);
     void fillHLTPtBins();
+
+    private:
+    std::vector<std::string> mPtNames;
 };
 
 #endif

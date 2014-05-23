@@ -1,0 +1,44 @@
+{
+  "runA_Jet" : {
+    "HLT_PFJet140": 232.363,
+    "HLT_PFJet200": 46.129,
+    "HLT_PFJet260": 10.701,
+    "HLT_PFJet320": 1 
+  },
+  "runB_JetHT": {
+    "HLT_PFJet140": -1,
+    "HLT_PFJet200": -1,
+    "HLT_PFJet260": -1,
+    "HLT_PFJet320": 1  
+  },
+  "runB_JetMon": {
+    "HLT_PFJet140": 271.730,
+    "HLT_PFJet200": 69.120,
+    "HLT_PFJet260": 16.634,
+    "HLT_PFJet320": -1      
+  },
+  "runC_JetHT": {
+    "HLT_PFJet140": -1,
+    "HLT_PFJet200": -1,
+    "HLT_PFJet260": -1,
+    "HLT_PFJet320": 1  
+  },
+  "runC_JetMon": {
+    "HLT_PFJet140": 404.194,
+    "HLT_PFJet200": 80.840,
+    "HLT_PFJet260": 20.143,
+    "HLT_PFJet320": -1
+  },
+  "runD_JetHT": {
+    "HLT_PFJet140": -1,
+    "HLT_PFJet200": -1,
+    "HLT_PFJet260": -1,
+    "HLT_PFJet320": 1  
+  },
+  "runD_JetMon": {
+    "HLT_PFJet140": 409.434,
+    "HLT_PFJet200": 81.885,
+    "HLT_PFJet260": 20.471,
+    "HLT_PFJet320": -1
+  }
+}
