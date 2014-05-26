@@ -20,7 +20,7 @@ systs = {
         }
 
 def launch(input, output, nevents, xsection, pureweighting):
-    args = ["./multijet_weight_common", "--input-list", input, "-o", output, "--mc", "--Nevents", str(nevents), "--Xsection", str(xsection), "--PU", str(pureweighting)]
+    args = ["./multijet_weight_common", "--input-list", input, "-o", output, "--mc", "--Nevents", str(nevents), "--Xsection", str(xsection), "--PU", str(pureweighting), "--recoilPtBin", "--recoilPtHLTBin"]
 
     return " ".join(args)
 

@@ -15,7 +15,7 @@ inputs = [
         ]
 
 def launch(input, output, nevents, xsection):
-    args = ["./multijet_weight_common", "--input-list", input, "-o", output, "--mc", "--Nevents", str(nevents), "--Xsection", str(xsection)]
+    args = ["./multijet_weight_common", "--input-list", input, "-o", output, "--mc", "--Nevents", str(nevents), "--Xsection", str(xsection), "--recoilPtBin", "--recoilPtHLTBin"]
 
     return " ".join(args)
 

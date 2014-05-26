@@ -61,20 +61,19 @@ for input in inputs:
 tmpfile.flush()
 
 args = ["parallel", "-u", "-a", tmpfile.name, "-j", "7"]
-#subprocess.call(args)
-print args
+subprocess.call(args)
+#print args
 
 ## All is done, merge
 
 print("Merging run by run...")
 for run in inputs:
-  if len(run) > 1:
     args = ["hadd","-f", "output_rootfile/%s/data/MULTIJET_Data_%s_merged_2012_woPU_pt30_eta50_puJetIdT_beforePrecaleReweighting.root" % (d,run[0][3])]
     path = "output_rootfile/%s/data" % (d)
     for output in run:
       args.append(os.path.join(path,output[0]))
-    #subprocess.call(args)
-    print args
+    subprocess.call(args)
+    #print args
 
 print("Merging ...")
 args = ["hadd","-f", "output_rootfile/%s/data/MULTIJET_Data_merged_2012_woPU_pt30_eta50_puJetIdT_beforePrecaleReweighting.root" % (d)]
@@ -83,7 +82,7 @@ for outputs in inputs:
     for output in outputs:
        args.append(os.path.join(path,output[0]))
 
-#subprocess.call(args)
-print args
+subprocess.call(args)
+#print args
 
 

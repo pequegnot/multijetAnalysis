@@ -267,7 +267,6 @@ void drawDataMcComparison(const string& canvasName, TH1 *hMc, TH1 *hData, const 
 		gPad-> SetLogy();
 	}
   	TLegend* legend = new TLegend(0.55, 0.15, 0.92, 0.38);
-  	//TLegend* legend = new TLegend(0.55, 0.65, 0.92, 0.88);
   	legend->SetFillColor(kWhite);
   	legend->SetFillStyle(0);
   	legend->SetTextSize(0.038);
@@ -443,9 +442,6 @@ int main (int argc, char** argv)
 	bool isShapeNorm = false;
 	bool inLinScale = false;
 	bool rmPU = false;
-  bool useSyst = false;
-  string systFileName = "";
-  bool useRecoilPtBin = true;
 	
 	string extension = ".pdf";	
 	
@@ -508,13 +504,7 @@ int main (int argc, char** argv)
     cmd.add( linArg );
     TCLAP::SwitchArg rmPUArg("", "rmPU", "Do you want to remove PU jets?", false);
     cmd.add(rmPUArg);
-    TCLAP::SwitchArg useSystArg("", "useSyst", "Do you want to use systematics?", false);
-    cmd.add(useSystArg);
-    TCLAP::ValueArg<std::string> systFileArg("", "syst-file", "The file containing the systematics", false, "", "string", cmd);
 
-    TCLAP::SwitchArg recoilPtBinArg("", "recoilPtBin", "Do you want to bin in recoil pt?", false);
-    TCLAP::SwitchArg firstJetPtBinArg("", "firstJetPtBin", "Do you want to bin in 1st jet pt?", false);
-    cmd.xorAdd(recoilPtBinArg, firstJetPtBinArg);
     
     // Parse the argv array.
     cmd.parse(argc, argv);
@@ -527,9 +517,6 @@ int main (int argc, char** argv)
     inLinScale = linArg.getValue();
     extension = plotNameArg.getValue() + extensionArg.getValue();
     rmPU = rmPUArg.getValue();
-    useSyst = useSystArg.getValue();
-    systFileName = systFileArg.getValue();    
-    useRecoilPtBin = recoilPtBinArg.getValue();
     
     if(rmPU) {
 	extension = "_woPUJets" + plotNameArg.getValue() + extensionArg.getValue();    
@@ -572,24 +559,24 @@ int main (int argc, char** argv)
 	vMJB_Npv_mc_shape.resize(numberNpvBins);
 
 	//MJB per recoilpt
-	vector<TH1F*> vMJB_RefObjPt_data_lumi;
-	vMJB_RefObjPt_data_lumi.resize(numberPtBins);
-	vector<TH1F*> vMJB_RefObjPt_mc_lumi;
-	vMJB_RefObjPt_mc_lumi.resize(numberPtBins);
-	vector<TH1F*> vMJB_RefObjPt_data_shape;
-	vMJB_RefObjPt_data_shape.resize(numberPtBins);
-	vector<TH1F*> vMJB_RefObjPt_mc_shape;
-	vMJB_RefObjPt_mc_shape.resize(numberPtBins);
+	vector<TH1F*> vMJB_RecoilPt_data_lumi;
+	vMJB_RecoilPt_data_lumi.resize(numberPtBins);
+	vector<TH1F*> vMJB_RecoilPt_mc_lumi;
+	vMJB_RecoilPt_mc_lumi.resize(numberPtBins);
+	vector<TH1F*> vMJB_RecoilPt_data_shape;
+	vMJB_RecoilPt_data_shape.resize(numberPtBins);
+	vector<TH1F*> vMJB_RecoilPt_mc_shape;
+	vMJB_RecoilPt_mc_shape.resize(numberPtBins);
 
 	//MPF per recoilpt
-	vector<TH1F*> vMPF_RefObjPt_data_lumi;
-	vMPF_RefObjPt_data_lumi.resize(numberPtBins);
-	vector<TH1F*> vMPF_RefObjPt_mc_lumi;
-	vMPF_RefObjPt_mc_lumi.resize(numberPtBins);
-	vector<TH1F*> vMPF_RefObjPt_data_shape;
-	vMPF_RefObjPt_data_shape.resize(numberPtBins);
-	vector<TH1F*> vMPF_RefObjPt_mc_shape;
-	vMPF_RefObjPt_mc_shape.resize(numberPtBins);
+	vector<TH1F*> vMPF_RecoilPt_data_lumi;
+	vMPF_RecoilPt_data_lumi.resize(numberPtBins);
+	vector<TH1F*> vMPF_RecoilPt_mc_lumi;
+	vMPF_RecoilPt_mc_lumi.resize(numberPtBins);
+	vector<TH1F*> vMPF_RecoilPt_data_shape;
+	vMPF_RecoilPt_data_shape.resize(numberPtBins);
+	vector<TH1F*> vMPF_RecoilPt_mc_shape;
+	vMPF_RecoilPt_mc_shape.resize(numberPtBins);
 
   //LeandingJetPt per recoilpt
 	vector<TH1F*> vLeadingJetPt_RecoilPt_data_lumi;
@@ -602,57 +589,57 @@ int main (int argc, char** argv)
 	vLeadingJetPt_RecoilPt_mc_shape.resize(numberPtBins);
 
     //LeandingJetPt per leadingjetrawpt
-	vector<TH1F*> vLeadingJetPt_RefObjPtHLT_data_lumi;
-	vLeadingJetPt_RefObjPtHLT_data_lumi.resize(numberHLTPtBins);
-	vector<TH1F*> vLeadingJetPt_RefObjPtHLT_mc_lumi;
-	vLeadingJetPt_RefObjPtHLT_mc_lumi.resize(numberHLTPtBins);
-	vector<TH1F*> vLeadingJetPt_RefObjPtHLT_data_shape;
-	vLeadingJetPt_RefObjPtHLT_data_shape.resize(numberHLTPtBins);
-	vector<TH1F*> vLeadingJetPt_RefObjPtHLT_mc_shape;
-	vLeadingJetPt_RefObjPtHLT_mc_shape.resize(numberHLTPtBins);
+	vector<TH1F*> vLeadingJetPt_LeadingJetPtHLT_data_lumi;
+	vLeadingJetPt_LeadingJetPtHLT_data_lumi.resize(numberHLTPtBins);
+	vector<TH1F*> vLeadingJetPt_LeadingJetPtHLT_mc_lumi;
+	vLeadingJetPt_LeadingJetPtHLT_mc_lumi.resize(numberHLTPtBins);
+	vector<TH1F*> vLeadingJetPt_LeadingJetPtHLT_data_shape;
+	vLeadingJetPt_LeadingJetPtHLT_data_shape.resize(numberHLTPtBins);
+	vector<TH1F*> vLeadingJetPt_LeadingJetPtHLT_mc_shape;
+	vLeadingJetPt_LeadingJetPtHLT_mc_shape.resize(numberHLTPtBins);
 	
   //RecoilPt per recoilpt
-	vector<TH1F*> vRecoilPt_RefObjPt_data_lumi;
-	vRecoilPt_RefObjPt_data_lumi.resize(numberPtBins);
-	vector<TH1F*> vRecoilPt_RefObjPt_mc_lumi;
-	vRecoilPt_RefObjPt_mc_lumi.resize(numberPtBins);
-	vector<TH1F*> vRecoilPt_RefObjPt_data_shape;
-	vRecoilPt_RefObjPt_data_shape.resize(numberPtBins);
-	vector<TH1F*> vRecoilPt_RefObjPt_mc_shape;
-	vRecoilPt_RefObjPt_mc_shape.resize(numberPtBins);
+	vector<TH1F*> vRecoilPt_RecoilPt_data_lumi;
+	vRecoilPt_RecoilPt_data_lumi.resize(numberPtBins);
+	vector<TH1F*> vRecoilPt_RecoilPt_mc_lumi;
+	vRecoilPt_RecoilPt_mc_lumi.resize(numberPtBins);
+	vector<TH1F*> vRecoilPt_RecoilPt_data_shape;
+	vRecoilPt_RecoilPt_data_shape.resize(numberPtBins);
+	vector<TH1F*> vRecoilPt_RecoilPt_mc_shape;
+	vRecoilPt_RecoilPt_mc_shape.resize(numberPtBins);
 
 	//MJB per recoileta
-	vector<TH1F*> vMJB_RefObjEta_data_lumi;
-	vMJB_RefObjEta_data_lumi.resize(numberEtaBins);
-	vector<TH1F*> vMJB_RefObjEta_mc_lumi;
-	vMJB_RefObjEta_mc_lumi.resize(numberEtaBins);
-	vector<TH1F*> vMJB_RefObjEta_data_shape;
-	vMJB_RefObjEta_data_shape.resize(numberEtaBins);
-	vector<TH1F*> vMJB_RefObjEta_mc_shape;
-	vMJB_RefObjEta_mc_shape.resize(numberEtaBins);
+	vector<TH1F*> vMJB_RecoilEta_data_lumi;
+	vMJB_RecoilEta_data_lumi.resize(numberEtaBins);
+	vector<TH1F*> vMJB_RecoilEta_mc_lumi;
+	vMJB_RecoilEta_mc_lumi.resize(numberEtaBins);
+	vector<TH1F*> vMJB_RecoilEta_data_shape;
+	vMJB_RecoilEta_data_shape.resize(numberEtaBins);
+	vector<TH1F*> vMJB_RecoilEta_mc_shape;
+	vMJB_RecoilEta_mc_shape.resize(numberEtaBins);
 
 	
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		ptBinName = myPtBinning.getName(j);
-		vectorName = "MJB/PtBin/MJB_" + ptBinName;
-		vMJB_RefObjPt_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
-		vMJB_RefObjPt_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
-		vectorName = "MPF/PtBin/MPF_" + ptBinName;
-		vMPF_RefObjPt_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
-		vMPF_RefObjPt_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
-    vectorName = "leadingJet/PtBin/LeadingJetPt_" + ptBinName;
+		vectorName = "MJB/recoilPtBin/MJB_" + ptBinName;
+		vMJB_RecoilPt_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
+		vMJB_RecoilPt_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
+		vectorName = "MPF/recoilPtBin/MPF_" + ptBinName;
+		vMPF_RecoilPt_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
+		vMPF_RecoilPt_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
+    vectorName = "leadingJet/recoilPtBin/LeadingJetPt_" + ptBinName;
 		vLeadingJetPt_RecoilPt_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
 		vLeadingJetPt_RecoilPt_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
-    vectorName = "recoil/PtBin/RecoilPt_" + ptBinName;
-		vRecoilPt_RefObjPt_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
-		vRecoilPt_RefObjPt_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
+    vectorName = "recoil/recoilPtBin/RecoilPt_" + ptBinName;
+		vRecoilPt_RecoilPt_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
+		vRecoilPt_RecoilPt_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
 	}
 
   for(int j=0; j<myHLTPtBinning.getSize(); j++) {
 		ptBinName = myHLTPtBinning.getName(j);
-    vectorName = "leadingJet/HLTPtBin/LeadingJetPt_" + ptBinName;
-		vLeadingJetPt_RefObjPtHLT_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
-		vLeadingJetPt_RefObjPtHLT_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
+    vectorName = "leadingJet/1stJetPtHLTBin/LeadingJetPt_" + ptBinName;
+		vLeadingJetPt_LeadingJetPtHLT_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
+		vLeadingJetPt_LeadingJetPtHLT_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
 	}
 	
 	for(int j=0; j<myNpvBinning.getSize(); j++) {
@@ -664,311 +651,186 @@ int main (int argc, char** argv)
 	
 	for(int j=0; j<myEtaBinning.getSize(); j++) {
 		etaBinName = myEtaBinning.getName(j);
-		vectorName = "MJB/EtaBin/MJB_" + etaBinName;
-		vMJB_RefObjEta_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
-		vMJB_RefObjEta_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
+		vectorName = "MJB/recoilEtaBin/MJB_" + etaBinName;
+		vMJB_RecoilEta_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
+		vMJB_RecoilEta_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
 	}
 	
 //************************************************************************************************************
 //
-//                                      MJB as a function of reference object pt 
+//                                      MJB as a function of ptrecoil
 //
 //************************************************************************************************************
 
-	TGraphErrors* gMJB_RefObjPt_data=(TGraphErrors*)f_data->Get("MJB/PtBin/gMJB_RefObjPt");
-	TGraphErrors* gMJB_RefObjPt_mc=(TGraphErrors*)f_mc->Get("MJB/PtBin/gMJB_RefObjPt");
-
-  if (useSyst) {
-    if (systFileName == "") {
-      std::cout << "ERROR! You must specify the file to use for systematics! *********************" << std::endl;
-    }
-    else {
-      TFile *f_syst=TFile::Open(systFileName.c_str());
-      TGraphErrors* gMJB_SystTot=(TGraphErrors*)f_syst->Get("MJB/PtBin/gMJB_SystTot");
-      for(int i=0; i<numberPtBins; i++) {
-        // quadratic sum of statitics and systematics errors
-        gMJB_RefObjPt_mc->SetPointError(i, 0., sqrt(gMJB_RefObjPt_mc->GetErrorY(i)*gMJB_RefObjPt_mc->GetErrorY(i) + gMJB_SystTot->GetErrorY(i)*gMJB_SystTot->GetErrorY(i)));
-	    }
-    }
-  }
-
-  TGraphErrors* gMJB_RefObjPt_mc_clone = (TGraphErrors*)gMJB_RefObjPt_mc->Clone();
-
-	TGraph_data_style (gMJB_RefObjPt_data);
-	TGraph_mc_style (gMJB_RefObjPt_mc);
-	TGraph_mc_style (gMJB_RefObjPt_mc_clone);
-
-	gMJB_RefObjPt_mc_clone->SetFillColor(17);
-	//gMJB_RefObjPt_mc_clone->SetFillStyle(3002);
-  gMJB_RefObjPt_mc->SetLineColor(17);
+	TGraphErrors* gMJB_RecoilPt_data=(TGraphErrors*)f_data->Get("MJB/recoilPtBin/gMJB_RecoilPt");
+	TGraphErrors* gMJB_RecoilPt_mc=(TGraphErrors*)f_mc->Get("MJB/recoilPtBin/gMJB_RecoilPt");
 	
-	TMultiGraph *mgMJB_RefObjPt = new TMultiGraph();
-	mgMJB_RefObjPt->Add(gMJB_RefObjPt_mc_clone,"e3");
-	mgMJB_RefObjPt->Add(gMJB_RefObjPt_mc,"p");
-	mgMJB_RefObjPt->Add(gMJB_RefObjPt_data,"pe");
-  if(useRecoilPtBin) {
-	  mgMJB_RefObjPt->SetTitle("MJB as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];MJB");
-  }
-  else {
-	  mgMJB_RefObjPt->SetTitle("MJB as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];MJB");
-  }
+	TGraph_data_style (gMJB_RecoilPt_data);
+	TGraph_mc_style (gMJB_RecoilPt_mc);
 	
-	TGraphErrors *gMJB_RefObjPt_ratio = NULL;
-  if(useRecoilPtBin) {
-    gMJB_RefObjPt_ratio = getDataMcResponseRatio(gMJB_RefObjPt_data,gMJB_RefObjPt_mc,numberPtBins, "p_{t}^{Recoil} [GeV/c]");
-	  gMJB_RefObjPt_ratio->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
-  }
-  else {
-    gMJB_RefObjPt_ratio = getDataMcResponseRatio(gMJB_RefObjPt_data,gMJB_RefObjPt_mc,numberPtBins, "p_{t}^{Leading Jet} [GeV/c]");
-	  gMJB_RefObjPt_ratio->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");  
-  }
-	gMJB_RefObjPt_ratio->GetYaxis()->SetTitle("MJB^{data}/MJB^{MC}");
-	gMJB_RefObjPt_ratio->SetName("Data/MC");
-	gMJB_RefObjPt_ratio->SetTitle("Data/MC");
-	gMJB_RefObjPt_ratio->SetMarkerSize(1.0);
-	gMJB_RefObjPt_ratio->Fit("func","","",gMJB_RefObjPt_data->GetXaxis()->GetXmin(),gMJB_RefObjPt_data->GetXaxis()->GetXmax());
+	TMultiGraph *mgMJB_RecoilPt = new TMultiGraph();
+	mgMJB_RecoilPt->Add(gMJB_RecoilPt_mc,"pe");
+	mgMJB_RecoilPt->Add(gMJB_RecoilPt_data,"pe");
+	mgMJB_RecoilPt->SetTitle("MJB as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];MJB");
 	
-	myHistoName = "images/response/MJB_RefObjPt" + extension;	
-	drawComparisonResponse("r1", mgMJB_RefObjPt, gMJB_RefObjPt_mc, gMJB_RefObjPt_data, gMJB_RefObjPt_ratio,"MC", myHistoName.c_str());
+	TGraphErrors *gMJB_RecoilPt_ratio = getDataMcResponseRatio(gMJB_RecoilPt_data,gMJB_RecoilPt_mc,numberPtBins, "p_{t}^{Recoil} [GeV/c]");
+	gMJB_RecoilPt_ratio->GetYaxis()->SetTitle("MJB^{data}/MJB^{MC}");
+	gMJB_RecoilPt_ratio->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+	gMJB_RecoilPt_ratio->SetName("Data/MC");
+	gMJB_RecoilPt_ratio->SetTitle("Data/MC");
+	gMJB_RecoilPt_ratio->SetMarkerSize(1.0);
+	gMJB_RecoilPt_ratio->Fit("func","","",gMJB_RecoilPt_data->GetXaxis()->GetXmin(),gMJB_RecoilPt_data->GetXaxis()->GetXmax());
+	
+	myHistoName = "images/response/MJB_RecoilPt" + extension;	
+	drawComparisonResponse("r1", mgMJB_RecoilPt, gMJB_RecoilPt_mc, gMJB_RecoilPt_data, gMJB_RecoilPt_ratio,"MC", myHistoName.c_str());
 
 //************************************************************************************************************
 //
-//                                      MJB as a function of ptrecoil without 2 ptbin
+//                                      MJB as a function of ptrecoil without 1 ptbin
 //
 //************************************************************************************************************
 
-	Double_t aMJB_RefObjPt_data_Mean[numberPtBins-2];
-	Double_t aMJB_RefObjPt_data_MeanError[numberPtBins-2];
-	Double_t aMJB_RefObjPt_mc_Mean[numberPtBins-2];
-	Double_t aMJB_RefObjPt_mc_MeanError[numberPtBins-2];
-	Double_t aRefObjPtBins_Mean[numberPtBins-2];
-	Double_t aRefObjPtBins_MeanError[numberPtBins-2];
-	Double_t aMJBRatio_Mean[numberPtBins-2];
-	Double_t aMJBRatio_MeanError[numberPtBins-2];
+	Double_t aMJB_RecoilPt_data_Mean[numberPtBins-1];
+	Double_t aMJB_RecoilPt_data_MeanError[numberPtBins-1];
+	Double_t aMJB_RecoilPt_mc_Mean[numberPtBins-1];
+	Double_t aMJB_RecoilPt_mc_MeanError[numberPtBins-1];
+	Double_t aRecoilPtBins_Mean[numberPtBins-1];
+	Double_t aRecoilPtBins_MeanError[numberPtBins-1];
+	Double_t aMJBRatio_Mean[numberPtBins-1];
+	Double_t aMJBRatio_MeanError[numberPtBins-1];
 	
-	for(int i=1; i<numberPtBins-1; i++) {
-    gMJB_RefObjPt_data->GetPoint(i,aRefObjPtBins_Mean[i-1],aMJB_RefObjPt_data_Mean[i-1]);
-    gMJB_RefObjPt_mc->GetPoint(i,aRefObjPtBins_Mean[i-1],aMJB_RefObjPt_mc_Mean[i-1]);
-    gMJB_RefObjPt_ratio->GetPoint(i,aRefObjPtBins_Mean[i-1],aMJBRatio_Mean[i-1]);
-    aMJB_RefObjPt_data_MeanError[i-1] = gMJB_RefObjPt_data->GetErrorY(i);
-    aMJB_RefObjPt_mc_MeanError[i-1] = gMJB_RefObjPt_mc->GetErrorY(i);
-    aRefObjPtBins_MeanError[i-1] = gMJB_RefObjPt_data->GetErrorX(i);
-    aMJBRatio_MeanError[i-1] = gMJB_RefObjPt_ratio->GetErrorY(i);
+	for(int i=1; i<numberPtBins; i++) {
+    gMJB_RecoilPt_data->GetPoint(i,aRecoilPtBins_Mean[i-1],aMJB_RecoilPt_data_Mean[i-1]);
+    gMJB_RecoilPt_mc->GetPoint(i,aRecoilPtBins_Mean[i-1],aMJB_RecoilPt_mc_Mean[i-1]);
+    gMJB_RecoilPt_ratio->GetPoint(i,aRecoilPtBins_Mean[i-1],aMJBRatio_Mean[i-1]);
+    aMJB_RecoilPt_data_MeanError[i-1] = gMJB_RecoilPt_data->GetErrorY(i);
+    aMJB_RecoilPt_mc_MeanError[i-1] = gMJB_RecoilPt_mc->GetErrorY(i);
+    aRecoilPtBins_MeanError[i-1] = gMJB_RecoilPt_data->GetErrorX(i);
+    aMJBRatio_MeanError[i-1] = gMJB_RecoilPt_ratio->GetErrorY(i);
 	}
 
-	TGraphErrors* gMJB_RefObjPt_data_resize = new TGraphErrors(numberPtBins-2,aRefObjPtBins_Mean, aMJB_RefObjPt_data_Mean, aRefObjPtBins_MeanError, aMJB_RefObjPt_data_MeanError);
-	TGraphErrors* gMJB_RefObjPt_mc_resize = new TGraphErrors(numberPtBins-2,aRefObjPtBins_Mean, aMJB_RefObjPt_mc_Mean, aRefObjPtBins_MeanError, aMJB_RefObjPt_mc_MeanError);	
-	TGraph* gMJB_RefObjPt_mc_resize_pointsOnly = new TGraph(numberPtBins-2,aRefObjPtBins_Mean, aMJB_RefObjPt_mc_Mean);	
-
-  TGraphErrors* gMJB_RefObjPt_mc_clone_resize = (TGraphErrors*)gMJB_RefObjPt_mc_resize->Clone();
+	TGraphErrors* gMJB_RecoilPt_data_resize = new TGraphErrors(numberPtBins-1,aRecoilPtBins_Mean, aMJB_RecoilPt_data_Mean, aRecoilPtBins_MeanError, aMJB_RecoilPt_data_MeanError);
+	TGraphErrors* gMJB_RecoilPt_mc_resize = new TGraphErrors(numberPtBins-1,aRecoilPtBins_Mean, aMJB_RecoilPt_mc_Mean, aRecoilPtBins_MeanError, aMJB_RecoilPt_mc_MeanError);	
+	TGraph_data_style (gMJB_RecoilPt_data_resize);
+	TGraph_mc_style (gMJB_RecoilPt_mc_resize);
 	
-	TGraph_data_style (gMJB_RefObjPt_data_resize);
-	TGraph_mc_style (gMJB_RefObjPt_mc_resize);
-	TGraph_mc_style (gMJB_RefObjPt_mc_resize_pointsOnly);
-	TGraph_mc_style (gMJB_RefObjPt_mc_clone_resize);
-
-	gMJB_RefObjPt_mc_clone_resize->SetFillColor(17);
-	//gMJB_RefObjPt_mc_resize->SetFillStyle(3002);
-  gMJB_RefObjPt_mc_resize->SetFillColor(17);
+	TMultiGraph *mgMJB_RecoilPt_resize = new TMultiGraph();
+	mgMJB_RecoilPt_resize->Add(gMJB_RecoilPt_mc_resize,"pe");
+	mgMJB_RecoilPt_resize->Add(gMJB_RecoilPt_data_resize,"pe");
+	mgMJB_RecoilPt_resize->SetTitle("MJB as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];MJB");
 	
-	TMultiGraph *mgMJB_RefObjPt_resize = new TMultiGraph();
-  mgMJB_RefObjPt_resize->Add(gMJB_RefObjPt_mc_resize,"e3");
-	mgMJB_RefObjPt_resize->Add(gMJB_RefObjPt_mc_resize_pointsOnly,"p");
-	mgMJB_RefObjPt_resize->Add(gMJB_RefObjPt_data_resize,"pe");
-  if(useRecoilPtBin) {
-	  mgMJB_RefObjPt_resize->SetTitle("MJB as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];MJB");
-  }
-  else {
-    mgMJB_RefObjPt_resize->SetTitle("MJB as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];MJB");
-  }
+	TGraphErrors *gMJB_RecoilPt_ratio_resize = getDataMcResponseRatio(gMJB_RecoilPt_data_resize,gMJB_RecoilPt_mc_resize,numberPtBins, "p_{t}^{Recoil} [GeV/c]");
+	gMJB_RecoilPt_ratio_resize->GetYaxis()->SetTitle("MJB^{data}/MJB^{MC}");
+	gMJB_RecoilPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+	gMJB_RecoilPt_ratio_resize->SetName("Data/MC");
+	gMJB_RecoilPt_ratio_resize->SetTitle("Data/MC");
+	gMJB_RecoilPt_ratio_resize->SetMarkerSize(1.0);
+	gMJB_RecoilPt_ratio_resize->Fit("func","","",gMJB_RecoilPt_data_resize->GetXaxis()->GetXmin(),gMJB_RecoilPt_data_resize->GetXaxis()->GetXmax());
 	
-	TGraphErrors *gMJB_RefObjPt_ratio_resize = NULL;
-  if(useRecoilPtBin) {
-    gMJB_RefObjPt_ratio_resize = getDataMcResponseRatio(gMJB_RefObjPt_data_resize,gMJB_RefObjPt_mc_resize,numberPtBins-2, "p_{t}^{Recoil} [GeV/c]");
-	  gMJB_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
-  }
-  else {
-    gMJB_RefObjPt_ratio_resize = getDataMcResponseRatio(gMJB_RefObjPt_data_resize,gMJB_RefObjPt_mc_resize,numberPtBins-2, "p_{t}^{Leading Jet} [GeV/c]");
-	  gMJB_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");
-  }
-	gMJB_RefObjPt_ratio_resize->GetYaxis()->SetTitle("MJB^{data}/MJB^{MC}");
-	gMJB_RefObjPt_ratio_resize->SetName("Data/MC");
-	gMJB_RefObjPt_ratio_resize->SetTitle("Data/MC");
-	gMJB_RefObjPt_ratio_resize->SetMarkerSize(1.0);
-	gMJB_RefObjPt_ratio_resize->Fit("func","","",gMJB_RefObjPt_data_resize->GetXaxis()->GetXmin(),gMJB_RefObjPt_data_resize->GetXaxis()->GetXmax());
-	
-	myHistoName = "images/response/MJB_RefObjPt_resize" + extension;	
-	drawComparisonResponse("r1", mgMJB_RefObjPt_resize, gMJB_RefObjPt_mc_resize, gMJB_RefObjPt_data_resize, gMJB_RefObjPt_ratio_resize,"MC", myHistoName.c_str());
+	myHistoName = "images/response/MJB_RecoilPt_resize" + extension;	
+	drawComparisonResponse("r1", mgMJB_RecoilPt_resize, gMJB_RecoilPt_mc_resize, gMJB_RecoilPt_data_resize, gMJB_RecoilPt_ratio_resize,"MC", myHistoName.c_str());
 
 
 //************************************************************************************************************
 //
-//                                      MPF as a function of reference object pt 
+//                                      MPF as a function of ptrecoil
 //
 //************************************************************************************************************
 
-	TGraphErrors* gMPF_RefObjPt_data=(TGraphErrors*)f_data->Get("MPF/PtBin/gMPF_RefObjPt");
-	TGraphErrors* gMPF_RefObjPt_mc=(TGraphErrors*)f_mc->Get("MPF/PtBin/gMPF_RefObjPt");
-
-  if (useSyst) {
-    if (systFileName == "") {
-      std::cout << "ERROR! You must specify the file to use for systematics! *********************" << std::endl;
-    }
-    else {
-      TFile *f_syst=TFile::Open(systFileName.c_str());
-      TGraphErrors* gMPF_SystTot=(TGraphErrors*)f_syst->Get("MPF/PtBin/gMPF_SystTot");
-      for(int i=0; i<numberPtBins; i++) {
-        // quadratic sum of statitics and systematics errors
-        gMPF_RefObjPt_mc->SetPointError(i, 0., sqrt(gMPF_RefObjPt_mc->GetErrorY(i)*gMPF_RefObjPt_mc->GetErrorY(i) + gMPF_SystTot->GetErrorY(i)*gMPF_SystTot->GetErrorY(i)));
-	    }
-    }
-  }
-
-  TGraphErrors* gMPF_RefObjPt_mc_clone = (TGraphErrors*)gMPF_RefObjPt_mc->Clone();
-
-	TGraph_data_style (gMPF_RefObjPt_data);
-	TGraph_mc_style (gMPF_RefObjPt_mc);
-	TGraph_mc_style (gMPF_RefObjPt_mc_clone);
-
-	gMPF_RefObjPt_mc_clone->SetFillColor(17);
-	//gMPF_RefObjPt_mc_clone->SetFillStyle(3002);
-  gMPF_RefObjPt_mc->SetLineColor(17);
+	TGraphErrors* gMPF_RecoilPt_data=(TGraphErrors*)f_data->Get("MPF/recoilPtBin/gMPF_RecoilPt");
+	TGraphErrors* gMPF_RecoilPt_mc=(TGraphErrors*)f_mc->Get("MPF/recoilPtBin/gMPF_RecoilPt");
 	
-	TMultiGraph *mgMPF_RefObjPt = new TMultiGraph();
-	mgMPF_RefObjPt->Add(gMPF_RefObjPt_mc_clone,"e3");
-	mgMPF_RefObjPt->Add(gMPF_RefObjPt_mc,"p");
-	mgMPF_RefObjPt->Add(gMPF_RefObjPt_data,"pe");
-  if(useRecoilPtBin) {
-	  mgMPF_RefObjPt->SetTitle("MPF as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];MPF");
-  }
-  else {
-	  mgMPF_RefObjPt->SetTitle("MPF as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];MPF");
-  }
+	TGraph_data_style (gMPF_RecoilPt_data);
+	TGraph_mc_style (gMPF_RecoilPt_mc);
 	
-	TGraphErrors *gMPF_RefObjPt_ratio = NULL;
-  if(useRecoilPtBin) {
-    gMPF_RefObjPt_ratio = getDataMcResponseRatio(gMPF_RefObjPt_data,gMPF_RefObjPt_mc,numberPtBins, "p_{t}^{Recoil} [GeV/c]");
-	  gMPF_RefObjPt_ratio->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
-  }
-  else {
-    gMPF_RefObjPt_ratio = getDataMcResponseRatio(gMPF_RefObjPt_data,gMPF_RefObjPt_mc,numberPtBins, "p_{t}^{Leading Jet} [GeV/c]");
-	  gMPF_RefObjPt_ratio->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");  
-  }
-	gMPF_RefObjPt_ratio->GetYaxis()->SetTitle("MPF^{data}/MPF^{MC}");
-	gMPF_RefObjPt_ratio->SetName("Data/MC");
-	gMPF_RefObjPt_ratio->SetTitle("Data/MC");
-	gMPF_RefObjPt_ratio->SetMarkerSize(1.0);
-	gMPF_RefObjPt_ratio->Fit("func","","",gMPF_RefObjPt_data->GetXaxis()->GetXmin(),gMPF_RefObjPt_data->GetXaxis()->GetXmax());
+	TMultiGraph *mgMPF_RecoilPt = new TMultiGraph();
+	mgMPF_RecoilPt->Add(gMPF_RecoilPt_mc,"pe");
+	mgMPF_RecoilPt->Add(gMPF_RecoilPt_data,"pe");
+	mgMPF_RecoilPt->SetTitle("MPF as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];MPF");
 	
-	myHistoName = "images/response/MPF_RefObjPt" + extension;	
-	drawComparisonResponse("r1", mgMPF_RefObjPt, gMPF_RefObjPt_mc, gMPF_RefObjPt_data, gMPF_RefObjPt_ratio,"MC", myHistoName.c_str());
+	TGraphErrors *gMPF_RecoilPt_ratio = getDataMcResponseRatio(gMPF_RecoilPt_data,gMPF_RecoilPt_mc,numberPtBins, "p_{t}^{Recoil} [GeV/c]");
+	gMPF_RecoilPt_ratio->GetYaxis()->SetTitle("MPF^{data}/MPF^{MC}");
+	gMPF_RecoilPt_ratio->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+	gMPF_RecoilPt_ratio->SetName("Data/MC");
+	gMPF_RecoilPt_ratio->SetTitle("Data/MC");
+	gMPF_RecoilPt_ratio->SetMarkerSize(1.0);
+	gMPF_RecoilPt_ratio->Fit("func","","",gMPF_RecoilPt_data->GetXaxis()->GetXmin(),gMPF_RecoilPt_data->GetXaxis()->GetXmax());
+	
+	myHistoName = "images/response/MPF_RecoilPt" + extension;	
+	drawComparisonResponse("r1", mgMPF_RecoilPt, gMPF_RecoilPt_mc, gMPF_RecoilPt_data, gMPF_RecoilPt_ratio,"MC", myHistoName.c_str());
+
 
 //************************************************************************************************************
 //
-//                                      MPF as a function of ptrecoil without 2 ptbin
+//                                      MPF as a function of ptrecoil without 1 ptbin
 //
 //************************************************************************************************************
 
-	Double_t aMPF_RefObjPt_data_Mean[numberPtBins-2];
-	Double_t aMPF_RefObjPt_data_MeanError[numberPtBins-2];
-	Double_t aMPF_RefObjPt_mc_Mean[numberPtBins-2];
-	Double_t aMPF_RefObjPt_mc_MeanError[numberPtBins-2];
-	Double_t aMPFRatio_Mean[numberPtBins-2];
-	Double_t aMPFRatio_MeanError[numberPtBins-2];
+	Double_t aMPF_RecoilPt_data_Mean[numberPtBins-1];
+	Double_t aMPF_RecoilPt_data_MeanError[numberPtBins-1];
+	Double_t aMPF_RecoilPt_mc_Mean[numberPtBins-1];
+	Double_t aMPF_RecoilPt_mc_MeanError[numberPtBins-1];
+	Double_t aMPFRatio_Mean[numberPtBins-1];
+	Double_t aMPFRatio_MeanError[numberPtBins-1];
 	
-	for(int i=1; i<numberPtBins-1; i++) {
-    gMPF_RefObjPt_data->GetPoint(i,aRefObjPtBins_Mean[i-1],aMPF_RefObjPt_data_Mean[i-1]);
-    gMPF_RefObjPt_mc->GetPoint(i,aRefObjPtBins_Mean[i-1],aMPF_RefObjPt_mc_Mean[i-1]);
-    gMPF_RefObjPt_ratio->GetPoint(i,aRefObjPtBins_Mean[i-1],aMPFRatio_Mean[i-1]);
-    aMPF_RefObjPt_data_MeanError[i-1] = gMPF_RefObjPt_data->GetErrorY(i);
-    aMPF_RefObjPt_mc_MeanError[i-1] = gMPF_RefObjPt_mc->GetErrorY(i);
-    aRefObjPtBins_MeanError[i-1] = gMPF_RefObjPt_data->GetErrorX(i);
-    aMPFRatio_MeanError[i-1] = gMPF_RefObjPt_ratio->GetErrorY(i);
+	for(int i=1; i<numberPtBins; i++) {
+    gMPF_RecoilPt_data->GetPoint(i,aRecoilPtBins_Mean[i-1],aMPF_RecoilPt_data_Mean[i-1]);
+    gMPF_RecoilPt_mc->GetPoint(i,aRecoilPtBins_Mean[i-1],aMPF_RecoilPt_mc_Mean[i-1]);
+    gMPF_RecoilPt_ratio->GetPoint(i,aRecoilPtBins_Mean[i-1],aMPFRatio_Mean[i-1]);
+    aMPF_RecoilPt_data_MeanError[i-1] = gMPF_RecoilPt_data->GetErrorY(i);
+    aMPF_RecoilPt_mc_MeanError[i-1] = gMPF_RecoilPt_mc->GetErrorY(i);
+    aRecoilPtBins_MeanError[i-1] = gMPF_RecoilPt_data->GetErrorX(i);
+    aMPFRatio_MeanError[i-1] = gMPF_RecoilPt_ratio->GetErrorY(i);
 	}
 
-	TGraphErrors* gMPF_RefObjPt_data_resize = new TGraphErrors(numberPtBins-2,aRefObjPtBins_Mean, aMPF_RefObjPt_data_Mean, aRefObjPtBins_MeanError, aMPF_RefObjPt_data_MeanError);
-	TGraphErrors* gMPF_RefObjPt_mc_resize = new TGraphErrors(numberPtBins-2,aRefObjPtBins_Mean, aMPF_RefObjPt_mc_Mean, aRefObjPtBins_MeanError, aMPF_RefObjPt_mc_MeanError);	
-	TGraph* gMPF_RefObjPt_mc_resize_pointsOnly = new TGraph(numberPtBins-2,aRefObjPtBins_Mean, aMPF_RefObjPt_mc_Mean);	
-
-  TGraphErrors* gMPF_RefObjPt_mc_clone_resize = (TGraphErrors*)gMPF_RefObjPt_mc_resize->Clone();
+	TGraphErrors* gMPF_RecoilPt_data_resize = new TGraphErrors(numberPtBins-1,aRecoilPtBins_Mean, aMPF_RecoilPt_data_Mean, aRecoilPtBins_MeanError, aMPF_RecoilPt_data_MeanError);
+	TGraphErrors* gMPF_RecoilPt_mc_resize = new TGraphErrors(numberPtBins-1,aRecoilPtBins_Mean, aMPF_RecoilPt_mc_Mean, aRecoilPtBins_MeanError, aMPF_RecoilPt_mc_MeanError);	
+	TGraph_data_style (gMPF_RecoilPt_data_resize);
+	TGraph_mc_style (gMPF_RecoilPt_mc_resize);
 	
-	TGraph_data_style (gMPF_RefObjPt_data_resize);
-	TGraph_mc_style (gMPF_RefObjPt_mc_resize);
-	TGraph_mc_style (gMPF_RefObjPt_mc_resize_pointsOnly);
-	TGraph_mc_style (gMPF_RefObjPt_mc_clone_resize);
-
-	gMPF_RefObjPt_mc_clone_resize->SetFillColor(17);
-	//gMPF_RefObjPt_mc_resize->SetFillStyle(3002);
-  gMPF_RefObjPt_mc_resize->SetFillColor(17);
+	TMultiGraph *mgMPF_RecoilPt_resize = new TMultiGraph();
+	mgMPF_RecoilPt_resize->Add(gMPF_RecoilPt_mc_resize,"pe");
+	mgMPF_RecoilPt_resize->Add(gMPF_RecoilPt_data_resize,"pe");
+	mgMPF_RecoilPt_resize->SetTitle("MPF as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];MPF");
 	
-	TMultiGraph *mgMPF_RefObjPt_resize = new TMultiGraph();
-  mgMPF_RefObjPt_resize->Add(gMPF_RefObjPt_mc_resize,"e3");
-	mgMPF_RefObjPt_resize->Add(gMPF_RefObjPt_mc_resize_pointsOnly,"p");
-	mgMPF_RefObjPt_resize->Add(gMPF_RefObjPt_data_resize,"pe");
-  if(useRecoilPtBin) {
-	  mgMPF_RefObjPt_resize->SetTitle("MPF as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];MPF");
-  }
-  else {
-    mgMPF_RefObjPt_resize->SetTitle("MPF as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];MPF");
-  }
+	TGraphErrors *gMPF_RecoilPt_ratio_resize = getDataMcResponseRatio(gMPF_RecoilPt_data_resize,gMPF_RecoilPt_mc_resize,numberPtBins, "p_{t}^{Recoil} [GeV/c]");
+	gMPF_RecoilPt_ratio_resize->GetYaxis()->SetTitle("MPF^{data}/MPF^{MC}");
+	gMPF_RecoilPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+	gMPF_RecoilPt_ratio_resize->SetName("Data/MC");
+	gMPF_RecoilPt_ratio_resize->SetTitle("Data/MC");
+	gMPF_RecoilPt_ratio_resize->SetMarkerSize(1.0);
+	gMPF_RecoilPt_ratio_resize->Fit("func","","",gMPF_RecoilPt_data_resize->GetXaxis()->GetXmin(),gMPF_RecoilPt_data_resize->GetXaxis()->GetXmax());
 	
-	TGraphErrors *gMPF_RefObjPt_ratio_resize = NULL;
-  if(useRecoilPtBin) {
-    gMPF_RefObjPt_ratio_resize = getDataMcResponseRatio(gMPF_RefObjPt_data_resize,gMPF_RefObjPt_mc_resize,numberPtBins-2, "p_{t}^{Recoil} [GeV/c]");
-	  gMPF_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
-  }
-  else {
-    gMPF_RefObjPt_ratio_resize = getDataMcResponseRatio(gMPF_RefObjPt_data_resize,gMPF_RefObjPt_mc_resize,numberPtBins-2, "p_{t}^{Leading Jet} [GeV/c]");
-	  gMPF_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");
-  }
-	gMPF_RefObjPt_ratio_resize->GetYaxis()->SetTitle("MPF^{data}/MPF^{MC}");
-	gMPF_RefObjPt_ratio_resize->SetName("Data/MC");
-	gMPF_RefObjPt_ratio_resize->SetTitle("Data/MC");
-	gMPF_RefObjPt_ratio_resize->SetMarkerSize(1.0);
-	gMPF_RefObjPt_ratio_resize->Fit("func","","",gMPF_RefObjPt_data_resize->GetXaxis()->GetXmin(),gMPF_RefObjPt_data_resize->GetXaxis()->GetXmax());
+	myHistoName = "images/response/MPF_RecoilPt_resize" + extension;	
+	drawComparisonResponse("r1", mgMPF_RecoilPt_resize, gMPF_RecoilPt_mc_resize, gMPF_RecoilPt_data_resize, gMPF_RecoilPt_ratio_resize,"MC", myHistoName.c_str());
 	
-	myHistoName = "images/response/MPF_RefObjPt_resize" + extension;	
-	drawComparisonResponse("r1", mgMPF_RefObjPt_resize, gMPF_RefObjPt_mc_resize, gMPF_RefObjPt_data_resize, gMPF_RefObjPt_ratio_resize,"MC", myHistoName.c_str());
-
 //************************************************************************************************************
 //
-//                                      MJB as a function of reference object eta
+//                                      MJB as a function of etarecoil
 //
 //************************************************************************************************************
 
-	TGraphErrors* gMJB_RefObjEta_data=(TGraphErrors*)f_data->Get("MJB/EtaBin/gMJB_RefObjEta");
-	TGraphErrors* gMJB_RefObjEta_mc=(TGraphErrors*)f_mc->Get("MJB/EtaBin/gMJB_RefObjEta");
+	TGraphErrors* gMJB_RecoilEta_data=(TGraphErrors*)f_data->Get("MJB/recoilEtaBin/gMJB_RecoilEta");
+	TGraphErrors* gMJB_RecoilEta_mc=(TGraphErrors*)f_mc->Get("MJB/recoilEtaBin/gMJB_RecoilEta");
 	
-	TGraph_data_style (gMJB_RefObjEta_data);
-	TGraph_mc_style (gMJB_RefObjEta_mc);
+	TGraph_data_style (gMJB_RecoilEta_data);
+	TGraph_mc_style (gMJB_RecoilEta_mc);
 	
-	TMultiGraph *mgMJB_RefObjEta = new TMultiGraph();
-	mgMJB_RefObjEta->Add(gMJB_RefObjEta_mc,"pe");
-	mgMJB_RefObjEta->Add(gMJB_RefObjEta_data,"pe");
-  if(useRecoilPtBin) {
-  	mgMJB_RefObjEta->SetTitle("MJB as a function of |#eta^{Recoil}|;|#eta^{Recoil}|;MJB");
-  }  
-  else {
-  	mgMJB_RefObjEta->SetTitle("MJB as a function of |#eta^{Leading Jet}|;|#eta^{Leading Jet}|;MJB");
-  }
+	TMultiGraph *mgMJB_RecoilEta = new TMultiGraph();
+	mgMJB_RecoilEta->Add(gMJB_RecoilEta_mc,"pe");
+	mgMJB_RecoilEta->Add(gMJB_RecoilEta_data,"pe");
+	mgMJB_RecoilEta->SetTitle("MJB as a function of |#eta^{Recoil}|;|#eta^{Recoil}|;MJB");
 	
-	TGraphErrors *gMJB_RefObjEta_ratio = NULL;
-  if(useRecoilPtBin) {
-    gMJB_RefObjEta_ratio = getDataMcResponseRatio(gMJB_RefObjEta_data,gMJB_RefObjEta_mc,numberEtaBins, "p_{t}^{Recoil} [GeV/c]");
-	  gMJB_RefObjEta_ratio->GetXaxis()->SetTitle("|#eta^{Recoil}|");
-  }
-  else {
-    gMJB_RefObjEta_ratio = getDataMcResponseRatio(gMJB_RefObjEta_data,gMJB_RefObjEta_mc,numberEtaBins, "p_{t}^{Leading Jet} [GeV/c]");
-	  gMJB_RefObjEta_ratio->GetXaxis()->SetTitle("|#eta^{Leading Jet}|");  
-  }
-	gMJB_RefObjEta_ratio->GetYaxis()->SetTitle("MJB^{data}/MJB^{MC}");
-	gMJB_RefObjEta_ratio->SetName("Data/MC");
-	gMJB_RefObjEta_ratio->SetTitle("Data/MC");
-	gMJB_RefObjEta_ratio->SetMarkerSize(1.0);
-	gMJB_RefObjEta_ratio->Fit("func","","",gMJB_RefObjEta_data->GetXaxis()->GetXmin(),gMJB_RefObjEta_data->GetXaxis()->GetXmax());
+	TGraphErrors *gMJB_RecoilEta_ratio = getDataMcResponseRatio(gMJB_RecoilEta_data,gMJB_RecoilEta_mc,numberEtaBins, "p_{t}^{Recoil} [GeV/c]");
+	gMJB_RecoilEta_ratio->GetYaxis()->SetTitle("MJB^{data}/MJB^{MC}");
+	gMJB_RecoilEta_ratio->GetXaxis()->SetTitle("|#eta^{Recoil}|");
+	gMJB_RecoilEta_ratio->SetName("Data/MC");
+	gMJB_RecoilEta_ratio->SetTitle("Data/MC");
+	gMJB_RecoilEta_ratio->SetMarkerSize(1.0);
+	gMJB_RecoilEta_ratio->Fit("func","","",gMJB_RecoilEta_data->GetXaxis()->GetXmin(),gMJB_RecoilEta_data->GetXaxis()->GetXmax());
 	
-	myHistoName = "images/response/MJB_RefObjEta" + extension;	
-	drawComparisonResponse("r1", mgMJB_RefObjEta, gMJB_RefObjEta_mc, gMJB_RefObjEta_data, gMJB_RefObjEta_ratio,"MC", myHistoName.c_str());
+	myHistoName = "images/response/MJB_RecoilEta" + extension;	
+	drawComparisonResponse("r1", mgMJB_RecoilEta, gMJB_RecoilEta_mc, gMJB_RecoilEta_data, gMJB_RecoilEta_ratio,"MC", myHistoName.c_str());
 	
 //************************************************************************************************************
 //
@@ -1110,14 +972,14 @@ int main (int argc, char** argv)
 //************************************************************************************************************	
 
 	for(int j=0; j<myPtBinning.getSize(); j++) {
-		h1_style(vMJB_RefObjPt_data_lumi[j]);
-		h1_style(vMJB_RefObjPt_mc_lumi[j]);
-		vMJB_RefObjPt_mc_lumi[j]->Scale(getLumi());
+		h1_style(vMJB_RecoilPt_data_lumi[j]);
+		h1_style(vMJB_RecoilPt_mc_lumi[j]);
+		vMJB_RecoilPt_mc_lumi[j]->Scale(getLumi());
 		binName = myPtBinning.getName(j);
 		myName = "MJB_{data}/MJB_{MC} for " + binName;
 		myXName = "MJB for " + binName;
-		mySaveName = "images/MJBperRefObjPt/MJB_" + binName + "_lumi_inLogScale" + extension;
-		drawDataMcComparison(myName.c_str(), vMJB_RefObjPt_mc_lumi[j], vMJB_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_lumi_inLogScale" + extension;
+		drawDataMcComparison(myName.c_str(), vMJB_RecoilPt_mc_lumi[j], vMJB_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 
 //************************************************************************************************************
@@ -1127,14 +989,14 @@ int main (int argc, char** argv)
 //************************************************************************************************************	
 
 	for(int j=0; j<myPtBinning.getSize(); j++) {
-		h1_style(vMPF_RefObjPt_data_lumi[j]);
-		h1_style(vMPF_RefObjPt_mc_lumi[j]);
-		vMPF_RefObjPt_mc_lumi[j]->Scale(getLumi());
+		h1_style(vMPF_RecoilPt_data_lumi[j]);
+		h1_style(vMPF_RecoilPt_mc_lumi[j]);
+		vMPF_RecoilPt_mc_lumi[j]->Scale(getLumi());
 		binName = myPtBinning.getName(j);
 		myName = "MPF_{data}/MPF_{MC} for " + binName;
 		myXName = "MPF for " + binName;
-		mySaveName = "images/MPFperRefObjPt/MPF_" + binName + "_lumi_inLogScale" + extension;
-		drawDataMcComparison(myName.c_str(), vMPF_RefObjPt_mc_lumi[j], vMPF_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+		mySaveName = "images/MPFperPtRecoil/MPF_" + binName + "_lumi_inLogScale" + extension;
+		drawDataMcComparison(myName.c_str(), vMPF_RecoilPt_mc_lumi[j], vMPF_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 
 //************************************************************************************************************
@@ -1150,60 +1012,60 @@ int main (int argc, char** argv)
 		binName = myPtBinning.getName(j);
 		myName = "pT^{Leading Jet}_{data}/pT^{Leading Jet}_{MC} for " + binName;
 		myXName = "pT^{Leading Jet} for " + binName + " [GeV/c]";
-		mySaveName = "images/LeadingJetPtperRefObjPt/LeadingJetPt_" + binName + "_lumi_inLogScale" + extension;
+		mySaveName = "images/LeadingJetPtperPtRecoil/LeadingJetPt_" + binName + "_lumi_inLogScale" + extension;
 		drawDataMcComparison(myName.c_str(), vLeadingJetPt_RecoilPt_mc_lumi[j], vLeadingJetPt_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 
 //************************************************************************************************************
 //
-//                                      LeadingJetPt per HLT pt bin 
+//                                      LeadingJetPt per leadingjetrawpt 
 //
 //************************************************************************************************************	
 
 	for(int j=0; j<myHLTPtBinning.getSize(); j++) {
-		h1_style(vLeadingJetPt_RefObjPtHLT_data_lumi[j]);
-		h1_style(vLeadingJetPt_RefObjPtHLT_mc_lumi[j]);
-		vLeadingJetPt_RefObjPtHLT_mc_lumi[j]->Scale(getLumi());
+		h1_style(vLeadingJetPt_LeadingJetPtHLT_data_lumi[j]);
+		h1_style(vLeadingJetPt_LeadingJetPtHLT_mc_lumi[j]);
+		vLeadingJetPt_LeadingJetPtHLT_mc_lumi[j]->Scale(getLumi());
 		binName = myHLTPtBinning.getName(j);
 		myName = "pT^{Leading Jet}_{data}/pT^{Leading Jet}_{MC} for " + binName;
 		myXName = "pT^{Leading Jet} for " + binName + " [GeV/c]";
-		mySaveName = "images/LeadingJetPtperPtHLT/LeadingJetPt_" + binName + "_lumi_inLogScale" + extension;
-		drawDataMcComparison(myName.c_str(), vLeadingJetPt_RefObjPtHLT_mc_lumi[j], vLeadingJetPt_RefObjPtHLT_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+		mySaveName = "images/LeadingJetPtperLeadingJetPtHLT/LeadingJetPt_" + binName + "_lumi_inLogScale" + extension;
+		drawDataMcComparison(myName.c_str(), vLeadingJetPt_LeadingJetPtHLT_mc_lumi[j], vLeadingJetPt_LeadingJetPtHLT_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 
 //************************************************************************************************************
 //
-//                                      RecoilPt per reference object pt 
+//                                      RecoilPt per ptrecoil 
 //
 //************************************************************************************************************	
 
 	for(int j=0; j<myPtBinning.getSize(); j++) {
-		h1_style(vRecoilPt_RefObjPt_data_lumi[j]);
-		h1_style(vRecoilPt_RefObjPt_mc_lumi[j]);
-		vRecoilPt_RefObjPt_mc_lumi[j]->Scale(getLumi());
+		h1_style(vRecoilPt_RecoilPt_data_lumi[j]);
+		h1_style(vRecoilPt_RecoilPt_mc_lumi[j]);
+		vRecoilPt_RecoilPt_mc_lumi[j]->Scale(getLumi());
 		binName = myPtBinning.getName(j);
 		myName = "pT^{Recoil}_{data}/pT^{Recoil}_{MC} for " + binName;
 		myXName = "pT^{Recoil} for " + binName + " [GeV/c]";
-		mySaveName = "images/RecoilPtperRefObjPt/RecoilPt_" + binName + "_lumi_inLogScale" + extension;
-		drawDataMcComparison(myName.c_str(), vRecoilPt_RefObjPt_mc_lumi[j], vRecoilPt_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+		mySaveName = "images/RecoilPtperPtRecoil/RecoilPt_" + binName + "_lumi_inLogScale" + extension;
+		drawDataMcComparison(myName.c_str(), vRecoilPt_RecoilPt_mc_lumi[j], vRecoilPt_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 
 
 //************************************************************************************************************
 //
-//                                      MJB per reference object eta 
+//                                      MJB per etarecoil 
 //
 //************************************************************************************************************	
 
 	for(int j=0; j<myEtaBinning.getSize(); j++) {
-		h1_style(vMJB_RefObjEta_data_lumi[j]);
-		h1_style(vMJB_RefObjEta_mc_lumi[j]);
-		vMJB_RefObjEta_mc_lumi[j]->Scale(getLumi());
+		h1_style(vMJB_RecoilEta_data_lumi[j]);
+		h1_style(vMJB_RecoilEta_mc_lumi[j]);
+		vMJB_RecoilEta_mc_lumi[j]->Scale(getLumi());
 		binName = myEtaBinning.getName(j);
 		myName = "MJB_{data}/MJB_{MC} for " + binName;
 		myXName = "MJB for " + binName;
-		mySaveName = "images/MJBperRefObjEta/MJB_" + binName + "_lumi_inLogScale" + extension;
-		drawDataMcComparison(myName.c_str(), vMJB_RefObjEta_mc_lumi[j], vMJB_RefObjEta_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+		mySaveName = "images/MJBperEtaRecoil/MJB_" + binName + "_lumi_inLogScale" + extension;
+		drawDataMcComparison(myName.c_str(), vMJB_RecoilEta_mc_lumi[j], vMJB_RecoilEta_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 	
 //************************************************************************************************************
@@ -1311,25 +1173,7 @@ int main (int argc, char** argv)
 	myHistoName = "images/variables/LeadingJetPt_afterSel_lumi_inLogScale" + extension;
 	drawDataMcComparison("LeadingJetPt_afterSel", hLeadingJetPt_afterSel_mc_lumi, hLeadingJetPt_afterSel_data_lumi,"p_{t}^{leading jet} [GeV/c]", myHistoName.c_str());
 		
-//************************************************************************************************************
-//
-//                                      LeadingJetPt afterSel zoom 
-//
-//************************************************************************************************************	
-			
-	TH1* hLeadingJetPt_afterSel_mc_lumi_zoom = (TH1F*)hLeadingJetPt_afterSel_mc_lumi->Clone();
-	TH1* hLeadingJetPt_afterSel_data_lumi_zoom = (TH1F*)hLeadingJetPt_afterSel_data_lumi->Clone();
 
-
-	h1_style(hLeadingJetPt_afterSel_mc_lumi_zoom);
-	h1_style(hLeadingJetPt_afterSel_data_lumi_zoom);
-
-    hLeadingJetPt_afterSel_mc_lumi_zoom->GetXaxis()->SetRangeUser(0., 600.);
-    hLeadingJetPt_afterSel_data_lumi_zoom->GetXaxis()->SetRangeUser(0., 600.);
-		
-	myHistoName = "images/variables/LeadingJetPt_afterSel_zoom_lumi_inLogScale" + extension;
-	drawDataMcComparison("LeadingJetPt_afterSel_zoom", hLeadingJetPt_afterSel_mc_lumi_zoom, hLeadingJetPt_afterSel_data_lumi_zoom,"p_{t}^{leading jet} [GeV/c]", myHistoName.c_str());
-		
 //************************************************************************************************************
 //
 //                                      JetsPt beforeSel 
@@ -1568,25 +1412,7 @@ int main (int argc, char** argv)
 	myHistoName = "images/variables/FracRmPuJets_JetPt_lumi_inLogScale" + extension;
 	drawDataMcComparison("FracRmPuJets_JetPt", hFracRmPuJets_JetPt_mc_lumi, hFracRmPuJets_JetPt_data_lumi, "p_{t}^{jet} [GeV/c]", myHistoName.c_str(), false, "N_{removed PU jets}/N_{total jets}");	
 
-//************************************************************************************************************
-//
-//                                      FracRmPuJets_JetPt zoomed
-//
-//************************************************************************************************************	
-			
-	TH1* hFracRmPuJets_JetPt_mc_lumi_zoomed = (TH1F*)hFracRmPuJets_JetPt_mc_lumi->Clone();
-	TH1* hFracRmPuJets_JetPt_data_lumi_zoomed = (TH1F*)hFracRmPuJets_JetPt_data_lumi->Clone();
-
-
-	h1_style(hFracRmPuJets_JetPt_mc_lumi_zoomed);
-	h1_style(hFracRmPuJets_JetPt_data_lumi_zoomed);
-
-    hFracRmPuJets_JetPt_mc_lumi_zoomed->GetXaxis()->SetRangeUser(0., 1500.);
-    hFracRmPuJets_JetPt_data_lumi_zoomed->GetXaxis()->SetRangeUser(0., 1500.);
-		
-	myHistoName = "images/variables/FracRmPuJets_JetPt_zoomed_lumi_inLogScale" + extension;
-	drawDataMcComparison("FracRmPuJets_JetPt_zoomed", hFracRmPuJets_JetPt_mc_lumi_zoomed, hFracRmPuJets_JetPt_data_lumi_zoomed, "p_{t}^{jet} [GeV/c]", myHistoName.c_str(), false, "N_{removed PU jets}/N_{total jets}");		
-
+	
 //************************************************************************************************************
 //
 //                                      Alpha beforeSel 
@@ -1804,8 +1630,6 @@ int main (int argc, char** argv)
       drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_lumi, hNpv_afterSel_data_lumi,  "N_{PV}", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/FracRmPuJets_JetPt_lumi_inLinScale" + extension;
       drawDataMcComparison("FracRmPuJets_JetPt", hFracRmPuJets_JetPt_mc_lumi, hFracRmPuJets_JetPt_data_lumi,  "p_{t}^{jet} [GeV/c]", myHistoName.c_str(), inLinScale, "N_{removed PU jets}/N_{total jets}");
-      myHistoName = "images/variables/FracRmPuJets_JetPt_zoomed_lumi_inLinScale" + extension;
-      drawDataMcComparison("FracRmPuJets_JetPt_zoomed", hFracRmPuJets_JetPt_mc_lumi_zoomed, hFracRmPuJets_JetPt_data_lumi_zoomed,  "p_{t}^{jet} [GeV/c]", myHistoName.c_str(), inLinScale, "N_{removed PU jets}/N_{total jets}");
       myHistoName = "images/variables/Alpha_beforeSel_lumi_inLinScale" + extension;
       drawDataMcComparison("Alpha_beforeSel", hAlpha_beforeSel_mc_lumi, hAlpha_beforeSel_data_lumi,"#alpha", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/Alpha_afterSel_lumi_inLinScale" + extension;
@@ -1830,39 +1654,39 @@ int main (int argc, char** argv)
         binName = myPtBinning.getName(j);
         myName = "MJB_{data}/MJB_{MC} for " + binName;
         myXName = "MJB for " + binName;
-        mySaveName = "images/MJBperRefObjPt/MJB_" + binName + "_lumi_inLinScale" + extension;
-        drawDataMcComparison(myName.c_str(), vMJB_RefObjPt_mc_lumi[j], vMJB_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+        mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_lumi_inLinScale" + extension;
+        drawDataMcComparison(myName.c_str(), vMJB_RecoilPt_mc_lumi[j], vMJB_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
 
         myName = "MPF_{data}/MPF_{MC} for " + binName;
         myXName = "MPF for " + binName;
-        mySaveName = "images/MPFperRefObjPt/MPF_" + binName + "_lumi_inLinScale" + extension;
-        drawDataMcComparison(myName.c_str(), vMPF_RefObjPt_mc_lumi[j], vMPF_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+        mySaveName = "images/MPFperPtRecoil/MPF_" + binName + "_lumi_inLinScale" + extension;
+        drawDataMcComparison(myName.c_str(), vMPF_RecoilPt_mc_lumi[j], vMPF_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
         
         myName = "pT^{Leading Jet}_{data}/pT^{Leading Jet}_{MC} for " + binName;
         myXName = "pT^{Leading Jet} for " + binName + " [GeV/c]";
-        mySaveName = "images/LeadingJetPtperRefObjPt/LeadingJetPt_" + binName + "_lumi_inLinScale" + extension;
+        mySaveName = "images/LeadingJetPtperPtRecoil/LeadingJetPt_" + binName + "_lumi_inLinScale" + extension;
         drawDataMcComparison(myName.c_str(), vLeadingJetPt_RecoilPt_mc_lumi[j], vLeadingJetPt_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
 
         myName = "pT^{Recoil}_{data}/pT^{Recoil}_{MC} for " + binName;
         myXName = "pT^{Recoil} for " + binName + " [GeV/c]";
-        mySaveName = "images/RecoilPtperRefObjPt/RecoilPt_" + binName + "_lumi_inLinScale" + extension;
-        drawDataMcComparison(myName.c_str(), vRecoilPt_RefObjPt_mc_lumi[j], vRecoilPt_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+        mySaveName = "images/RecoilPtperPtRecoil/RecoilPt_" + binName + "_lumi_inLinScale" + extension;
+        drawDataMcComparison(myName.c_str(), vRecoilPt_RecoilPt_mc_lumi[j], vRecoilPt_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
       }
 
       for(int j=0; j<myHLTPtBinning.getSize(); j++) {
         binName = myHLTPtBinning.getName(j);
         myName = "pT^{Leading Jet}_{data}/pT^{Leading Jet}_{MC} for " + binName;
         myXName = "pT^{Leading Jet} for " + binName + " [GeV/c]";
-        mySaveName = "images/LeadingJetPtperPtHLT/LeadingJetPt_" + binName + "_lumi_inLinScale" + extension;
-        drawDataMcComparison(myName.c_str(), vLeadingJetPt_RefObjPtHLT_mc_lumi[j], vLeadingJetPt_RefObjPtHLT_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+        mySaveName = "images/LeadingJetPtperLeadingJetPtHLT/LeadingJetPt_" + binName + "_lumi_inLinScale" + extension;
+        drawDataMcComparison(myName.c_str(), vLeadingJetPt_LeadingJetPtHLT_mc_lumi[j], vLeadingJetPt_LeadingJetPtHLT_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
       }
 
       for(int j=0; j<myEtaBinning.getSize(); j++) {
         binName = myEtaBinning.getName(j);
         myName = "MJB_{data}/MJB_{MC} for " + binName;
         myXName = "MJB for " + binName;
-        mySaveName = "images/MJBperRefObjEta/MJB_" + binName + "_lumi_inLinScale" + extension;
-        drawDataMcComparison(myName.c_str(), vMJB_RefObjEta_mc_lumi[j], vMJB_RefObjEta_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+        mySaveName = "images/MJBperEtaRecoil/MJB_" + binName + "_lumi_inLinScale" + extension;
+        drawDataMcComparison(myName.c_str(), vMJB_RecoilEta_mc_lumi[j], vMJB_RecoilEta_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
       }
       for(int j=0; j<myNpvBinning.getSize(); j++) {
         binName = myNpvBinning.getName(j);
@@ -1883,18 +1707,18 @@ int main (int argc, char** argv)
 //************************************************************************************************************
 
   if(isShapeNorm) {
-  float Nentries_MJB_RefObjPt_mc;
-  float Nentries_MPF_RefObjPt_mc;
-  float Nentries_MJB_RefObjPt_Data;
-  float Nentries_MPF_RefObjPt_Data;
+  float Nentries_MJB_RecoilPt_mc;
+  float Nentries_MPF_RecoilPt_mc;
+  float Nentries_MJB_RecoilPt_Data;
+  float Nentries_MPF_RecoilPt_Data;
   float Nentries_LeadingJetPt_RecoilPt_mc;
   float Nentries_LeadingJetPt_RecoilPt_Data;
   float Nentries_LeadingJetPt_LeadingJetPtHLT_mc;
   float Nentries_LeadingJetPt_LeadingJetPtHLT_Data;
   float Nentries_RecoilPt_RecoilPt_mc;
   float Nentries_RecoilPt_RecoilPt_Data;
-  float Nentries_MJB_RefObjEta_mc;
-  float Nentries_MJB_RefObjEta_Data;
+  float Nentries_MJB_RecoilEta_mc;
+  float Nentries_MJB_RecoilEta_Data;
   float Nentries_MJB_Npv_mc;
   float Nentries_MJB_Npv_Data;
   
@@ -1905,20 +1729,20 @@ int main (int argc, char** argv)
 //************************************************************************************************************	
 
 	for(int j=0; j<myPtBinning.getSize(); j++) {
-		vMJB_RefObjPt_mc_shape[j]=(TH1F*)vMJB_RefObjPt_mc_lumi[j]->Clone();
-		vMJB_RefObjPt_data_shape[j]=(TH1F*)vMJB_RefObjPt_data_lumi[j]->Clone();
-		h1_style(vMJB_RefObjPt_data_shape[j]);
-		h1_style(vMJB_RefObjPt_mc_shape[j]);
+		vMJB_RecoilPt_mc_shape[j]=(TH1F*)vMJB_RecoilPt_mc_lumi[j]->Clone();
+		vMJB_RecoilPt_data_shape[j]=(TH1F*)vMJB_RecoilPt_data_lumi[j]->Clone();
+		h1_style(vMJB_RecoilPt_data_shape[j]);
+		h1_style(vMJB_RecoilPt_mc_shape[j]);
 
-		Nentries_MJB_RefObjPt_mc = vMJB_RefObjPt_mc_shape[j]->Integral();
-		Nentries_MJB_RefObjPt_Data = vMJB_RefObjPt_data_shape[j]->Integral();
-		vMJB_RefObjPt_mc_shape[j]->Scale(Nentries_MJB_RefObjPt_Data/Nentries_MJB_RefObjPt_mc);
+		Nentries_MJB_RecoilPt_mc = vMJB_RecoilPt_mc_shape[j]->Integral();
+		Nentries_MJB_RecoilPt_Data = vMJB_RecoilPt_data_shape[j]->Integral();
+		vMJB_RecoilPt_mc_shape[j]->Scale(Nentries_MJB_RecoilPt_Data/Nentries_MJB_RecoilPt_mc);
 
 		binName = myPtBinning.getName(j);
 		myName = "MJB_{data}/MJB_{MC} for " + binName;
 		myXName = "MJB for " + binName;
-		mySaveName = "images/MJBperRefObjPt/MJB_" + binName + "_shape_inLogScale" + extension;
-		drawDataMcComparison(myName.c_str(), vMJB_RefObjPt_mc_lumi[j], vMJB_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+		mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_shape_inLogScale" + extension;
+		drawDataMcComparison(myName.c_str(), vMJB_RecoilPt_mc_lumi[j], vMJB_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 
 //************************************************************************************************************
@@ -1928,20 +1752,20 @@ int main (int argc, char** argv)
 //************************************************************************************************************	
 
 	for(int j=0; j<myPtBinning.getSize(); j++) {
-		vMPF_RefObjPt_mc_shape[j]=(TH1F*)vMPF_RefObjPt_mc_lumi[j]->Clone();
-		vMPF_RefObjPt_data_shape[j]=(TH1F*)vMPF_RefObjPt_data_lumi[j]->Clone();
-		h1_style(vMPF_RefObjPt_data_shape[j]);
-		h1_style(vMPF_RefObjPt_mc_shape[j]);
+		vMPF_RecoilPt_mc_shape[j]=(TH1F*)vMPF_RecoilPt_mc_lumi[j]->Clone();
+		vMPF_RecoilPt_data_shape[j]=(TH1F*)vMPF_RecoilPt_data_lumi[j]->Clone();
+		h1_style(vMPF_RecoilPt_data_shape[j]);
+		h1_style(vMPF_RecoilPt_mc_shape[j]);
 
-		Nentries_MPF_RefObjPt_mc = vMPF_RefObjPt_mc_shape[j]->Integral();
-		Nentries_MPF_RefObjPt_Data = vMPF_RefObjPt_data_shape[j]->Integral();
-		vMPF_RefObjPt_mc_shape[j]->Scale(Nentries_MPF_RefObjPt_Data/Nentries_MPF_RefObjPt_mc);
+		Nentries_MPF_RecoilPt_mc = vMPF_RecoilPt_mc_shape[j]->Integral();
+		Nentries_MPF_RecoilPt_Data = vMPF_RecoilPt_data_shape[j]->Integral();
+		vMPF_RecoilPt_mc_shape[j]->Scale(Nentries_MPF_RecoilPt_Data/Nentries_MPF_RecoilPt_mc);
 
 		binName = myPtBinning.getName(j);
 		myName = "MPF_{data}/MPF_{MC} for " + binName;
 		myXName = "MPF for " + binName;
-		mySaveName = "images/MPFperRefObjPt/MPF_" + binName + "_shape_inLogScale" + extension;
-		drawDataMcComparison(myName.c_str(), vMPF_RefObjPt_mc_lumi[j], vMPF_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+		mySaveName = "images/MPFperPtRecoil/MPF_" + binName + "_shape_inLogScale" + extension;
+		drawDataMcComparison(myName.c_str(), vMPF_RecoilPt_mc_lumi[j], vMPF_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 
 //************************************************************************************************************
@@ -1963,7 +1787,7 @@ int main (int argc, char** argv)
 		binName = myPtBinning.getName(j);
 		myName = "pT^{Leading Jet}_{data}/pT^{Leading Jet}_{MC} for " + binName;
 		myXName = "pT^{Leading Jet} for " + binName + " [GeV/c]";
-		mySaveName = "images/LeadingJetPtperRefObjPt/LeadingJetPt_" + binName + "_shape_inLogScale" + extension;
+		mySaveName = "images/LeadingJetPtperPtRecoil/LeadingJetPt_" + binName + "_shape_inLogScale" + extension;
 		drawDataMcComparison(myName.c_str(), vLeadingJetPt_RecoilPt_mc_lumi[j], vLeadingJetPt_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
   
@@ -1974,20 +1798,20 @@ int main (int argc, char** argv)
 //************************************************************************************************************	
 
 	for(int j=0; j<myHLTPtBinning.getSize(); j++) {
-		vLeadingJetPt_RefObjPtHLT_mc_shape[j]=(TH1F*)vLeadingJetPt_RefObjPtHLT_mc_lumi[j]->Clone();
-		vLeadingJetPt_RefObjPtHLT_data_shape[j]=(TH1F*)vLeadingJetPt_RefObjPtHLT_data_lumi[j]->Clone();
-		h1_style(vLeadingJetPt_RefObjPtHLT_data_shape[j]);
-		h1_style(vLeadingJetPt_RefObjPtHLT_mc_shape[j]);
+		vLeadingJetPt_LeadingJetPtHLT_mc_shape[j]=(TH1F*)vLeadingJetPt_LeadingJetPtHLT_mc_lumi[j]->Clone();
+		vLeadingJetPt_LeadingJetPtHLT_data_shape[j]=(TH1F*)vLeadingJetPt_LeadingJetPtHLT_data_lumi[j]->Clone();
+		h1_style(vLeadingJetPt_LeadingJetPtHLT_data_shape[j]);
+		h1_style(vLeadingJetPt_LeadingJetPtHLT_mc_shape[j]);
 
-		Nentries_LeadingJetPt_LeadingJetPtHLT_mc = vLeadingJetPt_RefObjPtHLT_mc_shape[j]->Integral();
-		Nentries_LeadingJetPt_LeadingJetPtHLT_Data = vLeadingJetPt_RefObjPtHLT_data_shape[j]->Integral();
-		vLeadingJetPt_RefObjPtHLT_mc_shape[j]->Scale(Nentries_LeadingJetPt_LeadingJetPtHLT_Data/Nentries_LeadingJetPt_LeadingJetPtHLT_mc);
+		Nentries_LeadingJetPt_LeadingJetPtHLT_mc = vLeadingJetPt_LeadingJetPtHLT_mc_shape[j]->Integral();
+		Nentries_LeadingJetPt_LeadingJetPtHLT_Data = vLeadingJetPt_LeadingJetPtHLT_data_shape[j]->Integral();
+		vLeadingJetPt_LeadingJetPtHLT_mc_shape[j]->Scale(Nentries_LeadingJetPt_LeadingJetPtHLT_Data/Nentries_LeadingJetPt_LeadingJetPtHLT_mc);
 
 		binName = myHLTPtBinning.getName(j);
 		myName = "pT^{Leading Jet}_{data}/pT^{Leading Jet}_{MC} for " + binName;
 		myXName = "pT^{Leading Jet} for " + binName + " [GeV/c]";
-		mySaveName = "images/LeadingJetPtperPtHLT/LeadingJetPt_" + binName + "_shape_inLogScale" + extension;
-		drawDataMcComparison(myName.c_str(), vLeadingJetPt_RefObjPtHLT_mc_lumi[j], vLeadingJetPt_RefObjPtHLT_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+		mySaveName = "images/LeadingJetPtperLeadingJetPtHLT/LeadingJetPt_" + binName + "_shape_inLogScale" + extension;
+		drawDataMcComparison(myName.c_str(), vLeadingJetPt_LeadingJetPtHLT_mc_lumi[j], vLeadingJetPt_LeadingJetPtHLT_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 	
 
@@ -1998,20 +1822,20 @@ int main (int argc, char** argv)
 //************************************************************************************************************	
 
 	for(int j=0; j<myPtBinning.getSize(); j++) {
-		vRecoilPt_RefObjPt_mc_shape[j]=(TH1F*)vRecoilPt_RefObjPt_mc_lumi[j]->Clone();
-		vRecoilPt_RefObjPt_data_shape[j]=(TH1F*)vRecoilPt_RefObjPt_data_lumi[j]->Clone();
-		h1_style(vRecoilPt_RefObjPt_data_shape[j]);
-		h1_style(vRecoilPt_RefObjPt_mc_shape[j]);
+		vRecoilPt_RecoilPt_mc_shape[j]=(TH1F*)vRecoilPt_RecoilPt_mc_lumi[j]->Clone();
+		vRecoilPt_RecoilPt_data_shape[j]=(TH1F*)vRecoilPt_RecoilPt_data_lumi[j]->Clone();
+		h1_style(vRecoilPt_RecoilPt_data_shape[j]);
+		h1_style(vRecoilPt_RecoilPt_mc_shape[j]);
 
-		Nentries_RecoilPt_RecoilPt_mc = vRecoilPt_RefObjPt_mc_shape[j]->Integral();
-		Nentries_RecoilPt_RecoilPt_Data = vRecoilPt_RefObjPt_data_shape[j]->Integral();
-		vRecoilPt_RefObjPt_mc_shape[j]->Scale(Nentries_RecoilPt_RecoilPt_Data/Nentries_RecoilPt_RecoilPt_mc);
+		Nentries_RecoilPt_RecoilPt_mc = vRecoilPt_RecoilPt_mc_shape[j]->Integral();
+		Nentries_RecoilPt_RecoilPt_Data = vRecoilPt_RecoilPt_data_shape[j]->Integral();
+		vRecoilPt_RecoilPt_mc_shape[j]->Scale(Nentries_RecoilPt_RecoilPt_Data/Nentries_RecoilPt_RecoilPt_mc);
 
 		binName = myPtBinning.getName(j);
 		myName = "pT^{Recoil}_{data}/pT^{Recoil}_{MC} for " + binName;
 		myXName = "pT^{Recoil} for " + binName + " [GeV/c]";
-		mySaveName = "images/RecoilPtperRefObjPt/RecoilPt_" + binName + "_shape_inLogScale" + extension;
-		drawDataMcComparison(myName.c_str(), vRecoilPt_RefObjPt_mc_lumi[j], vRecoilPt_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+		mySaveName = "images/RecoilPtperPtRecoil/RecoilPt_" + binName + "_shape_inLogScale" + extension;
+		drawDataMcComparison(myName.c_str(), vRecoilPt_RecoilPt_mc_lumi[j], vRecoilPt_RecoilPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 	
 
@@ -2022,20 +1846,20 @@ int main (int argc, char** argv)
 //************************************************************************************************************	
 
 	for(int j=0; j<myEtaBinning.getSize(); j++) {
-		vMJB_RefObjEta_mc_shape[j]=(TH1F*)vMJB_RefObjEta_mc_lumi[j]->Clone();
-		vMJB_RefObjEta_data_shape[j]=(TH1F*)vMJB_RefObjEta_data_lumi[j]->Clone();
-		h1_style(vMJB_RefObjEta_data_shape[j]);
-		h1_style(vMJB_RefObjEta_mc_shape[j]);
+		vMJB_RecoilEta_mc_shape[j]=(TH1F*)vMJB_RecoilEta_mc_lumi[j]->Clone();
+		vMJB_RecoilEta_data_shape[j]=(TH1F*)vMJB_RecoilEta_data_lumi[j]->Clone();
+		h1_style(vMJB_RecoilEta_data_shape[j]);
+		h1_style(vMJB_RecoilEta_mc_shape[j]);
 
-		Nentries_MJB_RefObjEta_mc = vMJB_RefObjEta_mc_shape[j]->Integral();
-		Nentries_MJB_RefObjEta_Data = vMJB_RefObjEta_data_shape[j]->Integral();
-		vMJB_RefObjEta_mc_shape[j]->Scale(Nentries_MJB_RefObjEta_Data/Nentries_MJB_RefObjEta_mc);
+		Nentries_MJB_RecoilEta_mc = vMJB_RecoilEta_mc_shape[j]->Integral();
+		Nentries_MJB_RecoilEta_Data = vMJB_RecoilEta_data_shape[j]->Integral();
+		vMJB_RecoilEta_mc_shape[j]->Scale(Nentries_MJB_RecoilEta_Data/Nentries_MJB_RecoilEta_mc);
 
 		binName = myEtaBinning.getName(j);
 		myName = "MJB_{data}/MJB_{MC} for " + binName;
 		myXName = "MJB for " + binName;
-		mySaveName = "images/MJBperRefObjEta/MJB_" + binName + "_shape_inLogScale" + extension;
-		drawDataMcComparison(myName.c_str(), vMJB_RefObjEta_mc_lumi[j], vMJB_RefObjEta_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+		mySaveName = "images/MJBperEtaRecoil/MJB_" + binName + "_shape_inLogScale" + extension;
+		drawDataMcComparison(myName.c_str(), vMJB_RecoilEta_mc_lumi[j], vMJB_RecoilEta_data_lumi[j], myXName.c_str(), mySaveName.c_str());
 	}
 	
 //************************************************************************************************************
@@ -2441,24 +2265,7 @@ int main (int argc, char** argv)
 	myHistoName = "images/variables/FracRmPuJets_JetPt_shape_inLogScale" + extension;
 	drawDataMcComparison("FracRmPuJets_JetPt", hFracRmPuJets_JetPt_mc_shape, hFracRmPuJets_JetPt_data_shape, "p_{t}^{jet} [GeV/c]", myHistoName.c_str(), false, "N_{removed PU jets}/N_{total jets}");
 	
-//************************************************************************************************************
-//
-//                                      FracRmPuJets_JetPt_zoomed
-//
-//************************************************************************************************************	
 	
-	TH1F* hFracRmPuJets_JetPt_mc_shape_zoomed=(TH1F*)hFracRmPuJets_JetPt_mc_shape->Clone();
-	TH1F* hFracRmPuJets_JetPt_data_shape_zoomed=(TH1F*)hFracRmPuJets_JetPt_data_shape->Clone();
-
-	h1_style(hFracRmPuJets_JetPt_mc_shape_zoomed);
-	h1_style(hFracRmPuJets_JetPt_data_shape_zoomed);
-
-    hFracRmPuJets_JetPt_mc_shape_zoomed->GetXaxis()->SetRangeUser(0., 1500.);
-    hFracRmPuJets_JetPt_data_shape_zoomed->GetXaxis()->SetRangeUser(0., 1500.);
-		
-	myHistoName = "images/variables/FracRmPuJets_JetPt_zoomed_shape_inLogScale" + extension;
-	drawDataMcComparison("FracRmPuJets_JetPt_zoomed", hFracRmPuJets_JetPt_mc_shape_zoomed, hFracRmPuJets_JetPt_data_shape_zoomed, "p_{t}^{jet} [GeV/c]", myHistoName.c_str(), false, "N_{removed PU jets}/N_{total jets}");	
-
 //************************************************************************************************************
 //
 //                                      Alpha beforeSel 
@@ -2705,8 +2512,6 @@ int main (int argc, char** argv)
       drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_shape, hNpv_afterSel_data_shape, "N_{PV}", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/FracRmPuJets_JetPt_shape_inLinScale" + extension;
       drawDataMcComparison("FracRmPuJets_JetPt", hFracRmPuJets_JetPt_mc_shape, hFracRmPuJets_JetPt_data_shape, "p_{t}^{jet} [GeV/c]", myHistoName.c_str(), inLinScale, "N_{removed PU jets}/N_{total jets}");
-      myHistoName = "images/variables/FracRmPuJets_JetPt_zoomed_shape_inLinScale" + extension;
-      drawDataMcComparison("FracRmPuJets_JetPt_zoomed", hFracRmPuJets_JetPt_mc_shape_zoomed, hFracRmPuJets_JetPt_data_shape_zoomed, "p_{t}^{jet} [GeV/c]", myHistoName.c_str(), inLinScale, "N_{removed PU jets}/N_{total jets}");
       myHistoName = "images/variables/Alpha_beforeSel_shape_inLinScale" + extension;
       drawDataMcComparison("Alpha_beforeSel", hAlpha_beforeSel_mc_shape, hAlpha_beforeSel_data_shape, "#alpha", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/Alpha_afterSel_shape_inLinScale" + extension;
@@ -2731,38 +2536,38 @@ int main (int argc, char** argv)
         binName = myPtBinning.getName(j);
         myName = "MJB_{data}/MJB_{MC} for " + binName;
         myXName = "MJB for " + binName;
-        mySaveName = "images/MJBperRefObjPt/MJB_" + binName + "_shape_inLinScale" + extension;
-        drawDataMcComparison(myName.c_str(), vMJB_RefObjPt_mc_shape[j], vMJB_RefObjPt_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+        mySaveName = "images/MJBperPtRecoil/MJB_" + binName + "_shape_inLinScale" + extension;
+        drawDataMcComparison(myName.c_str(), vMJB_RecoilPt_mc_shape[j], vMJB_RecoilPt_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
 
         myName = "MPF_{data}/MPF_{MC} for " + binName;
         myXName = "MPF for " + binName;
-        mySaveName = "images/MPFperRefObjPt/MPF_" + binName + "_shape_inLinScale" + extension;
-        drawDataMcComparison(myName.c_str(), vMPF_RefObjPt_mc_shape[j], vMPF_RefObjPt_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+        mySaveName = "images/MPFperPtRecoil/MPF_" + binName + "_shape_inLinScale" + extension;
+        drawDataMcComparison(myName.c_str(), vMPF_RecoilPt_mc_shape[j], vMPF_RecoilPt_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
 
         myName = "pT^{Leading Jet}_{data}/pT^{Leading Jet}_{MC} for " + binName;
         myXName = "pT^{Leading Jet} for " + binName + " [GeV/c]";
-        mySaveName = "images/LeadingJetPtperRefObjPt/LeadingJetPtperPt_" + binName + "_shape_inLinScale" + extension;
+        mySaveName = "images/LeadingJetPtperPtRecoil/LeadingJetPtperPt_" + binName + "_shape_inLinScale" + extension;
         drawDataMcComparison(myName.c_str(), vLeadingJetPt_RecoilPt_mc_shape[j], vLeadingJetPt_RecoilPt_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
 
         myName = "pT^{Recoil}_{data}/pT^{Recoil}_{MC} for " + binName;
         myXName = "pT^{Recoil} for " + binName + " [GeV/c]";
-        mySaveName = "images/RecoilPtperRefObjPt/RecoilPtperPt_" + binName + "_shape_inLinScale" + extension;
-        drawDataMcComparison(myName.c_str(), vRecoilPt_RefObjPt_mc_shape[j], vRecoilPt_RefObjPt_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+        mySaveName = "images/RecoilPtperPtRecoil/RecoilPtperPt_" + binName + "_shape_inLinScale" + extension;
+        drawDataMcComparison(myName.c_str(), vRecoilPt_RecoilPt_mc_shape[j], vRecoilPt_RecoilPt_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
       }
       for(int j=0; j<myHLTPtBinning.getSize(); j++) {
         binName = myHLTPtBinning.getName(j);
         myName = "pT^{Leading Jet}_{data}/pT^{Leading Jet}_{MC} for " + binName;
         myXName = "pT^{Leading Jet} for " + binName + " [GeV/c]";
-        mySaveName = "images/LeadingJetPtperPtHLT/LeadingJetPt_" + binName + "_shape_inLinScale" + extension;
-        drawDataMcComparison(myName.c_str(), vLeadingJetPt_RefObjPtHLT_mc_shape[j], vLeadingJetPt_RefObjPtHLT_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+        mySaveName = "images/LeadingJetPtperLeadingJetPtHLT/LeadingJetPt_" + binName + "_shape_inLinScale" + extension;
+        drawDataMcComparison(myName.c_str(), vLeadingJetPt_LeadingJetPtHLT_mc_shape[j], vLeadingJetPt_LeadingJetPtHLT_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
       }
 
       for(int j=0; j<myEtaBinning.getSize(); j++) {
         binName = myEtaBinning.getName(j);
         myName = "MJB_{data}/MJB_{MC} for " + binName;
         myXName = "MJB for " + binName;
-        mySaveName = "images/MJBperRefObjEta/MJB_" + binName + "_shape_inLinScale" + extension;
-        drawDataMcComparison(myName.c_str(), vMJB_RefObjEta_mc_shape[j], vMJB_RefObjEta_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+        mySaveName = "images/MJBperEtaRecoil/MJB_" + binName + "_shape_inLinScale" + extension;
+        drawDataMcComparison(myName.c_str(), vMJB_RecoilEta_mc_shape[j], vMJB_RecoilEta_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
       }
       for(int j=0; j<myNpvBinning.getSize(); j++) {
         binName = myNpvBinning.getName(j);

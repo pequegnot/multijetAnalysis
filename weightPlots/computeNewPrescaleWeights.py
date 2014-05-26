@@ -34,8 +34,8 @@ inputs_data = []
 
 if option.run:
     for aRun, aDataset in runs.items():
-        #input = "output_rootfile/%s/data/MULTIJET_Data_%s_merged_2012_woPU_pt30_eta50_puJetIdT_beforePrecaleReweighting.root" % (d,aRun)
-        input = "output_rootfile/%s/data_woPrescaleReweighting/MULTIJET_Data_%s_merged_2012.root" % (d,aRun)
+        input = "output_rootfile/%s/data/MULTIJET_Data_%s_merged_2012_woPU_pt30_eta50_puJetIdT_beforePrecaleReweighting.root" % (d,aRun)
+        #input = "output_rootfile/%s/data_woPrescaleReweighting/MULTIJET_Data_%s_merged_2012.root" % (d,aRun)
         inputs_data.append(input)
 else:
     input = "output_rootfile/%s/data/MULTIJET_Data_merged_2012_woPU_pt30_eta50_puJetIdT_beforePrecaleReweighting.root" % (d)
@@ -61,6 +61,7 @@ for input_data in inputs_data:
   hdata = f_data.Get("variables/afterSel/hLeadingJetPt_afterSel")
   if option.useRecoilForHLT:
     hdata = f_data.Get("variables/afterSel/hRecoilPt_afterSel")
+  hdata.Draw()
 
   valInf = myHLTPtBinning.getBinValueInf(numberHLTPtBins-1)
   valSup = myHLTPtBinning.getBinValueSup(numberHLTPtBins-1)

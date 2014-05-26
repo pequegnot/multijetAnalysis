@@ -59,7 +59,8 @@ int main (int argc, char** argv)
 	string outputName;
 	string inputName;
 	bool rmPU = false;		
-  	
+    bool useRecoilPtBin = true;
+    bool useRecoilPtHLTBin = false; 	
 
 
 //********************************************************************************************************* 	
@@ -98,6 +99,13 @@ int main (int argc, char** argv)
     TCLAP::SwitchArg rmPUArg("", "rmPU", "Do you want to remove PU jets?", false);
     cmd.add(rmPUArg);
 
+    TCLAP::SwitchArg recoilPtBinArg("", "recoilPtBin", "Do you want to bin in recoil pt?", false);
+    TCLAP::SwitchArg firstJetPtBinArg("", "firstJetPtBin", "Do you want to bin in 1st jet pt?", false);
+    cmd.xorAdd(recoilPtBinArg, firstJetPtBinArg);
+
+    TCLAP::SwitchArg recoilPtHLTBinArg("", "recoilPtHLTBin", "Do you want to bin in recoil pt for HLT trigger?", false);
+    TCLAP::SwitchArg firstJetPtHLTBinArg("", "firstJetPtHLTBin", "Do you want to bin in 1st jet pt for HLT trigger?", false);
+    cmd.xorAdd(recoilPtHLTBinArg, firstJetPtHLTBinArg);
     
     // Parse the argv array.
     cmd.parse(argc, argv);
@@ -108,6 +116,8 @@ int main (int argc, char** argv)
     inputName = inputFileArg.getValue();
     extension = plotNameArg.getValue() + extensionArg.getValue();
     rmPU = rmPUArg.getValue();
+    useRecoilPtBin = recoilPtBinArg.getValue();
+    useRecoilPtHLTBin = recoilPtHLTBinArg.getValue();
     
     if(rmPU) {
 	extension = "_woPUJets" + plotNameArg.getValue() + extensionArg.getValue();    
@@ -170,28 +180,28 @@ int main (int argc, char** argv)
 	vMJB_Npv.resize(numberNpvBins);
 
 	//MJB per recoilpt
-	vector<TH1F*> vMJB_RecoilPt;
-	vMJB_RecoilPt.resize(numberPtBins);
+	vector<TH1F*> vMJB_RefObjPtBin;
+	vMJB_RefObjPtBin.resize(numberPtBins);
 
 	//MPF per recoilpt
-	vector<TH1F*> vMPF_RecoilPt;
-	vMPF_RecoilPt.resize(numberPtBins);
+	vector<TH1F*> vMPF_RefObjPtBin;
+	vMPF_RefObjPtBin.resize(numberPtBins);
 
 	//leadingJetPt per recoilpt
-	vector<TH1F*> vLeadingJetPt_RecoilPt;
-	vLeadingJetPt_RecoilPt.resize(numberPtBins);
+	vector<TH1F*> vLeadingJetPt_RefObjPtBin;
+	vLeadingJetPt_RefObjPtBin.resize(numberPtBins);
 
   //leadingJetPt per recoilpt
-	vector<TH1F*> vLeadingJetPt_LeadingJetPtHLT;
-	vLeadingJetPt_LeadingJetPtHLT.resize(numberHLTPtBins);
+	vector<TH1F*> vLeadingJetPt_HLTRefObjPtBin;
+	vLeadingJetPt_HLTRefObjPtBin.resize(numberHLTPtBins);
 
  	//RecoilPt per recoilpt
-	vector<TH1F*> vRecoilPt_RecoilPt;
-	vRecoilPt_RecoilPt.resize(numberPtBins);
+	vector<TH1F*> vRecoilPt_RefObjPtBin;
+	vRecoilPt_RefObjPtBin.resize(numberPtBins);
 
   //MJB per recoileta
-	vector<TH1F*> vMJB_RecoilEta;
-	vMJB_RecoilEta.resize(numberEtaBins);
+	vector<TH1F*> vMJB_RefObjEtaBin;
+	vMJB_RefObjEtaBin.resize(numberEtaBins);
 	
 	//NjetsRecoil per recoilpt
 	vector<TH1F*> vNjetsRecoil_RecoilPt;
@@ -204,26 +214,27 @@ int main (int argc, char** argv)
 	
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		ptBinName = myPtBinning.getName(j);
-		vectorName = "MJB/recoilPtBin/MJB_" + ptBinName;
-		vMJB_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
-		vectorName = "MPF/recoilPtBin/MPF_" + ptBinName;
-		vMPF_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
-        vectorName = "leadingJet/recoilPtBin/LeadingJetPt_" + ptBinName;
-		vLeadingJetPt_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
+		vectorName = "MJB/PtBin/MJB_" + ptBinName;
+		vMJB_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
+		vectorName = "MPF/PtBin/MPF_" + ptBinName;
+		vMPF_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
+        vectorName = "leadingJet/PtBin/LeadingJetPt_" + ptBinName;
+		vLeadingJetPt_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
+        //vectorName = "recoil/PtBin/RecoilPt_" + ptBinName;
         vectorName = "recoil/recoilPtBin/RecoilPt_" + ptBinName;
-		vRecoilPt_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
+		vRecoilPt_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
 	}
 
   for(int j=0; j<myHLTPtBinning.getSize(); j++) {
 		ptBinName = myHLTPtBinning.getName(j);
-        vectorName = "leadingJet/1stJetPtHLTBin/LeadingJetPt_" + ptBinName;
-		vLeadingJetPt_LeadingJetPtHLT[j] = (TH1F*)f->Get(vectorName.c_str());
+        vectorName = "leadingJet/HLTPtBin/LeadingJetPt_" + ptBinName;
+		vLeadingJetPt_HLTRefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
 	}
 
 	for(int j=0; j<myEtaBinning.getSize(); j++) {
 		etaBinName = myEtaBinning.getName(j);
-		vectorName = "MJB/recoilEtaBin/MJB_" + etaBinName;
-		vMJB_RecoilEta[j] = (TH1F*)f->Get(vectorName.c_str());
+		vectorName = "MJB/EtaBin/MJB_" + etaBinName;
+		vMJB_RefObjEtaBin[j] = (TH1F*)f->Get(vectorName.c_str());
 	}
 	
 	for(int j=0; j<myNpvBinning.getSize(); j++) {
@@ -237,24 +248,24 @@ int main (int argc, char** argv)
 		vector<TH1F*> vPtRatio_GenPt;
 		vPtRatio_GenPt.resize(numberPtBins);
 		//Rtrue per recoilpt
-		vector<TH1F*> vRtrue_leadingJet_RecoilPt;
-		vRtrue_leadingJet_RecoilPt.resize(numberPtBins);
+		vector<TH1F*> vRtrue_leadingJet_RefObjPt;
+		vRtrue_leadingJet_RefObjPt.resize(numberPtBins);
 		
 		vector<TH1F*> vRtrue_allJets_JetPt;
 		vRtrue_allJets_JetPt.resize(myLowPtBinning.getSize());
 	
-		//Rrecoil per recoilpt
-		vector<TH1F*> vRrecoil_RecoilPt;
-		vRrecoil_RecoilPt.resize(numberPtBins);
+		//Rrecoil per reference object pt
+		vector<TH1F*> vRrecoil_RefObjPtBin;
+		vRrecoil_RefObjPtBin.resize(numberPtBins);
 		
 		for(int j=0; j<myPtBinning.getSize(); j++) {
 			ptBinName = myPtBinning.getName(j);
 			vectorName = "Rtrue/Rtrue_leadingJet_" + ptBinName;
-			vRtrue_leadingJet_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
+			vRtrue_leadingJet_RefObjPt[j] = (TH1F*)f->Get(vectorName.c_str());
 			vectorName = "PtRatio/PtRatio_" + ptBinName;			
 			vPtRatio_GenPt[j] = (TH1F*)f->Get(vectorName.c_str());
 			vectorName = "Rtrue/Rrecoil_" + ptBinName;
-			vRrecoil_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
+			vRrecoil_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
 			
 			vectorName = "recoilJets/NjetsRecoil_" + ptBinName;
 			vNjetsRecoil_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
@@ -754,114 +765,132 @@ int main (int argc, char** argv)
     
 //************************************************************************************************************
 //
-//                                      MJB as a function of recoilpt
+//                                      MJB as a function of reference object pt
 //
 //************************************************************************************************************	
 
-	float aMJB_RecoilPt_Mean[numberPtBins];
-	float aMJB_RecoilPt_MeanError[numberPtBins];
-	float aRecoilPtBins_Mean[numberPtBins];
-	float aRecoilPtBins_MeanError[numberPtBins];
+	float aMJB_RefObjPt_Mean[numberPtBins];
+	float aMJB_RefObjPt_MeanError[numberPtBins];
+	float aRefObjPtBins_Mean[numberPtBins];
+	float aRefObjPtBins_MeanError[numberPtBins];
 	
 	for(int i=0; i<numberPtBins; i++) {
-		aMJB_RecoilPt_Mean[i] = vMJB_RecoilPt[i]->GetMean();
-		aMJB_RecoilPt_MeanError[i] = vMJB_RecoilPt[i]->GetMeanError();
-		aRecoilPtBins_Mean[i] = ( myPtBinning.getBinValueInf(i)+myPtBinning.getBinValueSup(i) )/2.;
-		aRecoilPtBins_MeanError[i]=0.;
+		aMJB_RefObjPt_Mean[i] = vMJB_RefObjPtBin[i]->GetMean();
+		aMJB_RefObjPt_MeanError[i] = vMJB_RefObjPtBin[i]->GetMeanError();
+		aRefObjPtBins_Mean[i] = ( myPtBinning.getBinValueInf(i)+myPtBinning.getBinValueSup(i) )/2.;
+		aRefObjPtBins_MeanError[i]=0.;
 	}
 	
-	TCanvas *cMJB_RecoilPt = new TCanvas("cMJB_RecoilPt","cMJB_RecoilPt");
-	cMJB_RecoilPt->cd();
+	TCanvas *cMJB_RefObjPt = new TCanvas("cMJB_RefObjPt","cMJB_RefObjPt");
+	cMJB_RefObjPt->cd();
 	
-	TGraphErrors *gMJB_RecoilPt = new TGraphErrors(numberPtBins,aRecoilPtBins_Mean, aMJB_RecoilPt_Mean, aRecoilPtBins_MeanError, aMJB_RecoilPt_MeanError);
-	gMJB_RecoilPt->SetName("MJB");
-	gMJB_RecoilPt->SetTitle("MJB as a function of p_{T}^{Recoil}");
-	gMJB_RecoilPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
-	gMJB_RecoilPt->GetYaxis()->SetTitle("MJB");
-	gMJB_RecoilPt->SetMarkerStyle(20);
-	gMJB_RecoilPt->SetMarkerColor(plotColor);
-	gMJB_RecoilPt->SetLineColor(plotColor);
-	//gMJB_RecoilPt->SetMarkerSize(0.5);	
-	cMJB_RecoilPt->cd();
-	//gMJB_RecoilPt->SetLogx(1);
-	//gMJB_RecoilPt->GetYaxis()->SetRangeUser(0.7,1.1);
-	gMJB_RecoilPt->Draw("ape");
-	TGraph_style (gMJB_RecoilPt);
-	saveName = "images/MJB/cMJB_RecoilPt" + typeName + extension;
-	cMJB_RecoilPt->SaveAs(saveName.c_str());
+	TGraphErrors *gMJB_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aMJB_RefObjPt_Mean, aRefObjPtBins_MeanError, aMJB_RefObjPt_MeanError);
+	gMJB_RefObjPt->SetName("MJB");
+    if(useRecoilPtBin) {
+	  gMJB_RefObjPt->SetTitle("MJB as a function of p_{T}^{Recoil}");
+	  gMJB_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+    }
+    else {
+	  gMJB_RefObjPt->SetTitle("MJB as a function of p_{T}^{Leading Jet}");
+	  gMJB_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Leading Jet} (GeV)");    
+    }
+	gMJB_RefObjPt->GetYaxis()->SetTitle("MJB");
+	gMJB_RefObjPt->SetMarkerStyle(20);
+	gMJB_RefObjPt->SetMarkerColor(plotColor);
+	gMJB_RefObjPt->SetLineColor(plotColor);
+	//gMJB_RefObjPt->SetMarkerSize(0.5);	
+	cMJB_RefObjPt->cd();
+	//gMJB_RefObjPt->SetLogx(1);
+	//gMJB_RefObjPt->GetYaxis()->SetRangeUser(0.7,1.1);
+	gMJB_RefObjPt->Draw("ape");
+	TGraph_style (gMJB_RefObjPt);
+	saveName = "images/MJB/cMJB_RefObjPt" + typeName + extension;
+	cMJB_RefObjPt->SaveAs(saveName.c_str());
 	
 
 //************************************************************************************************************
 //
-//                                      MPF as a function of recoilpt
+//                                      MPF as a function of ref obj pt
 //
 //************************************************************************************************************	
 
-	float aMPF_RecoilPt_Mean[numberPtBins];
-	float aMPF_RecoilPt_MeanError[numberPtBins];
+	float aMPF_RefObjPt_Mean[numberPtBins];
+	float aMPF_RefObjPt_MeanError[numberPtBins];
 	
 	for(int i=0; i<numberPtBins; i++) {
-		aMPF_RecoilPt_Mean[i] = vMPF_RecoilPt[i]->GetMean();
-		aMPF_RecoilPt_MeanError[i] = vMPF_RecoilPt[i]->GetMeanError();
+		aMPF_RefObjPt_Mean[i] = vMPF_RefObjPtBin[i]->GetMean();
+		aMPF_RefObjPt_MeanError[i] = vMPF_RefObjPtBin[i]->GetMeanError();
 	}
 	
-	TCanvas *cMPF_RecoilPt = new TCanvas("cMPF_RecoilPt","cMPF_RecoilPt");
-	cMPF_RecoilPt->cd();
+	TCanvas *cMPF_RefObjPt = new TCanvas("cMPF_RefObjPt","cMPF_RefObjPt");
+	cMPF_RefObjPt->cd();
 	
-	TGraphErrors *gMPF_RecoilPt = new TGraphErrors(numberPtBins,aRecoilPtBins_Mean, aMPF_RecoilPt_Mean, aRecoilPtBins_MeanError, aMPF_RecoilPt_MeanError);
-	gMPF_RecoilPt->SetName("MPF");
-	gMPF_RecoilPt->SetTitle("MPF as a function of p_{T}^{Recoil}");
-	gMPF_RecoilPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
-	gMPF_RecoilPt->GetYaxis()->SetTitle("MPF");
-	gMPF_RecoilPt->SetMarkerStyle(20);
-	gMPF_RecoilPt->SetMarkerColor(plotColor);
-	gMPF_RecoilPt->SetLineColor(plotColor);
-	//gMPF_RecoilPt->SetMarkerSize(0.5);	
-	cMPF_RecoilPt->cd();
-	//gMPF_RecoilPt->SetLogx(1);
-	//gMPF_RecoilPt->GetYaxis()->SetRangeUser(0.7,1.1);
-	gMPF_RecoilPt->Draw("ape");
-	TGraph_style (gMPF_RecoilPt);
-	saveName = "images/MPF/cMPF_RecoilPt" + typeName + extension;
-	cMPF_RecoilPt->SaveAs(saveName.c_str());
+	TGraphErrors *gMPF_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aMPF_RefObjPt_Mean, aRefObjPtBins_MeanError, aMPF_RefObjPt_MeanError);
+	gMPF_RefObjPt->SetName("MPF");
+    if(useRecoilPtBin) {
+	  gMPF_RefObjPt->SetTitle("MPF as a function of p_{T}^{Recoil}");
+	  gMPF_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+    }
+    else {
+	  gMPF_RefObjPt->SetTitle("MPF as a function of p_{T}^{Leading Jet}");
+	  gMPF_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Leading Jet} (GeV)");    
+    }
+	gMPF_RefObjPt->GetYaxis()->SetTitle("MPF");
+	gMPF_RefObjPt->SetMarkerStyle(20);
+	gMPF_RefObjPt->SetMarkerColor(plotColor);
+	gMPF_RefObjPt->SetLineColor(plotColor);
+	//gMPF_RefObjPt->SetMarkerSize(0.5);	
+	cMPF_RefObjPt->cd();
+	//gMPF_RefObjPt->SetLogx(1);
+	//gMPF_RefObjPt->GetYaxis()->SetRangeUser(0.7,1.1);
+	gMPF_RefObjPt->Draw("ape");
+	TGraph_style (gMPF_RefObjPt);
+	saveName = "images/MPF/cMPF_RefObjPt" + typeName + extension;
+	cMPF_RefObjPt->SaveAs(saveName.c_str());
 
 //************************************************************************************************************
 //
-//                                      MJB as a function of recoileta
+//                                      MJB as a function of ref obj eta
 //
 //************************************************************************************************************	
 
-	float aMJB_RecoilEta_Mean[numberEtaBins];
-	float aMJB_RecoilEta_MeanError[numberEtaBins];
-	float aRecoilEtaBins_Mean[numberEtaBins];
-	float aRecoilEtaBins_MeanError[numberEtaBins];
+	float aMJB_RefObjEta_Mean[numberEtaBins];
+	float aMJB_RefObjEta_MeanError[numberEtaBins];
+	float aRefObjEtaBins_Mean[numberEtaBins];
+	float aRefObjEtaBins_MeanError[numberEtaBins];
 	
 	for(int i=0; i<numberEtaBins; i++) {
-		aMJB_RecoilEta_Mean[i] = vMJB_RecoilEta[i]->GetMean();
-		aMJB_RecoilEta_MeanError[i] = vMJB_RecoilEta[i]->GetMeanError();
-		aRecoilEtaBins_Mean[i] = ( myEtaBinning.getBinValueInf(i)+myEtaBinning.getBinValueSup(i) )/2.;
-		aRecoilEtaBins_MeanError[i]=0.;
+		aMJB_RefObjEta_Mean[i] = vMJB_RefObjEtaBin[i]->GetMean();
+		aMJB_RefObjEta_MeanError[i] = vMJB_RefObjEtaBin[i]->GetMeanError();
+		aRefObjEtaBins_Mean[i] = ( myEtaBinning.getBinValueInf(i)+myEtaBinning.getBinValueSup(i) )/2.;
+		aRefObjEtaBins_MeanError[i]=0.;
 	}
 	
-	TCanvas *cMJB_RecoilEta = new TCanvas("cMJB_RecoilEta","cMJB_RecoilEta");
-	cMJB_RecoilEta->cd();
+	TCanvas *cMJB_RefObjEta = new TCanvas("cMJB_RefObjEta","cMJB_RefObjEta");
+	cMJB_RefObjEta->cd();
 	
-	TGraphErrors *gMJB_RecoilEta = new TGraphErrors(numberEtaBins,aRecoilEtaBins_Mean, aMJB_RecoilEta_Mean, aRecoilEtaBins_MeanError, aMJB_RecoilEta_MeanError);
-	gMJB_RecoilEta->SetName("MJB");
-	gMJB_RecoilEta->SetTitle("MJB as a function of |#eta^{Recoil}|");
-	gMJB_RecoilEta->GetXaxis()->SetTitle("|#eta^{Recoil}|");
-	gMJB_RecoilEta->GetYaxis()->SetTitle("MJB");
-	gMJB_RecoilEta->SetMarkerStyle(20);
-	gMJB_RecoilEta->SetMarkerColor(plotColor);
-	gMJB_RecoilEta->SetLineColor(plotColor);
-	//gMJB_RecoilEta->SetMarkerSize(0.5);	
-	cMJB_RecoilEta->cd();
-	//gMJB_RecoilEta->SetLogx(1);
-	//gMJB_RecoilEta->GetYaxis()->SetRangeUser(0.7,1.1);
-	gMJB_RecoilEta->Draw("ape");
-	TGraph_style (gMJB_RecoilEta);
-	saveName = "images/MJB/cMJB_RecoilEta" + typeName + extension;
-	cMJB_RecoilEta->SaveAs(saveName.c_str());
+	TGraphErrors *gMJB_RefObjEta = new TGraphErrors(numberEtaBins,aRefObjEtaBins_Mean, aMJB_RefObjEta_Mean, aRefObjEtaBins_MeanError, aMJB_RefObjEta_MeanError);
+	gMJB_RefObjEta->SetName("MJB");
+    if(useRecoilPtBin) {
+	  gMJB_RefObjEta->SetTitle("MJB as a function of |#eta^{Recoil}|");
+	  gMJB_RefObjEta->GetXaxis()->SetTitle("|#eta^{Recoil}|");
+    }
+    else {
+ 	  gMJB_RefObjEta->SetTitle("MJB as a function of |#eta^{Leading Jet}|");
+	  gMJB_RefObjEta->GetXaxis()->SetTitle("|#eta^{Leading Jet}|");
+    }
+	gMJB_RefObjEta->GetYaxis()->SetTitle("MJB");
+	gMJB_RefObjEta->SetMarkerStyle(20);
+	gMJB_RefObjEta->SetMarkerColor(plotColor);
+	gMJB_RefObjEta->SetLineColor(plotColor);
+	//gMJB_RefObjEta->SetMarkerSize(0.5);	
+	cMJB_RefObjEta->cd();
+	//gMJB_RefObjEta->SetLogx(1);
+	//gMJB_RefObjEta->GetYaxis()->SetRangeUser(0.7,1.1);
+	gMJB_RefObjEta->Draw("ape");
+	TGraph_style (gMJB_RefObjEta);
+	saveName = "images/MJB/cMJB_RefObjEta" + typeName + extension;
+	cMJB_RefObjEta->SaveAs(saveName.c_str());
 	
 	
 //************************************************************************************************************
@@ -881,7 +910,7 @@ int main (int argc, char** argv)
 	TCanvas *cNjetsRecoil_RecoilPt = new TCanvas("cNjetsRecoil_RecoilPt","cNjetsRecoil_RecoilPt");
 	cNjetsRecoil_RecoilPt->cd();
 	
-	TGraphErrors *gNjetsRecoil_RecoilPt = new TGraphErrors(numberPtBins,aRecoilPtBins_Mean, aNjetsRecoil_Mean, aRecoilPtBins_MeanError, aNjetsRecoil_MeanError);
+	TGraphErrors *gNjetsRecoil_RecoilPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aNjetsRecoil_Mean, aRefObjPtBins_MeanError, aNjetsRecoil_MeanError);
 	gNjetsRecoil_RecoilPt->SetName("NjetsRecoil");
 	gNjetsRecoil_RecoilPt->SetTitle("Number of jets in the recoil as a function of p_{T}^{Recoil}");
 	gNjetsRecoil_RecoilPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
@@ -915,7 +944,7 @@ int main (int argc, char** argv)
 	TCanvas *cNjetsRecoil_068E_RecoilPt = new TCanvas("cNjetsRecoil_068E_RecoilPt","cNjetsRecoil_068E_RecoilPt");
 	cNjetsRecoil_068E_RecoilPt->cd();
 	
-	TGraphErrors *gNjetsRecoil_068E_RecoilPt = new TGraphErrors(numberPtBins,aRecoilPtBins_Mean, aNjetsRecoil_068E_Mean, aRecoilPtBins_MeanError, aNjetsRecoil_068E_MeanError);
+	TGraphErrors *gNjetsRecoil_068E_RecoilPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aNjetsRecoil_068E_Mean, aRefObjPtBins_MeanError, aNjetsRecoil_068E_MeanError);
 	gNjetsRecoil_068E_RecoilPt->SetName("NjetsRecoil_068E");
 	gNjetsRecoil_068E_RecoilPt->SetTitle("Number of necessary recoil jets to carry 68% of p_{T}^{Recoil} as a function of p_{T}^{Recoil}");
 	gNjetsRecoil_068E_RecoilPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
@@ -949,7 +978,7 @@ int main (int argc, char** argv)
 	TCanvas *cNjetsRecoil_095E_RecoilPt = new TCanvas("cNjetsRecoil_095E_RecoilPt","cNjetsRecoil_095E_RecoilPt");
 	cNjetsRecoil_095E_RecoilPt->cd();
 	
-	TGraphErrors *gNjetsRecoil_095E_RecoilPt = new TGraphErrors(numberPtBins,aRecoilPtBins_Mean, aNjetsRecoil_095E_Mean, aRecoilPtBins_MeanError, aNjetsRecoil_095E_MeanError);
+	TGraphErrors *gNjetsRecoil_095E_RecoilPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aNjetsRecoil_095E_Mean, aRefObjPtBins_MeanError, aNjetsRecoil_095E_MeanError);
 	gNjetsRecoil_095E_RecoilPt->SetName("NjetsRecoil_095E");
 	gNjetsRecoil_095E_RecoilPt->SetTitle("Number of necessary recoil jets to carry 95% of p_{T}^{Recoil} as a function of p_{T}^{Recoil}");
 	gNjetsRecoil_095E_RecoilPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
@@ -967,14 +996,14 @@ int main (int argc, char** argv)
 	cNjetsRecoil_095E_RecoilPt->SaveAs(saveName.c_str());
 	
 	
-	TGraphErrors *gRtrue_leadingJet_RecoilPt = NULL;
+	TGraphErrors *gRtrue_leadingJet_RefObjPt = NULL;
 	TGraphErrors *gRtrue_allJets_JetPt = NULL;
-	TGraphErrors *gRrecoil_RecoilPt = NULL;
+	TGraphErrors *gRrecoil_RefObjPt = NULL;
 	
 	if(isMC) {
 //************************************************************************************************************
 //
-//                                      Rtrue,leading jet as a function of recoilpt
+//                                      Rtrue,leading jet as a function of ref obj pt
 //
 //************************************************************************************************************	
 
@@ -983,29 +1012,35 @@ int main (int argc, char** argv)
 		float aRtrue_leadingJet_MeanError[numberPtBins];
 	
 		for(int i=0; i<numberPtBins; i++) {
-			aRtrue_leadingJet_Mean[i] = vRtrue_leadingJet_RecoilPt[i]->GetMean();
-			aRtrue_leadingJet_MeanError[i] = vRtrue_leadingJet_RecoilPt[i]->GetMeanError();
+			aRtrue_leadingJet_Mean[i] = vRtrue_leadingJet_RefObjPt[i]->GetMean();
+			aRtrue_leadingJet_MeanError[i] = vRtrue_leadingJet_RefObjPt[i]->GetMeanError();
 		}
 	
-		TCanvas *cRtrue_leadingJet_RecoilPt = new TCanvas("cRtrue_leadingJet_RecoilPt","cRtrue_leadingJet_RecoilPt");
-		cRtrue_leadingJet_RecoilPt->cd();
+		TCanvas *cRtrue_leadingJet_RefObjPt = new TCanvas("cRtrue_leadingJet_RefObjPt","cRtrue_leadingJet_RefObjPt");
+		cRtrue_leadingJet_RefObjPt->cd();
 	
-		gRtrue_leadingJet_RecoilPt = new TGraphErrors(numberPtBins,aRecoilPtBins_Mean, aRtrue_leadingJet_Mean, aRecoilPtBins_MeanError, aRtrue_leadingJet_MeanError);
-		gRtrue_leadingJet_RecoilPt->SetName("Rtrue");
-		gRtrue_leadingJet_RecoilPt->SetTitle("R_{true} as a function of p_{T}^{Recoil}");
-		gRtrue_leadingJet_RecoilPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
-		gRtrue_leadingJet_RecoilPt->GetYaxis()->SetTitle("R_{true}");
-		gRtrue_leadingJet_RecoilPt->SetMarkerStyle(20);
-		gRtrue_leadingJet_RecoilPt->SetMarkerColor(plotColor);
-		gRtrue_leadingJet_RecoilPt->SetLineColor(plotColor);
-		//gRtrue_leadingJet_RecoilPt->SetMarkerSize(0.5);	
-		cRtrue_leadingJet_RecoilPt->cd();
-		//gRtrue_leadingJet_RecoilPt->SetLogx(1);
-		//gRtrue_leadingJet_RecoilPt->GetYaxis()->SetRangeUser(0.7,1.1);
-		gRtrue_leadingJet_RecoilPt->Draw("ape");
-		TGraph_style (gRtrue_leadingJet_RecoilPt);
-		saveName = "images/Rtrue/cRtrue_leadingJet_RecoilPt" + typeName + extension;
-		cRtrue_leadingJet_RecoilPt->SaveAs(saveName.c_str());
+		gRtrue_leadingJet_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aRtrue_leadingJet_Mean, aRefObjPtBins_MeanError, aRtrue_leadingJet_MeanError);
+		gRtrue_leadingJet_RefObjPt->SetName("Rtrue");
+        if (useRecoilPtBin) {
+		  gRtrue_leadingJet_RefObjPt->SetTitle("R_{true} as a function of p_{T}^{Recoil}");
+		  gRtrue_leadingJet_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+        }
+        else {
+		  gRtrue_leadingJet_RefObjPt->SetTitle("R_{true} as a function of p_{T}^{Leading Jet}");
+		  gRtrue_leadingJet_RefObjPt->GetXaxis()->SetTitle("p_{T}^{LeadingJet} (GeV)");      
+        }
+		gRtrue_leadingJet_RefObjPt->GetYaxis()->SetTitle("R_{true}");
+		gRtrue_leadingJet_RefObjPt->SetMarkerStyle(20);
+		gRtrue_leadingJet_RefObjPt->SetMarkerColor(plotColor);
+		gRtrue_leadingJet_RefObjPt->SetLineColor(plotColor);
+		//gRtrue_leadingJet_RefObjPt->SetMarkerSize(0.5);	
+		cRtrue_leadingJet_RefObjPt->cd();
+		//gRtrue_leadingJet_RefObjPt->SetLogx(1);
+		//gRtrue_leadingJet_RefObjPt->GetYaxis()->SetRangeUser(0.7,1.1);
+		gRtrue_leadingJet_RefObjPt->Draw("ape");
+		TGraph_style (gRtrue_leadingJet_RefObjPt);
+		saveName = "images/Rtrue/cRtrue_leadingJet_RefObjPt" + typeName + extension;
+		cRtrue_leadingJet_RefObjPt->SaveAs(saveName.c_str());
 
 //************************************************************************************************************
 //
@@ -1048,7 +1083,7 @@ int main (int argc, char** argv)
 
 //************************************************************************************************************
 //
-//                                      Rrecoil as a function of recoilpt
+//                                      Rrecoil as a function of reference object pt
 //
 //************************************************************************************************************	
 
@@ -1056,29 +1091,35 @@ int main (int argc, char** argv)
 		float aRrecoil_MeanError[numberPtBins];
 	
 		for(int i=0; i<numberPtBins; i++) {
-			aRrecoil_Mean[i] = vRrecoil_RecoilPt[i]->GetMean();
-			aRrecoil_MeanError[i] = vRrecoil_RecoilPt[i]->GetMeanError();
+			aRrecoil_Mean[i] = vRrecoil_RefObjPtBin[i]->GetMean();
+			aRrecoil_MeanError[i] = vRrecoil_RefObjPtBin[i]->GetMeanError();
 		}
 	
-		TCanvas *cRrecoil_RecoilPt = new TCanvas("cRrecoil_RecoilPt","cRrecoil_RecoilPt");
-		cRrecoil_RecoilPt->cd();
+		TCanvas *cRrecoil_RefObjPt = new TCanvas("cRrecoil_RefObjPt","cRrecoil_RefObjPt");
+		cRrecoil_RefObjPt->cd();
 	
-		gRrecoil_RecoilPt = new TGraphErrors(numberPtBins,aRecoilPtBins_Mean, aRrecoil_Mean, aRecoilPtBins_MeanError, aRrecoil_MeanError);
-		gRrecoil_RecoilPt->SetName("Rrecoil");
-		gRrecoil_RecoilPt->SetTitle("R_{recoil} as a function of p_{T}^{Recoil}");
-		gRrecoil_RecoilPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
-		gRrecoil_RecoilPt->GetYaxis()->SetTitle("R_{recoil}");
-		gRrecoil_RecoilPt->SetMarkerStyle(20);
-		gRrecoil_RecoilPt->SetMarkerColor(plotColor);
-		gRrecoil_RecoilPt->SetLineColor(plotColor);
-		//gRrecoil_RecoilPt->SetMarkerSize(0.5);	
-		cRrecoil_RecoilPt->cd();
-		//gRrecoil_RecoilPt->SetLogx(1);
-		//gRrecoil_RecoilPt->GetYaxis()->SetRangeUser(0.7,1.1);
-		gRrecoil_RecoilPt->Draw("ape");
-		TGraph_style (gRrecoil_RecoilPt);
-		saveName = "images/Rrecoil/cRrecoil_RecoilPt" + typeName + extension;
-		cRrecoil_RecoilPt->SaveAs(saveName.c_str());	
+		gRrecoil_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aRrecoil_Mean, aRefObjPtBins_MeanError, aRrecoil_MeanError);
+		gRrecoil_RefObjPt->SetName("Rrecoil");
+        if(useRecoilPtBin) {
+		  gRrecoil_RefObjPt->SetTitle("R_{recoil} as a function of p_{T}^{Recoil}");
+		  gRrecoil_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+        }
+        else {
+		  gRrecoil_RefObjPt->SetTitle("R_{recoil} as a function of p_{T}^{Leading Jet}");
+		  gRrecoil_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Leading Jet} (GeV)");        
+        }
+		gRrecoil_RefObjPt->GetYaxis()->SetTitle("R_{recoil}");
+		gRrecoil_RefObjPt->SetMarkerStyle(20);
+		gRrecoil_RefObjPt->SetMarkerColor(plotColor);
+		gRrecoil_RefObjPt->SetLineColor(plotColor);
+		//gRrecoil_RefObjPt->SetMarkerSize(0.5);	
+		cRrecoil_RefObjPt->cd();
+		//gRrecoil_RefObjPt->SetLogx(1);
+		//gRrecoil_RefObjPt->GetYaxis()->SetRangeUser(0.7,1.1);
+		gRrecoil_RefObjPt->Draw("ape");
+		TGraph_style (gRrecoil_RefObjPt);
+		saveName = "images/Rrecoil/cRrecoil_RefObjPt" + typeName + extension;
+		cRrecoil_RefObjPt->SaveAs(saveName.c_str());	
 	
 	}
 
@@ -1095,18 +1136,18 @@ int main (int argc, char** argv)
 
 	TDirectory *mjbDir = out->mkdir("MJB","MJB");
 	mjbDir->cd();
-	TDirectory *ptbinDir = mjbDir->mkdir("recoilPtBin","recoilPtBin");
+	TDirectory *ptbinDir = mjbDir->mkdir("PtBin","PtBin");
 	ptbinDir->cd();
-	gMJB_RecoilPt->Write("gMJB_RecoilPt");
+	gMJB_RefObjPt->Write("gMJB_RefObjPt");
 	for(int j=0; j<myPtBinning.getSize(); j++) {
-		vMJB_RecoilPt[j]->Write();
+		vMJB_RefObjPtBin[j]->Write();
 	}
 	
-	TDirectory *etabinDir = mjbDir->mkdir("recoilEtaBin","recoilEtaBin");
+	TDirectory *etabinDir = mjbDir->mkdir("EtaBin","EtaBin");
 	etabinDir->cd();
-	gMJB_RecoilEta->Write("gMJB_RecoilEta");
+	gMJB_RefObjEta->Write("gMJB_RefObjEta");
 	for(int j=0; j<myEtaBinning.getSize(); j++) {
-		vMJB_RecoilEta[j]->Write();
+		vMJB_RefObjEtaBin[j]->Write();
 	}
 
 	TDirectory *npvbinDir = mjbDir->mkdir("npvBin","npvBin");
@@ -1118,34 +1159,34 @@ int main (int argc, char** argv)
 	
 	TDirectory *mpfDir = out->mkdir("MPF","MPF");
 	mpfDir->cd();
-	TDirectory *ptbinmpfDir = mpfDir->mkdir("recoilPtBin","recoilPtBin");
+	TDirectory *ptbinmpfDir = mpfDir->mkdir("PtBin","PtBin");
 	ptbinmpfDir->cd();
-	gMPF_RecoilPt->Write("gMPF_RecoilPt");
+	gMPF_RefObjPt->Write("gMPF_RefObjPt");
 	for(int j=0; j<myPtBinning.getSize(); j++) {
-		vMPF_RecoilPt[j]->Write();
+		vMPF_RefObjPtBin[j]->Write();
 	}
 
   TDirectory *leadingJetDir = out->mkdir("leadingJet","leadingJet");
 	leadingJetDir->cd();
-	TDirectory *ptbin_jet1Dir = leadingJetDir->mkdir("recoilPtBin","recoilPtBin");
+	TDirectory *ptbin_jet1Dir = leadingJetDir->mkdir("PtBin","PtBin");
 	ptbin_jet1Dir->cd();
 	for(int j=0; j<myPtBinning.getSize(); j++) {
-		vLeadingJetPt_RecoilPt[j]->Write();
+		vLeadingJetPt_RefObjPtBin[j]->Write();
 	}
-  TDirectory *leadingjetrawptbin_jet1Dir = leadingJetDir->mkdir("1stJetPtHLTBin", "1stJetPtHLTBin");
+  TDirectory *leadingjetrawptbin_jet1Dir = leadingJetDir->mkdir("HLTPtBin", "HLTPtBin");
   leadingjetrawptbin_jet1Dir->cd();
   for(int j=0; j<myHLTPtBinning.getSize(); j++) {
-    vLeadingJetPt_LeadingJetPtHLT[j]->Write();
+    vLeadingJetPt_HLTRefObjPtBin[j]->Write();
   }
 
 	if(isMC) {
 		TDirectory *trueDir = out->mkdir("Rtrue","Rtrue");
 		trueDir->cd();
 		for(int j=0; j<myPtBinning.getSize(); j++) {
-			vRtrue_leadingJet_RecoilPt[j]->Write();
-			vRrecoil_RecoilPt[j]->Write();
+			vRtrue_leadingJet_RefObjPt[j]->Write();
+			vRrecoil_RefObjPtBin[j]->Write();
 		}
-		gRtrue_leadingJet_RecoilPt->Write("gRtrue_leadingJet_RecoilPt");
+		gRtrue_leadingJet_RefObjPt->Write("gRtrue_leadingJet_RefObjPt");
 		
 		for(int j=0; j<myLowPtBinning.getSize(); j++) {
 			vRtrue_allJets_JetPt[j]->Write();
@@ -1173,10 +1214,10 @@ int main (int argc, char** argv)
 	recoilDir->cd();	
 	hRecoilEta->Write();
 	hRecoilWidth->Write();
-	TDirectory *ptbin_recoilDir = recoilDir->mkdir("recoilPtBin","recoilPtBin");
+	TDirectory *ptbin_recoilDir = recoilDir->mkdir("PtBin","PtBin");
 	ptbin_recoilDir->cd();
 	for(int j=0; j<myPtBinning.getSize(); j++) {
-		vRecoilPt_RecoilPt[j]->Write();
+		vRecoilPt_RefObjPtBin[j]->Write();
 	}
 	
 	TDirectory *variablesDir = out->mkdir("variables","variables");
@@ -1236,7 +1277,7 @@ int main (int argc, char** argv)
 	out->Close();
 	
 	for(int j=0; j<myPtBinning.getSize(); j++) {
-		vMJB_RecoilPt[j]->Delete();
+		vMJB_RefObjPtBin[j]->Delete();
 	}
 	
 	for(int j=0; j<myNpvBinning.getSize(); j++) {
@@ -1244,7 +1285,7 @@ int main (int argc, char** argv)
 	}
 
 	for(int j=0; j<myPtBinning.getSize(); j++) {
-		vMPF_RecoilPt[j]->Delete();
+		vMPF_RefObjPtBin[j]->Delete();
 	}
 	
 	for(int j=0; j<myPtBinning.getSize(); j++) {
@@ -1255,8 +1296,8 @@ int main (int argc, char** argv)
 	
 	if(isMC) {
 		for(int j=0; j<myPtBinning.getSize(); j++) {
-			vRtrue_leadingJet_RecoilPt[j]->Delete();
-			vRrecoil_RecoilPt[j]->Delete();
+			vRtrue_leadingJet_RefObjPt[j]->Delete();
+			vRrecoil_RefObjPtBin[j]->Delete();
 		}
 		for(int j=0; j<myLowPtBinning.getSize(); j++) {
 			vRtrue_allJets_JetPt[j]->Delete();

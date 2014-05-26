@@ -25,7 +25,7 @@ LDFLAGS = -g -w
 NAME = multijet_weight_common
 ROOTLIBS = $(shell root-config --libs) -lboost_regex
 
-all: $(NAME)
+all: $(NAME) HLTPtBinning
 
 %.o: %.cpp
 	@echo "compiling the classes..."
@@ -47,4 +47,4 @@ HLTPtBinning: ../common/HLTPtBinning_python.o ../common/HLTPtBinning.o ../common
 
 clean:
 	@echo "cleaning up..."
-	rm $(NAME).o ../common/ptBinning.o ../common/HLTPtBinning.o ../common/npvBinning.o ../common/etaBinning.o PUReweighting/PUReweighter.o
+	rm $(NAME).o ../common/ptBinning.o ../common/HLTPtBinning.o ../common/npvBinning.o ../common/etaBinning.o PUReweighting/PUReweighter.o ../common/HLTPtBinning_python.o HLTPtBinning.so

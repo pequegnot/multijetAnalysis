@@ -77,13 +77,13 @@ subprocess.call(args)
 
 print("Merging run by run...")
 for run in inputs:
-  if len(run) > 1:
-    args = ["hadd","-f", "output_rootfile/%s/data/MULTIJET_Data_%s_merged_2012_woPU_pt30_eta50_puJetIdT_afterPrecaleReweighting.root" % (d,run[0][6])]
-    path = "output_rootfile/%s/data" % (d)
-    for output in run:
-      args.append(os.path.join(path,output[0]))
-    subprocess.call(args)
-    #print args
+  #if len(run) > 1:
+  args = ["hadd","-f", "output_rootfile/%s/data/MULTIJET_Data_%s_merged_2012_woPU_pt30_eta50_puJetIdT_afterPrecaleReweighting.root" % (d,run[0][6])]
+  path = "output_rootfile/%s/data" % (d)
+  for output in run:
+    args.append(os.path.join(path,output[0]))
+  subprocess.call(args)
+  #print args
 
 print("Merging ...")
 args = ["hadd","-f", "output_rootfile/%s/data/MULTIJET_Data_merged_2012_woPU_pt30_eta50_puJetIdT_afterPrecaleReweighting.root" % (d)]
