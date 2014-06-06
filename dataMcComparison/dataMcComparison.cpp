@@ -684,7 +684,7 @@ int main (int argc, char** argv)
     }
     else {
       TFile *f_syst=TFile::Open(systFileName.c_str());
-      TGraphErrors* gMJB_SystTot=(TGraphErrors*)f_syst->Get("MJB/PtBin/gMJB_SystTot");
+      TGraphErrors* gMJB_SystTot=(TGraphErrors*)f_syst->Get("MJB/recoilPtBin/gMJB_SystTot");
       for(int i=0; i<numberPtBins; i++) {
         // quadratic sum of statitics and systematics errors
         gMJB_RefObjPt_mc->SetPointError(i, 0., sqrt(gMJB_RefObjPt_mc->GetErrorY(i)*gMJB_RefObjPt_mc->GetErrorY(i) + gMJB_SystTot->GetErrorY(i)*gMJB_SystTot->GetErrorY(i)));
@@ -816,7 +816,7 @@ int main (int argc, char** argv)
     }
     else {
       TFile *f_syst=TFile::Open(systFileName.c_str());
-      TGraphErrors* gMPF_SystTot=(TGraphErrors*)f_syst->Get("MPF/PtBin/gMPF_SystTot");
+      TGraphErrors* gMPF_SystTot=(TGraphErrors*)f_syst->Get("MPF/recoilPtBin/gMPF_SystTot");
       for(int i=0; i<numberPtBins; i++) {
         // quadratic sum of statitics and systematics errors
         gMPF_RefObjPt_mc->SetPointError(i, 0., sqrt(gMPF_RefObjPt_mc->GetErrorY(i)*gMPF_RefObjPt_mc->GetErrorY(i) + gMPF_SystTot->GetErrorY(i)*gMPF_SystTot->GetErrorY(i)));
