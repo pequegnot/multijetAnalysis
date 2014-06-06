@@ -18,10 +18,15 @@ std::string HLTPtBinning::getHLTName(int bin) {
 void HLTPtBinning::fillHLTPtBins() 
 {
   mPtBins.clear();
-  mPtBins.push_back(std::make_pair(170., 230.));
+  /*mPtBins.push_back(std::make_pair(170., 230.));
   mPtBins.push_back(std::make_pair(230., 290.));
   mPtBins.push_back(std::make_pair(290., 360.));
-  mPtBins.push_back(std::make_pair(360., 3000.));
+  mPtBins.push_back(std::make_pair(360., 3000.));*/
+
+  mPtBins.push_back(std::make_pair(180., 240.));
+  mPtBins.push_back(std::make_pair(240., 300.));
+  mPtBins.push_back(std::make_pair(300., 370.));
+  mPtBins.push_back(std::make_pair(370., 3000.));
 
   mPtNames.clear();
   mPtNames.push_back("HLT_PFJet140");
