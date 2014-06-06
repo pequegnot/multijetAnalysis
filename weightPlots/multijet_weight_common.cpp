@@ -602,7 +602,7 @@ int main (int argc, char** argv)
 	TChain* t_vertices = NULL;
 	TChain* t_event = NULL;
 	TChain* t_jet_PF = NULL;
-    TChain* t_HLT = NULL;
+  TChain* t_HLT = NULL;
 	loadChain(inputFiles, "Multijet", t_multijet);
 	loadChain(inputFiles, "Vertices", t_vertices);
 	loadChain(inputFiles, "event", t_event);
@@ -710,61 +710,61 @@ int main (int argc, char** argv)
 	t_jet_PF->SetBranchAddress("jet_puJetFullId",&jet_PF_puJetFullId);
 	
   //HLT
-	std::vector<std::string>* HLT_vector = NULL;
-    t_HLT->SetBranchAddress("HLT_vector",&HLT_vector);
+  std::vector<std::string>* HLT_vector = NULL;
+  t_HLT->SetBranchAddress("HLT_vector",&HLT_vector);
 
-	
-	//Usefull variables
-    int binRefObjPt;
-    int binRefObjEta;
 
-    int binHLTRefObjPt;
+  //Usefull variables
+  int binRefObjPt;
+  int binRefObjEta;
 
-    float HLTRefObjPt;
+  int binHLTRefObjPt;
 
-	int binRecoilPt;//bin en recoilpt
-	int binHLTRecoilPt;//bin en recoilpt
-    int binLeadingJetRawPt;//bin en leading jet raw pt
-    int binHLTLeadingJetRawPt;//bin en leading jet raw pt
-    int binLeadingJetPt;
-    int binHLTLeadingJetPt;
-	int binRecoilEta;//bin en recoileta		
-	int binLeadingJetEta;//bin en leading jet eta		
+  float HLTRefObjPt;
+
+  int binRecoilPt;//bin en recoilpt
+  int binHLTRecoilPt;//bin en recoilpt
+  int binLeadingJetRawPt;//bin en leading jet raw pt
+  int binHLTLeadingJetRawPt;//bin en leading jet raw pt
+  int binLeadingJetPt;
+  int binHLTLeadingJetPt;
+  int binRecoilEta;//bin en recoileta		
+  int binLeadingJetEta;//bin en leading jet eta		
 	int binGenPt;//bin en firstjetgenpt
 	int binJetPt;//bin en pt des jets		
-	float recoilpt;
-	float recoilpx;
-	float recoilpy;
-	float recoileta;
-	float metpx;
-	float metpy;
-	float metpt;
-	float secondjetpt;	
-	float leadingjetgenpt;
-    float leadingjetrawpt;
-	float leadingjetpt;
-	float leadingjeteta;
-	float Rmpf = -1.;
-	float Rtrue = -1.;
-	float Rrecoil = -1.;
-	float recoilrecopt = -1;
-	float recoilgenpt = -1;
-	bool dropEvent=false;
-	float jetsPt;
-	float puJetsPt;
-	double PUWeight = 1;
-	float recoilEtaMin;
-	float recoilEtaMax;
-	float recoilEtaMinTmp;
-	float recoilEtaMaxTmp;
-	float recoilDeltaEta;
-	float jet_PF_pt;
-    float Njets_ptSup30_etaInf5_beforeSel;
-    float metphi;
-    float leadingjetphi;
-    float recoilphi;
-    Double_t DeltaPhi_METRecoil;
-    Double_t DeltaPhi_METJet1;
+  float recoilpt;
+  float recoilpx;
+  float recoilpy;
+  float recoileta;
+  float metpx;
+  float metpy;
+  float metpt;
+  float secondjetpt;	
+  float leadingjetgenpt;
+  float leadingjetrawpt;
+  float leadingjetpt;
+  float leadingjeteta;
+  float Rmpf = -1.;
+  float Rtrue = -1.;
+  float Rrecoil = -1.;
+  float recoilrecopt = -1;
+  float recoilgenpt = -1;
+  bool dropEvent=false;
+  float jetsPt;
+  float puJetsPt;
+  double PUWeight = 1;
+  float recoilEtaMin;
+  float recoilEtaMax;
+  float recoilEtaMinTmp;
+  float recoilEtaMaxTmp;
+  float recoilDeltaEta;
+  float jet_PF_pt;
+  float Njets_ptSup30_etaInf5_beforeSel;
+  float metphi;
+  float leadingjetphi;
+  float recoilphi;
+  Double_t DeltaPhi_METRecoil;
+  Double_t DeltaPhi_METJet1;
 	
 	
 	int ntot = 0;
@@ -965,19 +965,48 @@ int main (int argc, char** argv)
             //cout<<" HLT_vector->size(): "<< HLT_vector->size()<<endl;
 
             for (int j = 0; j<myHLTPtBinning.getSize(); j++) {
-                //if ( (HLTRefObjPt >= myHLTPtBinning.getBinValueInf(j) && HLTRefObjPt < myHLTPtBinning.getBinValueSup(j)) && vHLTPrescaleFactor[j] != -1) {
-                if (binHLTRefObjPt == j && vHLTPrescaleFactor[j] != -1) {
-                    for (int i = 0; i < HLT_vector->size(); i++) {
-                        //cout<<"HLT_vector->at("<<i<<")"<< HLT_vector->at(i) <<endl;
-                        //cout<<"leadingjetpt"<<leadingjetpt<<endl;
-                        if (TString(HLT_vector->at(i)).Contains(myHLTPtBinning.getHLTName(j))) {
-                            //std::cout << "HLTPath for HLTPrescale: " << myHLTPtBinning.getHLTName(j) << std::endl;
-                            dropEvent = false;
-                            weight = vHLTPrescaleFactor[j];
-                            vHLTRefObjPt_HLTRefObjPtBin[j]->Fill(HLTRefObjPt, weight);
-                            break;
-                        }
-                    }		              
+              //if ( (HLTRefObjPt >= myHLTPtBinning.getBinValueInf(j) && HLTRefObjPt < myHLTPtBinning.getBinValueSup(j)) && vHLTPrescaleFactor[j] != -1) {
+              if (binHLTRefObjPt == j && vHLTPrescaleFactor[j] != -1) {
+
+                bool passTrigger = false;
+                bool passHigherPtTrigger = false;
+                for (int i = 0; i < HLT_vector->size(); i++) {
+                  if (TString(HLT_vector->at(i)).Contains(myHLTPtBinning.getHLTName(j))) {
+                    //std::cout << "HLTPath for HLTPrescale: " << myHLTPtBinning.getHLTName(j) << std::endl;
+                    passTrigger = true;
+                    break;
+                  }
+                }	
+
+                /* if(passTrigger) { // check if you didn't trig a higher pt HLT
+                  for (int i = 0; i < HLT_vector->size(); i++) {
+                    //cout<<"HLT_vector->at("<<i<<")"<< HLT_vector->at(i) <<endl;
+                    //cout<<"leadingjetpt"<<leadingjetpt<<endl;
+                    for (int k = j+1; k<numberHLTBins; k++) {
+                      string otherHLTName = myHLTPtBinning.getHLTName(k);
+                      if (TString(HLT_vector->at(i)).Contains(otherHLTName)) {
+                        passHigherPtTrigger = true;
+                        break;
+                      }
+
+                    }
+                    if (passHigherPtTrigger) {
+                      break;
+                    }
+                  }                  
+                } */ 
+
+                //if (passTrigger && passHigherPtTrigger) {
+                  //std::cout << "passTrigger && passHigherPtTrigger" << std::endl;
+                //}
+
+                //if (passTrigger && !passHigherPtTrigger) {
+                if (passTrigger) {
+                  weight = vHLTPrescaleFactor[j];
+                  vHLTRefObjPt_HLTRefObjPtBin[j]->Fill(HLTRefObjPt, weight);
+                  dropEvent = false;
+                }
+                break;
                 }
             }
           }
