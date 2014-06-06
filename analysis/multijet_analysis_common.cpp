@@ -220,8 +220,8 @@ int main (int argc, char** argv)
 		vMPF_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
         vectorName = "leadingJet/PtBin/LeadingJetPt_" + ptBinName;
 		vLeadingJetPt_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
-        //vectorName = "recoil/PtBin/RecoilPt_" + ptBinName;
-        vectorName = "recoil/recoilPtBin/RecoilPt_" + ptBinName;
+        vectorName = "recoil/PtBin/RecoilPt_" + ptBinName;
+        //vectorName = "recoil/recoilPtBin/RecoilPt_" + ptBinName;
 		vRecoilPt_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
 	}
 
