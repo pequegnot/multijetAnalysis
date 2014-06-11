@@ -272,6 +272,9 @@ int main (int argc, char** argv)
   vector<TH1F*> vNjetsRecoil_RecoilPt = buildPtVectorH1(myPtBinning,"NjetsRecoil",35,0,35) ;
   vector<TH1F*> vNjetsRecoil_068E_RecoilPt = buildPtVectorH1(myPtBinning,"NjetsRecoil_068E",35,0,35) ;
   vector<TH1F*> vNjetsRecoil_095E_RecoilPt = buildPtVectorH1(myPtBinning,"NjetsRecoil_095E",35,0,35) ;
+  vector<TH1F*> vMeanLogPt_RecoilPt = buildPtVectorH1(myPtBinning,"MeanLogPt",30,3,6) ;
+  vector<TH1F*> vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt = buildPtVectorH1(myPtBinning,"Log_ptrecoil_exp_sum_Fi_log_fi",30,3,6) ;
+  vector<TH1F*> vExp_sum_Fi_log_fi_RecoilPt = buildPtVectorH1(myPtBinning,"Exp_sum_Fi_log_fi",30,0,1) ;
 
   //HLT ref object pt per HLT pt bin
   vector<TH1F*> vHLTRefObjPt_HLTRefObjPtBin = buildBinnedDistriVectorH1(myHLTPtBinning,"HLTRefObjPt", 5);
@@ -319,6 +322,9 @@ int main (int argc, char** argv)
 			vNjetsRecoil_RecoilPt[j]->Sumw2();
 			vNjetsRecoil_068E_RecoilPt[j]->Sumw2();
 			vNjetsRecoil_095E_RecoilPt[j]->Sumw2();
+      vMeanLogPt_RecoilPt[j]->Sumw2();
+      vExp_sum_Fi_log_fi_RecoilPt[j]->Sumw2();
+      vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt[j]->Sumw2();
 		}
 		for(int j=0; j<myLowPtBinning.getSize(); j++) {
 			vRtrue_allJets_JetPt[j]->Sumw2();
@@ -765,6 +771,9 @@ int main (int argc, char** argv)
   float recoilphi;
   Double_t DeltaPhi_METRecoil;
   Double_t DeltaPhi_METJet1;
+  double meanLogPt;
+  double exp_sum_Fi_log_fi;
+  double Fi, fi, deltaPhiJetRecoil;
 	
 	
 	int ntot = 0;
@@ -1161,6 +1170,27 @@ int main (int argc, char** argv)
                           break;
                         }	
                       }
+                      
+                      meanLogPt = 0.;
+                      for (int i=0; i<jets_recoil_4vector->GetSize(); i++) {
+                        meanLogPt = meanLogPt + TMath::Log(((TLorentzVector*)jets_recoil_4vector->At(i))->Pt());
+                      }
+                      meanLogPt = meanLogPt/((float) jets_recoil_4vector->GetSize());
+                      vMeanLogPt_RecoilPt[binRecoilPt]->Fill(meanLogPt, weight);
+
+                      exp_sum_Fi_log_fi = 0.;                      
+                      for (int i=0; i<jets_recoil_4vector->GetSize(); i++) {
+                        fi = ((TLorentzVector*)jets_recoil_4vector->At(i))->Pt()/recoilpt;
+                        deltaPhiJetRecoil = TMath::Abs(((TLorentzVector*)jets_recoil_4vector->At(i))->Phi() - recoilphi);
+                        if(deltaPhiJetRecoil>TMath::Pi()){
+                          deltaPhiJetRecoil = 2*TMath::Pi()-deltaPhiJetRecoil;
+                        }
+                        Fi = fi * TMath::Cos(deltaPhiJetRecoil);
+                        exp_sum_Fi_log_fi = exp_sum_Fi_log_fi + Fi * TMath::Log(fi);
+                      }
+                      exp_sum_Fi_log_fi = TMath::Exp(exp_sum_Fi_log_fi);
+                      vExp_sum_Fi_log_fi_RecoilPt[binRecoilPt]->Fill(exp_sum_Fi_log_fi, weight);
+                      vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt[binRecoilPt]->Fill(TMath::Log(recoilpt*exp_sum_Fi_log_fi), weight);
                 
                       hMet_afterSel->Fill(metpt, weight);
                       hLeadingJetPt_afterSel->Fill(leadingjetpt, weight);
@@ -1401,6 +1431,9 @@ int main (int argc, char** argv)
 		vNjetsRecoil_RecoilPt[j]->Write();
 		vNjetsRecoil_068E_RecoilPt[j]->Write();
 		vNjetsRecoil_095E_RecoilPt[j]->Write();
+    vMeanLogPt_RecoilPt[j]->Write();
+    vExp_sum_Fi_log_fi_RecoilPt[j]->Write();
+    vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt[j]->Write();
 	}
 
 	TDirectory *recoilDir = out->mkdir("recoil","recoil");
@@ -1495,6 +1528,8 @@ int main (int argc, char** argv)
 		vNjetsRecoil_RecoilPt[j]->Delete();
 		vNjetsRecoil_068E_RecoilPt[j]->Delete();
 		vNjetsRecoil_095E_RecoilPt[j]->Delete();
+    vMeanLogPt_RecoilPt[j]->Delete();
+    vExp_sum_Fi_log_fi_RecoilPt[j]->Delete();
 	}
 
 	for(int j=0; j<myEtaBinning.getSize(); j++) {

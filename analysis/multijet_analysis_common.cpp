@@ -209,7 +209,13 @@ int main (int argc, char** argv)
 	vector<TH1F*> vNjetsRecoil_068E_RecoilPt;
 	vNjetsRecoil_068E_RecoilPt.resize(numberPtBins);
 	vector<TH1F*> vNjetsRecoil_095E_RecoilPt;
-	vNjetsRecoil_095E_RecoilPt.resize(numberPtBins);
+    vNjetsRecoil_095E_RecoilPt.resize(numberPtBins);
+    vector<TH1F*> vMeanLogPt_RecoilPt;
+    vMeanLogPt_RecoilPt.resize(numberPtBins);
+    vector<TH1F*> vExp_sum_Fi_log_fi_RecoilPt;
+    vExp_sum_Fi_log_fi_RecoilPt.resize(numberPtBins);
+    vector<TH1F*> vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt;
+    vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt.resize(numberPtBins);
 
 	
 	for(int j=0; j<myPtBinning.getSize(); j++) {
@@ -273,6 +279,12 @@ int main (int argc, char** argv)
 			vNjetsRecoil_068E_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
 			vectorName = "recoilJets/NjetsRecoil_095E_" + ptBinName;
 			vNjetsRecoil_095E_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
+			vectorName = "recoilJets/MeanLogPt_" + ptBinName;
+			vMeanLogPt_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
+            vectorName = "recoilJets/Exp_sum_Fi_log_fi_" + ptBinName;
+            vExp_sum_Fi_log_fi_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
+            vectorName = "recoilJets/Log_ptrecoil_exp_sum_Fi_log_fi_" + ptBinName;
+            vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
 		}
 		
 		for(int j=0; j<myLowPtBinning.getSize(); j++) {
@@ -994,7 +1006,119 @@ int main (int argc, char** argv)
 	TGraph_style (gNjetsRecoil_095E_RecoilPt);
 	saveName = "images/NjetsRecoil/cNjetsRecoil_095E_RecoilPt" + typeName + extension;
 	cNjetsRecoil_095E_RecoilPt->SaveAs(saveName.c_str());
+
+
+
+//************************************************************************************************************
+//
+//                                      Exp_sum_Fi_log_fi as a function of recoilpt 
+//
+//************************************************************************************************************	
+
+	float aExp_sum_Fi_log_fi_Mean[numberPtBins];
+	float aExp_sum_Fi_log_fi_MeanError[numberPtBins];
 	
+	for(int i=0; i<numberPtBins; i++) {
+		aExp_sum_Fi_log_fi_Mean[i] = vExp_sum_Fi_log_fi_RecoilPt[i]->GetMean();
+		aExp_sum_Fi_log_fi_MeanError[i] = vExp_sum_Fi_log_fi_RecoilPt[i]->GetMeanError();
+	}
+	
+	TCanvas *cExp_sum_Fi_log_fi_RecoilPt = new TCanvas("cExp_sum_Fi_log_fi_RecoilPt","cExp_sum_Fi_log_fi_RecoilPt");
+	cExp_sum_Fi_log_fi_RecoilPt->cd();
+	
+	TGraphErrors *gExp_sum_Fi_log_fi_RecoilPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aExp_sum_Fi_log_fi_Mean, aRefObjPtBins_MeanError, aExp_sum_Fi_log_fi_MeanError);
+	gExp_sum_Fi_log_fi_RecoilPt->SetName("Exp_sum_Fi_log_fi");
+	gExp_sum_Fi_log_fi_RecoilPt->SetTitle("exp(sum_i[F_i * log(f_i)]) as a function of p_{T}^{Recoil}");
+	gExp_sum_Fi_log_fi_RecoilPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+	gExp_sum_Fi_log_fi_RecoilPt->GetYaxis()->SetTitle("exp(sum_i[F_i * log(f_i)])");
+	gExp_sum_Fi_log_fi_RecoilPt->SetMarkerStyle(20);
+	gExp_sum_Fi_log_fi_RecoilPt->SetMarkerColor(plotColor);
+	gExp_sum_Fi_log_fi_RecoilPt->SetLineColor(plotColor);
+	//gExp_sum_Fi_log_fi_RecoilPt->SetMarkerSize(0.5);	
+	cExp_sum_Fi_log_fi_RecoilPt->cd();
+	//gExp_sum_Fi_log_fi_RecoilPt->SetLogx(1);
+	//gExp_sum_Fi_log_fi_RecoilPt->GetYaxis()->SetRangeUser(0.7,1.1);
+	gExp_sum_Fi_log_fi_RecoilPt->Draw("ape");
+	TGraph_style (gExp_sum_Fi_log_fi_RecoilPt);
+	saveName = "images/NjetsRecoil/cExp_sum_Fi_log_fi_RecoilPt" + typeName + extension;
+	cExp_sum_Fi_log_fi_RecoilPt->SaveAs(saveName.c_str());
+	saveName = "images/NjetsRecoil/cExp_sum_Fi_log_fi_RecoilPt" + typeName + ".root";
+	cExp_sum_Fi_log_fi_RecoilPt->SaveAs(saveName.c_str());
+
+
+//************************************************************************************************************
+//
+//                                      Log_ptrecoil_exp_sum_Fi_log_fi as a function of recoilpt 
+//
+//************************************************************************************************************	
+
+	float aLog_ptrecoil_exp_sum_Fi_log_fi_Mean[numberPtBins];
+	float aLog_ptrecoil_exp_sum_Fi_log_fi_MeanError[numberPtBins];
+	
+	for(int i=0; i<numberPtBins; i++) {
+		aLog_ptrecoil_exp_sum_Fi_log_fi_Mean[i] = vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt[i]->GetMean();
+		aLog_ptrecoil_exp_sum_Fi_log_fi_MeanError[i] = vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt[i]->GetMeanError();
+	}
+	
+	TCanvas *cLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt = new TCanvas("cLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt","cLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt");
+	cLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt->cd();
+	
+	TGraphErrors *gLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aLog_ptrecoil_exp_sum_Fi_log_fi_Mean, aRefObjPtBins_MeanError, aLog_ptrecoil_exp_sum_Fi_log_fi_MeanError);
+	gLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt->SetName("Log_ptrecoil_exp_sum_Fi_log_fi");
+	gLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt->SetTitle("log( ptrecoil * exp(sum_i[F_i * log(f_i)]) ) as a function of p_{T}^{Recoil}");
+	gLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+	gLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt->GetYaxis()->SetTitle("log( ptrecoil * exp(sum_i[F_i * log(f_i)]) )");
+	gLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt->SetMarkerStyle(20);
+	gLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt->SetMarkerColor(plotColor);
+	gLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt->SetLineColor(plotColor);
+	//gLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt->SetMarkerSize(0.5);	
+	cLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt->cd();
+	//gLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt->SetLogx(1);
+	//gLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt->GetYaxis()->SetRangeUser(0.7,1.1);
+	gLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt->Draw("ape");
+	TGraph_style (gLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt);
+	saveName = "images/NjetsRecoil/cLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt" + typeName + extension;
+	cLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt->SaveAs(saveName.c_str());
+    saveName = "images/NjetsRecoil/cLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt" + typeName + ".root";
+	cLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt->SaveAs(saveName.c_str());
+
+
+//************************************************************************************************************
+//
+//                                      MeanLogPt as a function of recoilpt
+//
+//************************************************************************************************************	
+
+	float aMeanLogPt_Mean[numberPtBins];
+	float aMeanLogPt_MeanError[numberPtBins];
+	
+	for(int i=0; i<numberPtBins; i++) {
+		aMeanLogPt_Mean[i] = vMeanLogPt_RecoilPt[i]->GetMean();
+		aMeanLogPt_MeanError[i] = vMeanLogPt_RecoilPt[i]->GetMeanError();
+	}
+	
+	TCanvas *cMeanLogPt_RecoilPt = new TCanvas("cMeanLogPt_RecoilPt","cMeanLogPt_RecoilPt");
+	cMeanLogPt_RecoilPt->cd();
+	
+	TGraphErrors *gMeanLogPt_RecoilPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aMeanLogPt_Mean, aRefObjPtBins_MeanError, aMeanLogPt_MeanError);
+	gMeanLogPt_RecoilPt->SetName("MeanLogPt");
+	gMeanLogPt_RecoilPt->SetTitle("<log(p_{T}^{jets in recoil})> as a function of p_{T}^{Recoil}");
+	gMeanLogPt_RecoilPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+	gMeanLogPt_RecoilPt->GetYaxis()->SetTitle("<log(p_{T}^{jets in recoil})>");
+	gMeanLogPt_RecoilPt->SetMarkerStyle(20);
+	gMeanLogPt_RecoilPt->SetMarkerColor(plotColor);
+	gMeanLogPt_RecoilPt->SetLineColor(plotColor);
+	//gMeanLogPt_RecoilPt->SetMarkerSize(0.5);	
+	cMeanLogPt_RecoilPt->cd();
+	//gMeanLogPt_RecoilPt->SetLogx(1);
+	//gMeanLogPt_RecoilPt->GetYaxis()->SetRangeUser(0.7,1.1);
+	gMeanLogPt_RecoilPt->Draw("ape");
+	TGraph_style (gMeanLogPt_RecoilPt);
+	saveName = "images/NjetsRecoil/cMeanLogPt_RecoilPt" + typeName + extension;
+	cMeanLogPt_RecoilPt->SaveAs(saveName.c_str());
+	saveName = "images/NjetsRecoil/cMeanLogPt_RecoilPt" + typeName + ".root";
+	cMeanLogPt_RecoilPt->SaveAs(saveName.c_str());
+
 	
 	TGraphErrors *gRtrue_leadingJet_RefObjPt = NULL;
 	TGraphErrors *gRtrue_allJets_JetPt = NULL;
@@ -1203,11 +1327,20 @@ int main (int argc, char** argv)
 
 	TDirectory *recoilJetsDir = out->mkdir("recoilJets","recoilJets");
 	recoilJetsDir->cd();	
-	for(int j=0; j<myPtBinning.getSize(); j++) {
-		vNjetsRecoil_RecoilPt[j]->Write();
-		vNjetsRecoil_068E_RecoilPt[j]->Write();
-		vNjetsRecoil_095E_RecoilPt[j]->Write();
-	}
+    for(int j=0; j<myPtBinning.getSize(); j++) {
+        gNjetsRecoil_RecoilPt->Write("gNjetsRecoil_RecoilPt");
+        gNjetsRecoil_068E_RecoilPt->Write("gNjetsRecoil_068E_RecoilPt");
+        gNjetsRecoil_095E_RecoilPt->Write("gNjetsRecoil_095E_RecoilPt");
+        gMeanLogPt_RecoilPt->Write("gMeanLogPt_RecoilPt");
+        gExp_sum_Fi_log_fi_RecoilPt->Write("gExp_sum_Fi_log_fi_RecoilPt");
+        gLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt->Write("gLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt");
+        vNjetsRecoil_RecoilPt[j]->Write();
+        vNjetsRecoil_068E_RecoilPt[j]->Write();
+        vNjetsRecoil_095E_RecoilPt[j]->Write();
+        vMeanLogPt_RecoilPt[j]->Write();
+        vExp_sum_Fi_log_fi_RecoilPt[j]->Write();
+        vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt[j]->Write();
+    }
 
 
 	TDirectory *recoilDir = out->mkdir("recoil","recoil");
