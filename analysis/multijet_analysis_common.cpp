@@ -40,6 +40,7 @@
 
 #include "../common/ptBinning.h"
 #include "../common/HLTPtBinning.h"
+#include "../common/logPtPrimeBinning.h"
 #include "../common/npvBinning.h"
 #include "../common/etaBinning.h"
 
@@ -55,6 +56,7 @@ int main (int argc, char** argv)
 	string typeName = "_data";
 	int plotColor = getDataColor();
 	string extension = ".pdf";
+	string plotName = "";
 	std::vector<std::string> inputFiles;
 	string outputName;
 	string inputName;
@@ -115,12 +117,14 @@ int main (int argc, char** argv)
     outputName = outputFileArg.getValue();
     inputName = inputFileArg.getValue();
     extension = plotNameArg.getValue() + extensionArg.getValue();
+    plotName = plotNameArg.getValue();
     rmPU = rmPUArg.getValue();
     useRecoilPtBin = recoilPtBinArg.getValue();
     useRecoilPtHLTBin = recoilPtHLTBinArg.getValue();
     
     if(rmPU) {
 	extension = "_woPUJets" + plotNameArg.getValue() + extensionArg.getValue();    
+	plotName = "_woPUJets" + plotNameArg.getValue();    
     }
     
     if (!isMC) {
@@ -148,16 +152,19 @@ int main (int argc, char** argv)
 //
 //*********************************************************************************************************
 
-	ptBinning myPtBinning;
-    HLTPtBinning myHLTPtBinning;
-	npvBinning myNpvBinning;
-	ptBinning myLowPtBinning(true);
-	etaBinning myEtaBinning;
-	
-	int numberPtBins = myPtBinning.getSize();
-    int numberHLTPtBins = myHLTPtBinning.getSize();
-	int numberNpvBins = myNpvBinning.getSize();
-	int numberEtaBins = myEtaBinning.getSize();
+  ptBinning myPtBinning;
+  logPtPrimeBinning myLogPtPrimeBinning;
+  HLTPtBinning myHLTPtBinning;
+  npvBinning myNpvBinning;
+  ptBinning myLowPtBinning(true);
+  etaBinning myEtaBinning;
+  myHLTPtBinning.fillHLTPtBins(useRecoilPtHLTBin);  
+
+  int numberPtBins = myPtBinning.getSize();
+  int numberLogPtPrimeBins = myLogPtPrimeBinning.getSize();
+  int numberHLTPtBins = myHLTPtBinning.getSize();
+  int numberNpvBins = myNpvBinning.getSize();
+  int numberEtaBins = myEtaBinning.getSize();
 	
 	string vectorName;
 	string ptBinName;
@@ -201,21 +208,33 @@ int main (int argc, char** argv)
 
   //MJB per recoileta
 	vector<TH1F*> vMJB_RefObjEtaBin;
-	vMJB_RefObjEtaBin.resize(numberEtaBins);
-	
-	//NjetsRecoil per recoilpt
-	vector<TH1F*> vNjetsRecoil_RecoilPt;
-	vNjetsRecoil_RecoilPt.resize(numberPtBins);
-	vector<TH1F*> vNjetsRecoil_068E_RecoilPt;
-	vNjetsRecoil_068E_RecoilPt.resize(numberPtBins);
-	vector<TH1F*> vNjetsRecoil_095E_RecoilPt;
-    vNjetsRecoil_095E_RecoilPt.resize(numberPtBins);
-    vector<TH1F*> vMeanLogPt_RecoilPt;
-    vMeanLogPt_RecoilPt.resize(numberPtBins);
-    vector<TH1F*> vExp_sum_Fi_log_fi_RecoilPt;
-    vExp_sum_Fi_log_fi_RecoilPt.resize(numberPtBins);
-    vector<TH1F*> vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt;
-    vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt.resize(numberPtBins);
+  vMJB_RefObjEtaBin.resize(numberEtaBins);
+
+  //NjetsRecoil per recoilpt
+  vector<TH1F*> vNjetsRecoil_RecoilPt;
+  vNjetsRecoil_RecoilPt.resize(numberPtBins);
+  vector<TH1F*> vNjetsRecoil_068E_RecoilPt;
+  vNjetsRecoil_068E_RecoilPt.resize(numberPtBins);
+  vector<TH1F*> vNjetsRecoil_095E_RecoilPt;
+  vNjetsRecoil_095E_RecoilPt.resize(numberPtBins);
+  vector<TH1F*> vMeanLogPt_RecoilPt;
+  vMeanLogPt_RecoilPt.resize(numberPtBins);
+  vector<TH1F*> vExp_sum_Fi_log_fi_RecoilPt;
+  vExp_sum_Fi_log_fi_RecoilPt.resize(numberPtBins);
+  vector<TH1F*> vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt;
+  vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt.resize(numberPtBins);
+  vector<TH1F*> vMJB_LogPtPrimeBin;
+  vMJB_LogPtPrimeBin.resize(numberLogPtPrimeBins);
+  vector<TH1F*> vInvMJB_LogPtPrimeBin;
+  vInvMJB_LogPtPrimeBin.resize(numberLogPtPrimeBins);
+
+  for (int j=0; j<numberLogPtPrimeBins; j++) {
+		ptBinName = myLogPtPrimeBinning.getName(j);
+    vectorName = "MJB/LogPtPrimeBin/MJB_" + ptBinName;
+    vMJB_LogPtPrimeBin[j] = (TH1F*)f->Get(vectorName.c_str());
+    vectorName = "MJB/LogPtPrimeBin/InvMJB_" + ptBinName;
+    vInvMJB_LogPtPrimeBin[j] = (TH1F*)f->Get(vectorName.c_str());
+  }
 
 	
 	for(int j=0; j<myPtBinning.getSize(); j++) {
@@ -232,9 +251,9 @@ int main (int argc, char** argv)
 	}
 
   for(int j=0; j<myHLTPtBinning.getSize(); j++) {
-		ptBinName = myHLTPtBinning.getName(j);
-        vectorName = "leadingJet/HLTPtBin/LeadingJetPt_" + ptBinName;
-		vLeadingJetPt_HLTRefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
+    ptBinName = myHLTPtBinning.getName(j);
+    vectorName = "leadingJet/HLTPtBin/LeadingJetPt_" + ptBinName;
+    vLeadingJetPt_HLTRefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
 	}
 
 	for(int j=0; j<myEtaBinning.getSize(); j++) {
@@ -276,15 +295,15 @@ int main (int argc, char** argv)
 			vectorName = "recoilJets/NjetsRecoil_" + ptBinName;
 			vNjetsRecoil_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
 			vectorName = "recoilJets/NjetsRecoil_068E_" + ptBinName;
-			vNjetsRecoil_068E_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
-			vectorName = "recoilJets/NjetsRecoil_095E_" + ptBinName;
-			vNjetsRecoil_095E_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
-			vectorName = "recoilJets/MeanLogPt_" + ptBinName;
-			vMeanLogPt_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
-            vectorName = "recoilJets/Exp_sum_Fi_log_fi_" + ptBinName;
-            vExp_sum_Fi_log_fi_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
-            vectorName = "recoilJets/Log_ptrecoil_exp_sum_Fi_log_fi_" + ptBinName;
-            vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
+      vNjetsRecoil_068E_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
+      vectorName = "recoilJets/NjetsRecoil_095E_" + ptBinName;
+      vNjetsRecoil_095E_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
+      vectorName = "recoilJets/MeanLogPt_" + ptBinName;
+      vMeanLogPt_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
+      vectorName = "recoilJets/Exp_sum_Fi_log_fi_" + ptBinName;
+      vExp_sum_Fi_log_fi_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
+      vectorName = "recoilJets/Log_ptrecoil_exp_sum_Fi_log_fi_" + ptBinName;
+      vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt[j] = (TH1F*)f->Get(vectorName.c_str());
 		}
 		
 		for(int j=0; j<myLowPtBinning.getSize(); j++) {
@@ -1008,6 +1027,86 @@ int main (int argc, char** argv)
 	cNjetsRecoil_095E_RecoilPt->SaveAs(saveName.c_str());
 
 
+//************************************************************************************************************
+//
+//                                      MJB_LogPtPrimeBin as a function of recoilpt 
+//
+//************************************************************************************************************	
+
+	float aMJB_LogPtPrimeBin_Mean[numberLogPtPrimeBins];
+	float aMJB_LogPtPrimeBin_MeanError[numberLogPtPrimeBins];
+	float aLogPtPrimeBins_Mean[numberLogPtPrimeBins];
+	float aLogPtPrimeBins_MeanError[numberLogPtPrimeBins];
+
+	
+	for(int i=0; i<numberLogPtPrimeBins; i++) {
+		aMJB_LogPtPrimeBin_Mean[i] = vMJB_LogPtPrimeBin[i]->GetMean();
+		aMJB_LogPtPrimeBin_MeanError[i] = vMJB_LogPtPrimeBin[i]->GetMeanError();
+		aLogPtPrimeBins_Mean[i] = ( myLogPtPrimeBinning.getBinValueInf(i)+myLogPtPrimeBinning.getBinValueSup(i) )/2.;
+		aLogPtPrimeBins_MeanError[i]=0.;
+
+	}
+	
+	TCanvas *cMJB_LogPtPrimeBin_RecoilPt = new TCanvas("cMJB_LogPtPrimeBin_RecoilPt","cMJB_LogPtPrimeBin_RecoilPt");
+	cMJB_LogPtPrimeBin_RecoilPt->cd();
+	
+	TGraphErrors *gMJB_LogPtPrimeBin_RecoilPt = new TGraphErrors(numberLogPtPrimeBins,aLogPtPrimeBins_Mean, aMJB_LogPtPrimeBin_Mean, aLogPtPrimeBins_MeanError, aMJB_LogPtPrimeBin_MeanError);
+	gMJB_LogPtPrimeBin_RecoilPt->SetName("MJB_LogPtPrimeBin");
+	gMJB_LogPtPrimeBin_RecoilPt->SetTitle("MJB as a function of p_{T}^{Recoil}*exp(sum_i[F_i * log(f_i)])");
+	gMJB_LogPtPrimeBin_RecoilPt->GetXaxis()->SetTitle("p_{T}^{Recoil}*exp(sum_i[F_i * log(f_i)])");
+	gMJB_LogPtPrimeBin_RecoilPt->GetYaxis()->SetTitle("MJB");
+	gMJB_LogPtPrimeBin_RecoilPt->SetMarkerStyle(20);
+	gMJB_LogPtPrimeBin_RecoilPt->SetMarkerColor(plotColor);
+	gMJB_LogPtPrimeBin_RecoilPt->SetLineColor(plotColor);
+	//gMJB_LogPtPrimeBin_RecoilPt->SetMarkerSize(0.5);	
+	cMJB_LogPtPrimeBin_RecoilPt->cd();
+	//gMJB_LogPtPrimeBin_RecoilPt->SetLogx(1);
+	//gMJB_LogPtPrimeBin_RecoilPt->GetYaxis()->SetRangeUser(0.7,1.1);
+	gMJB_LogPtPrimeBin_RecoilPt->Draw("ape");
+	TGraph_style (gMJB_LogPtPrimeBin_RecoilPt);
+	saveName = "images/MJB/cMJB_LogPtPrimeBin_RecoilPt" + typeName + extension;
+	cMJB_LogPtPrimeBin_RecoilPt->SaveAs(saveName.c_str());
+	saveName = "images/MJB/cMJB_LogPtPrimeBin_RecoilPt" + typeName + ".root";
+	cMJB_LogPtPrimeBin_RecoilPt->SaveAs(saveName.c_str());
+
+
+  
+//************************************************************************************************************
+//
+//                                      InvMJB_LogPtPrimeBin as a function of recoilpt 
+//
+//************************************************************************************************************	
+
+	float aInvMJB_LogPtPrimeBin_Mean[numberLogPtPrimeBins];
+	float aInvMJB_LogPtPrimeBin_MeanError[numberLogPtPrimeBins];
+	
+	for(int i=0; i<numberLogPtPrimeBins; i++) {
+		aInvMJB_LogPtPrimeBin_Mean[i] = vInvMJB_LogPtPrimeBin[i]->GetMean();
+		aInvMJB_LogPtPrimeBin_MeanError[i] = vInvMJB_LogPtPrimeBin[i]->GetMeanError();
+	}
+	
+	TCanvas *cInvMJB_LogPtPrimeBin_RecoilPt = new TCanvas("cInvMJB_LogPtPrimeBin_RecoilPt","cInvMJB_LogPtPrimeBin_RecoilPt");
+	cInvMJB_LogPtPrimeBin_RecoilPt->cd();
+	
+	TGraphErrors *gInvMJB_LogPtPrimeBin_RecoilPt = new TGraphErrors(numberLogPtPrimeBins,aLogPtPrimeBins_Mean, aInvMJB_LogPtPrimeBin_Mean, aLogPtPrimeBins_MeanError, aInvMJB_LogPtPrimeBin_MeanError);
+	gInvMJB_LogPtPrimeBin_RecoilPt->SetName("InvMJB_LogPtPrimeBin");
+	gInvMJB_LogPtPrimeBin_RecoilPt->SetTitle("InvMJB as a function of p_{T}^{Recoil}*exp(sum_i[F_i * log(f_i)])");
+	gInvMJB_LogPtPrimeBin_RecoilPt->GetXaxis()->SetTitle("p_{T}^{Recoil}*exp(sum_i[F_i * log(f_i)])");
+	gInvMJB_LogPtPrimeBin_RecoilPt->GetYaxis()->SetTitle("InvMJB");
+	gInvMJB_LogPtPrimeBin_RecoilPt->SetMarkerStyle(20);
+	gInvMJB_LogPtPrimeBin_RecoilPt->SetMarkerColor(plotColor);
+	gInvMJB_LogPtPrimeBin_RecoilPt->SetLineColor(plotColor);
+	//gInvMJB_LogPtPrimeBin_RecoilPt->SetMarkerSize(0.5);	
+	cInvMJB_LogPtPrimeBin_RecoilPt->cd();
+	//gInvMJB_LogPtPrimeBin_RecoilPt->SetLogx(1);
+	//gInvMJB_LogPtPrimeBin_RecoilPt->GetYaxis()->SetRangeUser(0.7,1.1);
+	gInvMJB_LogPtPrimeBin_RecoilPt->Draw("ape");
+	TGraph_style (gInvMJB_LogPtPrimeBin_RecoilPt);
+	saveName = "images/MJB/cInvMJB_LogPtPrimeBin_RecoilPt" + typeName + extension;
+	cInvMJB_LogPtPrimeBin_RecoilPt->SaveAs(saveName.c_str());
+	saveName = "images/MJB/cInvMJB_LogPtPrimeBin_RecoilPt" + typeName + ".root";
+	cInvMJB_LogPtPrimeBin_RecoilPt->SaveAs(saveName.c_str());
+
 
 //************************************************************************************************************
 //
@@ -1042,7 +1141,7 @@ int main (int argc, char** argv)
 	TGraph_style (gExp_sum_Fi_log_fi_RecoilPt);
 	saveName = "images/NjetsRecoil/cExp_sum_Fi_log_fi_RecoilPt" + typeName + extension;
 	cExp_sum_Fi_log_fi_RecoilPt->SaveAs(saveName.c_str());
-	saveName = "images/NjetsRecoil/cExp_sum_Fi_log_fi_RecoilPt" + typeName + ".root";
+	saveName = "images/NjetsRecoil/cExp_sum_Fi_log_fi_RecoilPt" + typeName + plotName + ".root";
 	cExp_sum_Fi_log_fi_RecoilPt->SaveAs(saveName.c_str());
 
 
@@ -1265,6 +1364,15 @@ int main (int argc, char** argv)
 	gMJB_RefObjPt->Write("gMJB_RefObjPt");
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vMJB_RefObjPtBin[j]->Write();
+	}
+
+	TDirectory *logptprimebinDir = mjbDir->mkdir("LogPtPrimeBin","LogPtPrimeBin");
+	logptprimebinDir->cd();
+	for(int j=0; j<myLogPtPrimeBinning.getSize(); j++) {
+    gMJB_LogPtPrimeBin_RecoilPt->Write("gMJB_LogPtPrimeBin_RecoilPt");
+    gInvMJB_LogPtPrimeBin_RecoilPt->Write("gInvMJB_LogPtPrimeBin_RecoilPt");
+		vMJB_LogPtPrimeBin[j]->Write();
+    vInvMJB_LogPtPrimeBin[j]->Write();
 	}
 	
 	TDirectory *etabinDir = mjbDir->mkdir("EtaBin","EtaBin");

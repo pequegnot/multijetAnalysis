@@ -51,7 +51,7 @@ void fit_invMJB() {
   gPad->Modified();
   gPad->Update();
 
-  c->Print("images/MJB/invmjb_response_fit.pdf");
+  c->Print("images/MJB/invmjb_response_fit_mc_HT.pdf");
 }
 
 

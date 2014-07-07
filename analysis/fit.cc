@@ -51,6 +51,6 @@ void fit() {
   gPad->Modified();
   gPad->Update();
 
-  c->Print("images/MJB/mjb_response_fit.pdf");
+  c->Print("images/MJB/mjb_response_fit_mc_HT.pdf");
 }
 

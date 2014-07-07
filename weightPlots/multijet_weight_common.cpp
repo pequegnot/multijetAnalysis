@@ -41,6 +41,7 @@
 
 #include "../common/ptBinning.h"
 #include "../common/HLTPtBinning.h"
+#include "../common/logPtPrimeBinning.h"
 #include "../common/npvBinning.h"
 #include "../common/etaBinning.h"
 #include "PUReweighting/PUReweighter.h"
@@ -78,7 +79,7 @@ int main (int argc, char** argv)
 	
     HLTPtBinning myHLTPtBinning;
     std::vector<float> vHLTPrescaleFactor;
-    int numberHLTBins = myHLTPtBinning.getSize(); 
+    int numberHLTBins = myHLTPtBinning.getHLTNumber(); 
 
 	bool isMC = false;	
     bool useRecoilPtBin = true;
@@ -203,9 +204,11 @@ int main (int argc, char** argv)
 //*********************************************************************************************************
 
   ptBinning myPtBinning; 
+  logPtPrimeBinning myLogPtPrimeBinning; 
   npvBinning myNpvBinning;
   etaBinning myEtaBinning;
   ptBinning myLowPtBinning(true);
+  myHLTPtBinning.fillHLTPtBins(useRecoilPtHLTBin);
 
   //PUReweighter myPUReweighter;
   //PUReweighter myPUReweighter_HLT_PFJet140("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet140.root");
@@ -275,9 +278,20 @@ int main (int argc, char** argv)
   vector<TH1F*> vMeanLogPt_RecoilPt = buildPtVectorH1(myPtBinning,"MeanLogPt",30,3,6) ;
   vector<TH1F*> vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt = buildPtVectorH1(myPtBinning,"Log_ptrecoil_exp_sum_Fi_log_fi",30,3,6) ;
   vector<TH1F*> vExp_sum_Fi_log_fi_RecoilPt = buildPtVectorH1(myPtBinning,"Exp_sum_Fi_log_fi",30,0,1) ;
+  //MJB per logPtPrime bin
+  // PtPrime = ptRecoil * exp_sum_Fi_log_fi
+  vector<TH1F*> vMJB_LogPtPrimeBin = buildPtVectorH1(myLogPtPrimeBinning,"MJB",nbinsx,xlow,xup) ;
+  // InvMJB per logPtPrime bin
+  // PtPrime = ptRecoil * exp_sum_Fi_log_fi
+  vector<TH1F*> vInvMJB_LogPtPrimeBin = buildPtVectorH1(myLogPtPrimeBinning,"InvMJB",20,0.01,2.) ;
+
 
   //HLT ref object pt per HLT pt bin
   vector<TH1F*> vHLTRefObjPt_HLTRefObjPtBin = buildBinnedDistriVectorH1(myHLTPtBinning,"HLTRefObjPt", 5);
+
+  // leadingjetpt distribution for each HLT path trigged
+  vector<TH1F*> vLeadingJetPt_perHLTTrigger = buildPtVectorH1(myHLTPtBinning,"LeadingJetPt",190, 100, 2000) ;
+
 
   //ptLeadingJet per HLT pt bin
   vector<TH1F*> vLeadingJetPt_HLTRefObjPtBin = buildBinnedDistriVectorH1(myHLTPtBinning,"LeadingJetPt", 5);;
@@ -291,6 +305,11 @@ int main (int argc, char** argv)
     vLeadingJetPt_RefObjPtBin[j]->Sumw2();
     vRecoilPt_RefObjPtBin[j]->Sumw2();
 
+  }
+
+  for (int i=0; i<myLogPtPrimeBinning.getSize(); i++) {
+    vMJB_LogPtPrimeBin[i]->Sumw2();
+    vInvMJB_LogPtPrimeBin[i]->Sumw2();
   }
 
   for(int j=0; j<myHLTPtBinning.getSize(); j++) {
@@ -543,6 +562,11 @@ int main (int argc, char** argv)
 	TH1F* hRecoilPt_afterSel=new TH1F("hRecoilPt_afterSel","hRecoilPt_afterSel",150,0,3000);
 	hRecoilPt_afterSel->SetXTitle("p_{t}^{Recoil} [GeV/c]");
 	hRecoilPt_afterSel->Sumw2();
+
+  TH2F* h2LeadingJet_Recoil_pt_beforeSel = new TH2F("h2LeadingJet_Recoil_pt_beforeSel", "h2LeadingJet_Recoil_pt_beforeSel", 150,0,3000, 150,0,3000);
+  h2LeadingJet_Recoil_pt_beforeSel->SetXTitle("p_{t}^{leading jet} [GeV/c]");
+  h2LeadingJet_Recoil_pt_beforeSel->SetYTitle("p_{t}^{Recoil} [GeV/c]");
+  h2LeadingJet_Recoil_pt_beforeSel->Sumw2();
 	
 	TH1F* hRecoilJetsPt_beforeSel=new TH1F("hRecoilJetsPt_beforeSel","hRecoilJetsPt_beforeSel",150,0,3000);
 	hRecoilJetsPt_beforeSel->SetXTitle("p_{t}^{Recoil jets} [GeV/c]");
@@ -588,7 +612,7 @@ int main (int argc, char** argv)
 	hA_afterSel->Sumw2();
 	
 	
-	TH1F* hRecoilWidth=new TH1F("hRecoilWidth","hRecoilWidth",20,0,1);
+	TH1F* hRecoilWidth=new TH1F("hRecoilWidth","hRecoilWidth",50,0,10);
 	hRecoilWidth->SetXTitle("Recoil width (#Delta #eta = |#eta^{Recoil jet}_{max} - #eta^{Recoil jet}_{min}|)");
 	hRecoilWidth->Sumw2();
 
@@ -728,6 +752,7 @@ int main (int argc, char** argv)
 
   float HLTRefObjPt;
 
+  int binLogPtPrime;
   int binRecoilPt;//bin en recoilpt
   int binHLTRecoilPt;//bin en recoilpt
   int binLeadingJetRawPt;//bin en leading jet raw pt
@@ -766,13 +791,13 @@ int main (int argc, char** argv)
   float recoilDeltaEta;
   float jet_PF_pt;
   float Njets_ptSup30_etaInf5_beforeSel;
-  float metphi;
   float leadingjetphi;
   float recoilphi;
   Double_t DeltaPhi_METRecoil;
   Double_t DeltaPhi_METJet1;
   double meanLogPt;
   double exp_sum_Fi_log_fi;
+  double ptPrime; // PtPrime = ptRecoil * exp_sum_Fi_log_fi
   double Fi, fi, deltaPhiJetRecoil;
 	
 	
@@ -969,6 +994,15 @@ int main (int argc, char** argv)
 //*****************************************************************************************************
 
           if (!isMC) {
+            for (int j = 0; j<myHLTPtBinning.getSize(); j++) {
+                for (int i = 0; i < HLT_vector->size(); i++) {
+                  if (TString(HLT_vector->at(i)).Contains(myHLTPtBinning.getHLTName(j))) {
+                      vLeadingJetPt_perHLTTrigger[j]->Fill(leadingjetpt, weight);
+                  }
+                }
+              }
+            
+
             dropEvent = true;
             //cout<<"leadingjetpt: "<<leadingjetpt<<endl;
             //cout<<" HLT_vector->size(): "<< HLT_vector->size()<<endl;
@@ -1191,7 +1225,18 @@ int main (int argc, char** argv)
                       exp_sum_Fi_log_fi = TMath::Exp(exp_sum_Fi_log_fi);
                       vExp_sum_Fi_log_fi_RecoilPt[binRecoilPt]->Fill(exp_sum_Fi_log_fi, weight);
                       vLog_ptrecoil_exp_sum_Fi_log_fi_RecoilPt[binRecoilPt]->Fill(TMath::Log(recoilpt*exp_sum_Fi_log_fi), weight);
-                
+
+                      ptPrime = recoilpt * exp_sum_Fi_log_fi;
+                      binLogPtPrime = myLogPtPrimeBinning.getPtBin(TMath::Log(ptPrime));
+                      if (binLogPtPrime != -1) {
+                        vMJB_LogPtPrimeBin[binLogPtPrime]->Fill(MJB, weight);
+                        vInvMJB_LogPtPrimeBin[binLogPtPrime]->Fill(1./MJB, weight);
+                      }
+
+                      if(binHLTRefObjPt >= 0) {
+                        vNvtx_HLTRefObjPtBin[binHLTRefObjPt]->Fill(n_vertices, weight);
+                      }
+
                       hMet_afterSel->Fill(metpt, weight);
                       hLeadingJetPt_afterSel->Fill(leadingjetpt, weight);
                       hRecoilPt_afterSel->Fill(recoilpt, weight);
@@ -1364,6 +1409,13 @@ int main (int argc, char** argv)
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vMJB_RefObjPtBin[j]->Write();
 	}
+
+	TDirectory *logptprimebinDir = mjbDir->mkdir("LogPtPrimeBin","LogPtPrimeBin");
+	logptprimebinDir->cd();
+	for(int j=0; j<myLogPtPrimeBinning.getSize(); j++) {
+		vMJB_LogPtPrimeBin[j]->Write();
+    vInvMJB_LogPtPrimeBin[j]->Write();
+	}
 	
 	TDirectory *etabinDir = mjbDir->mkdir("EtaBin","EtaBin");
 	etabinDir->cd();
@@ -1457,6 +1509,7 @@ int main (int argc, char** argv)
 	
 	TDirectory *beforeSelDir = variablesDir->mkdir("beforeSel","beforeSel");
 	beforeSelDir->cd();
+  h2LeadingJet_Recoil_pt_beforeSel->Write();
   hWeight->Write();
   hHT_beforeSel->Write();
 	hMet_beforeSel->Write();

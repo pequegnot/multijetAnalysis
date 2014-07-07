@@ -31,9 +31,9 @@ all: $(NAME) HLTPtBinning
 	@echo "compiling the classes..."
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(NAME):$(NAME).o ../common/ptBinning.o ../common/HLTPtBinning.o ../common/npvBinning.o ../common/etaBinning.o PUReweighting/PUReweighter.o
+$(NAME):$(NAME).o ../common/ptBinning.o ../common/HLTPtBinning.o ../common/logPtPrimeBinning.o ../common/npvBinning.o ../common/etaBinning.o PUReweighting/PUReweighter.o
 	@echo "linking..."
-	$(LD) $(LDFLAGS) $(NAME).o -o $(NAME) ../common/ptBinning.o ../common/HLTPtBinning.o ../common/npvBinning.o ../common/etaBinning.o PUReweighting/PUReweighter.o $(ROOTLIBS) 
+	$(LD) $(LDFLAGS) $(NAME).o -o $(NAME) ../common/ptBinning.o ../common/HLTPtBinning.o ../common/logPtPrimeBinning.o ../common/npvBinning.o ../common/etaBinning.o PUReweighting/PUReweighter.o $(ROOTLIBS) 
 
 listTriggers: listTriggers.o
 	@echo "linking..."
@@ -47,4 +47,4 @@ HLTPtBinning: ../common/HLTPtBinning_python.o ../common/HLTPtBinning.o ../common
 
 clean:
 	@echo "cleaning up..."
-	rm $(NAME).o ../common/ptBinning.o ../common/HLTPtBinning.o ../common/npvBinning.o ../common/etaBinning.o PUReweighting/PUReweighter.o ../common/HLTPtBinning_python.o HLTPtBinning.so
+	rm $(NAME).o ../common/ptBinning.o ../common/HLTPtBinning.o ../common/logPtPrimeBinning.o ../common/npvBinning.o ../common/etaBinning.o PUReweighting/PUReweighter.o ../common/HLTPtBinning_python.o HLTPtBinning.so

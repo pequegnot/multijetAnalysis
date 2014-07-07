@@ -43,6 +43,7 @@
 
 #include "../common/ptBinning.h"
 #include "../common/HLTPtBinning.h"
+#include "../common/logPtPrimeBinning.h"
 #include "../common/npvBinning.h"
 #include "../common/etaBinning.h"
 
@@ -137,7 +138,8 @@ void applyStyle() {
   style_->SetPadTickY(1);
 
   // Legend
-  style_->SetLegendBorderSize(1);
+  //style_->SetLegendBorderSize(1);
+  style_->SetLegendBorderSize(0);
   style_->SetLegendFillColor(kWhite);
   style_->SetLegendFont(42);
 
@@ -266,11 +268,12 @@ void drawDataMcComparison(const string& canvasName, TH1 *hMc, TH1 *hData, const 
 		hData->SetMinimum(0.01);
 		gPad-> SetLogy();
 	}
-  	TLegend* legend = new TLegend(0.55, 0.15, 0.92, 0.38);
-  	//TLegend* legend = new TLegend(0.55, 0.65, 0.92, 0.88);
+    //TLegend* legend = new TLegend(0.55, 0.15, 0.92, 0.38);
+    TLegend* legend = new TLegend(0.55, 0.65, 0.92, 0.88);
   	legend->SetFillColor(kWhite);
   	legend->SetFillStyle(0);
   	legend->SetTextSize(0.038);
+    legend->SetLineWidth(0);
 	legend->SetTextFont(42);
 	legend->AddEntry(hMc,"MC","f");
 	legend->AddEntry(hData,"Data 2012","p");
@@ -326,7 +329,7 @@ TGraphErrors* getDataMcResponseRatio(TGraphErrors* gData, TGraphErrors* gMc, int
 	return gDataMcResponseratio;
 }
 
-void drawComparisonResponse(const string& canvasName, TMultiGraph *mgResponse, TGraphErrors *gResponseMC, TGraphErrors *gResponseData, TGraph *gratio,const string& mcSample, const string& path, bool doFit = false) {
+void drawComparisonResponse(const string& canvasName, TMultiGraph *mgResponse, TGraphErrors *gResponseMC, TGraphErrors *gResponseData, TGraph *gratio,const string& mcSample, const string& path, bool doFit = false, bool setRangeUser = true) {
 	TCanvas *cCanvas = new TCanvas(canvasName.c_str(),canvasName.c_str(), 600, 800);
 	cCanvas->cd();
   	// Data / MC comparison
@@ -348,8 +351,10 @@ void drawComparisonResponse(const string& canvasName, TMultiGraph *mgResponse, T
     	pad_hi->cd();
 
 	gStyle->SetOptStat(0);
-	mgResponse->SetMaximum(1.05);
-	mgResponse->SetMinimum(0.9);
+    if (setRangeUser) {
+	  mgResponse->SetMaximum(1.05);
+	  mgResponse->SetMinimum(0.9);
+    }
 	mgResponse->Draw("AP");
 	mgResponse->GetXaxis()->SetLabelSize(0);
 	mgResponse->GetYaxis()->SetTitleOffset(1.3);
@@ -438,23 +443,25 @@ void drawComparisonResponse(const string& canvasName, TMultiGraph *mgResponse, T
 int main (int argc, char** argv) 
 {
 	TString inname_data;
-	TString inname_mc;
-	bool isLumiNorm = false;
-	bool isShapeNorm = false;
-	bool inLinScale = false;
-	bool rmPU = false;
-  bool useSyst = false;
-  string systFileName = "";
-  bool useRecoilPtBin = true;
+    TString inname_mc;
+    bool isLumiNorm = false;
+    bool isShapeNorm = false;
+    bool inLinScale = false;
+    bool rmPU = false;
+    bool useSyst = false;
+    string systFileName = "";
+    bool useRecoilPtBin = true;
+    bool useRecoilPtHLTBin = false;
 	
-	string extension = ".pdf";	
-	
-	//gStyle->SetOptFit(111111);
-	
-	ptBinning myPtBinning;
-  HLTPtBinning myHLTPtBinning;
+	string extension = ".pdf";	  	
+    
+    ptBinning myPtBinning;
+	logPtPrimeBinning myLogPtPrimeBinning;
+    HLTPtBinning myHLTPtBinning;
 	npvBinning myNpvBinning;
 	etaBinning myEtaBinning;
+	
+	//gStyle->SetOptFit(111111);
 	
 	Double_t xlow = getHistoXlow();
 	Double_t xup = getHistoXup();
@@ -463,7 +470,8 @@ int main (int argc, char** argv)
 	Int_t    nbinsx = getHistoNbinsx();
 	
 	int numberPtBins = myPtBinning.getSize();
-  int numberHLTPtBins = myHLTPtBinning.getSize();
+	int numberLogPtPrimeBins = myLogPtPrimeBinning.getSize();
+    int numberHLTPtBins = myHLTPtBinning.getSize();
 	int numberNpvBins = myNpvBinning.getSize();
 	int numberEtaBins = myEtaBinning.getSize();
 	
@@ -515,6 +523,10 @@ int main (int argc, char** argv)
     TCLAP::SwitchArg recoilPtBinArg("", "recoilPtBin", "Do you want to bin in recoil pt?", false);
     TCLAP::SwitchArg firstJetPtBinArg("", "firstJetPtBin", "Do you want to bin in 1st jet pt?", false);
     cmd.xorAdd(recoilPtBinArg, firstJetPtBinArg);
+
+    TCLAP::SwitchArg recoilPtHLTBinArg("", "recoilPtHLTBin", "Do you want to bin in recoil pt for HLT trigger?", false);
+    TCLAP::SwitchArg firstJetPtHLTBinArg("", "firstJetPtHLTBin", "Do you want to bin in 1st jet pt for HLT trigger?", false);
+    cmd.xorAdd(recoilPtHLTBinArg, firstJetPtHLTBinArg);
     
     // Parse the argv array.
     cmd.parse(argc, argv);
@@ -530,6 +542,7 @@ int main (int argc, char** argv)
     useSyst = useSystArg.getValue();
     systFileName = systFileArg.getValue();    
     useRecoilPtBin = recoilPtBinArg.getValue();
+    useRecoilPtHLTBin = recoilPtHLTBinArg.getValue();
     
     if(rmPU) {
 	extension = "_woPUJets" + plotNameArg.getValue() + extensionArg.getValue();    
@@ -540,6 +553,9 @@ int main (int argc, char** argv)
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
     return 1;
   }
+
+
+    myHLTPtBinning.fillHLTPtBins(useRecoilPtHLTBin);
   
 	TFile *f_data=TFile::Open(inname_data);
 	TFile *f_mc=TFile::Open(inname_mc);
@@ -669,6 +685,7 @@ int main (int argc, char** argv)
 		vMJB_RefObjEta_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
 	}
 	
+
 //************************************************************************************************************
 //
 //                                      MJB as a function of reference object pt 
@@ -684,7 +701,7 @@ int main (int argc, char** argv)
     }
     else {
       TFile *f_syst=TFile::Open(systFileName.c_str());
-      TGraphErrors* gMJB_SystTot=(TGraphErrors*)f_syst->Get("MJB/recoilPtBin/gMJB_SystTot");
+      TGraphErrors* gMJB_SystTot=(TGraphErrors*)f_syst->Get("MJB/PtBin/gMJB_SystTot");
       for(int i=0; i<numberPtBins; i++) {
         // quadratic sum of statitics and systematics errors
         gMJB_RefObjPt_mc->SetPointError(i, 0., sqrt(gMJB_RefObjPt_mc->GetErrorY(i)*gMJB_RefObjPt_mc->GetErrorY(i) + gMJB_SystTot->GetErrorY(i)*gMJB_SystTot->GetErrorY(i)));
@@ -816,7 +833,7 @@ int main (int argc, char** argv)
     }
     else {
       TFile *f_syst=TFile::Open(systFileName.c_str());
-      TGraphErrors* gMPF_SystTot=(TGraphErrors*)f_syst->Get("MPF/recoilPtBin/gMPF_SystTot");
+      TGraphErrors* gMPF_SystTot=(TGraphErrors*)f_syst->Get("MPF/PtBin/gMPF_SystTot");
       for(int i=0; i<numberPtBins; i++) {
         // quadratic sum of statitics and systematics errors
         gMPF_RefObjPt_mc->SetPointError(i, 0., sqrt(gMPF_RefObjPt_mc->GetErrorY(i)*gMPF_RefObjPt_mc->GetErrorY(i) + gMPF_SystTot->GetErrorY(i)*gMPF_SystTot->GetErrorY(i)));
@@ -996,6 +1013,96 @@ int main (int argc, char** argv)
 	
 	myHistoName = "images/response/MJB_Npv" + extension;	
 	drawComparisonResponse("r2", mgMJB_Npv, gMJB_Npv_mc, gMJB_Npv_data, gMJB_Npv_ratio,"MC", myHistoName.c_str(), true);
+
+//************************************************************************************************************
+//
+//************************************************************************************************************
+//
+//                                      MJB as a function of p_{T}^{Recoil}*exp(sum_i[F_i * log(f_i)]) 
+//
+//************************************************************************************************************
+
+	TGraphErrors* gMJB_LogPtPrimeBin_data=(TGraphErrors*)f_data->Get("MJB/LogPtPrimeBin/gMJB_LogPtPrimeBin_RecoilPt");
+	TGraphErrors* gMJB_LogPtPrimeBin_mc=(TGraphErrors*)f_mc->Get("MJB/LogPtPrimeBin/gMJB_LogPtPrimeBin_RecoilPt");
+
+    TGraphErrors* gMJB_LogPtPrimeBin_mc_clone = (TGraphErrors*)gMJB_LogPtPrimeBin_mc->Clone();
+
+	TGraph_data_style (gMJB_LogPtPrimeBin_data);
+	TGraph_mc_style (gMJB_LogPtPrimeBin_mc);
+	TGraph_mc_style (gMJB_LogPtPrimeBin_mc_clone);
+
+	gMJB_LogPtPrimeBin_mc_clone->SetFillColor(17);
+	//gMJB_LogPtPrimeBin_mc_clone->SetFillStyle(3002);
+  gMJB_LogPtPrimeBin_mc->SetLineColor(17);
+	
+	TMultiGraph *mgMJB_LogPtPrimeBin = new TMultiGraph();
+	mgMJB_LogPtPrimeBin->Add(gMJB_LogPtPrimeBin_mc_clone,"e3");
+    mgMJB_LogPtPrimeBin->Add(gMJB_LogPtPrimeBin_mc,"p");
+    mgMJB_LogPtPrimeBin->Add(gMJB_LogPtPrimeBin_data,"pe");
+
+    mgMJB_LogPtPrimeBin->SetTitle("MJB as a function of p_{T}^{Recoil}.exp(#sum_{i}F_{i}.log(f_{i}));p_{T}^{Recoil}.exp(#sum_{i}F_{i}.log(f_{i}));MJB");
+
+    mgMJB_LogPtPrimeBin->SetMinimum(0.85);
+    mgMJB_LogPtPrimeBin->SetMaximum(1.15);
+
+
+    TGraphErrors *gMJB_LogPtPrimeBin_ratio = NULL;
+
+    gMJB_LogPtPrimeBin_ratio = getDataMcResponseRatio(gMJB_LogPtPrimeBin_data,gMJB_LogPtPrimeBin_mc,numberLogPtPrimeBins, "p_{T}^{Recoil}.exp(#sum_{i}F_{i}.log(f_{i}))");
+	  gMJB_LogPtPrimeBin_ratio->GetXaxis()->SetTitle("p_{T}^{Recoil}.exp(#sum_{i}F_{i}.log(f_{i}))");  
+	gMJB_LogPtPrimeBin_ratio->GetYaxis()->SetTitle("MJB^{data}/MJB^{MC}");
+	gMJB_LogPtPrimeBin_ratio->SetName("Data/MC");
+	gMJB_LogPtPrimeBin_ratio->SetTitle("Data/MC");
+	gMJB_LogPtPrimeBin_ratio->SetMarkerSize(1.0);
+	gMJB_LogPtPrimeBin_ratio->Fit("func","","",gMJB_LogPtPrimeBin_data->GetXaxis()->GetXmin(),gMJB_LogPtPrimeBin_data->GetXaxis()->GetXmax());
+	
+	myHistoName = "images/response/MJB_LogPtPrimeBin" + extension;	
+	drawComparisonResponse("r1", mgMJB_LogPtPrimeBin, gMJB_LogPtPrimeBin_mc, gMJB_LogPtPrimeBin_data, gMJB_LogPtPrimeBin_ratio,"MC", myHistoName.c_str(), false, false);
+
+//************************************************************************************************************
+//
+//                                      InvMJB as a function of p_{T}^{Recoil}*exp(sum_i[F_i * log(f_i)]) 
+//
+//************************************************************************************************************
+
+	TGraphErrors* gInvMJB_LogPtPrimeBin_data=(TGraphErrors*)f_data->Get("MJB/LogPtPrimeBin/gInvMJB_LogPtPrimeBin_RecoilPt");
+	TGraphErrors* gInvMJB_LogPtPrimeBin_mc=(TGraphErrors*)f_mc->Get("MJB/LogPtPrimeBin/gInvMJB_LogPtPrimeBin_RecoilPt");
+
+    TGraphErrors* gInvMJB_LogPtPrimeBin_mc_clone = (TGraphErrors*)gInvMJB_LogPtPrimeBin_mc->Clone();
+
+	TGraph_data_style (gInvMJB_LogPtPrimeBin_data);
+	TGraph_mc_style (gInvMJB_LogPtPrimeBin_mc);
+	TGraph_mc_style (gInvMJB_LogPtPrimeBin_mc_clone);
+
+	gInvMJB_LogPtPrimeBin_mc_clone->SetFillColor(17);
+	//gInvMJB_LogPtPrimeBin_mc_clone->SetFillStyle(3002);
+  gInvMJB_LogPtPrimeBin_mc->SetLineColor(17);
+	
+	TMultiGraph *mgInvMJB_LogPtPrimeBin = new TMultiGraph();
+	mgInvMJB_LogPtPrimeBin->Add(gInvMJB_LogPtPrimeBin_mc_clone,"e3");
+    mgInvMJB_LogPtPrimeBin->Add(gInvMJB_LogPtPrimeBin_mc,"p");
+    mgInvMJB_LogPtPrimeBin->Add(gInvMJB_LogPtPrimeBin_data,"pe");
+
+    mgInvMJB_LogPtPrimeBin->SetTitle("MJB^{-1} as a function of p_{T}^{Recoil}.exp(#sum_{i}F_{i}.log(f_{i}));p_{T}^{Recoil}.exp(#sum_{i}F_{i}.log(f_{i}));MJB^{-1}");
+
+    mgInvMJB_LogPtPrimeBin->SetMinimum(0.85);
+    mgInvMJB_LogPtPrimeBin->SetMaximum(1.15);
+
+
+    TGraphErrors *gInvMJB_LogPtPrimeBin_ratio = NULL;
+
+    gInvMJB_LogPtPrimeBin_ratio = getDataMcResponseRatio(gInvMJB_LogPtPrimeBin_data,gInvMJB_LogPtPrimeBin_mc,numberLogPtPrimeBins, "p_{T}^{Recoil}.exp(#sum_{i}F_{i}.log(f_{i}))");
+	  gInvMJB_LogPtPrimeBin_ratio->GetXaxis()->SetTitle("p_{T}^{Recoil}.exp(#sum_{i}F_{i}.log(f_{i}))");  
+	gInvMJB_LogPtPrimeBin_ratio->GetYaxis()->SetTitle("MJB^{-1}_{data}/MJB^{-1}_{MC}");
+	gInvMJB_LogPtPrimeBin_ratio->SetName("Data/MC");
+	gInvMJB_LogPtPrimeBin_ratio->SetTitle("Data/MC");
+	gInvMJB_LogPtPrimeBin_ratio->SetMarkerSize(1.0);
+	gInvMJB_LogPtPrimeBin_ratio->Fit("func","","",gInvMJB_LogPtPrimeBin_data->GetXaxis()->GetXmin(),gInvMJB_LogPtPrimeBin_data->GetXaxis()->GetXmax());
+	
+	myHistoName = "images/response/InvMJB_LogPtPrimeBin" + extension;	
+	drawComparisonResponse("r1", mgInvMJB_LogPtPrimeBin, gInvMJB_LogPtPrimeBin_mc, gInvMJB_LogPtPrimeBin_data, gInvMJB_LogPtPrimeBin_ratio,"MC", myHistoName.c_str(), false, false);
+
+
 
 //************************************************************************************************************
 //
