@@ -1016,6 +1016,357 @@ int main (int argc, char** argv)
 
 //************************************************************************************************************
 //
+//                                      NjetsRecoil as a function of reference object pt 
+//
+//************************************************************************************************************
+
+	TGraphErrors* gNjetsRecoil_RefObjPt_data=(TGraphErrors*)f_data->Get("recoilJets/gNjetsRecoil_RecoilPt");
+	TGraphErrors* gNjetsRecoil_RefObjPt_mc=(TGraphErrors*)f_mc->Get("recoilJets/gNjetsRecoil_RecoilPt");
+
+    TGraphErrors* gNjetsRecoil_RefObjPt_mc_clone = (TGraphErrors*)gNjetsRecoil_RefObjPt_mc->Clone();
+
+	TGraph_data_style (gNjetsRecoil_RefObjPt_data);
+	TGraph_mc_style (gNjetsRecoil_RefObjPt_mc);
+	TGraph_mc_style (gNjetsRecoil_RefObjPt_mc_clone);
+
+	gNjetsRecoil_RefObjPt_mc_clone->SetFillColor(17);
+	//gNjetsRecoil_RefObjPt_mc_clone->SetFillStyle(3002);
+  gNjetsRecoil_RefObjPt_mc->SetLineColor(17);
+	
+	TMultiGraph *mgNjetsRecoil_RefObjPt = new TMultiGraph();
+	mgNjetsRecoil_RefObjPt->Add(gNjetsRecoil_RefObjPt_mc_clone,"e3");
+	mgNjetsRecoil_RefObjPt->Add(gNjetsRecoil_RefObjPt_mc,"p");
+	mgNjetsRecoil_RefObjPt->Add(gNjetsRecoil_RefObjPt_data,"pe");
+  if(useRecoilPtBin) {
+	  mgNjetsRecoil_RefObjPt->SetTitle("N_{jets in Recoil} as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];N_{jets in Recoil}");
+  }
+  else {
+	  mgNjetsRecoil_RefObjPt->SetTitle("N_{jets in Recoil} as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];N_{jets in Recoil}");
+  }
+	
+	TGraphErrors *gNjetsRecoil_RefObjPt_ratio = NULL;
+  if(useRecoilPtBin) {
+    gNjetsRecoil_RefObjPt_ratio = getDataMcResponseRatio(gNjetsRecoil_RefObjPt_data,gNjetsRecoil_RefObjPt_mc,numberPtBins, "p_{t}^{Recoil} [GeV/c]");
+	  gNjetsRecoil_RefObjPt_ratio->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+  }
+  else {
+    gNjetsRecoil_RefObjPt_ratio = getDataMcResponseRatio(gNjetsRecoil_RefObjPt_data,gNjetsRecoil_RefObjPt_mc,numberPtBins, "p_{t}^{Leading Jet} [GeV/c]");
+	  gNjetsRecoil_RefObjPt_ratio->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");  
+  }
+	gNjetsRecoil_RefObjPt_ratio->GetYaxis()->SetTitle("N_{jets in Recoil}^{data}/N_{jets in Recoil}^{MC}");
+	gNjetsRecoil_RefObjPt_ratio->SetName("Data/MC");
+	gNjetsRecoil_RefObjPt_ratio->SetTitle("Data/MC");
+	gNjetsRecoil_RefObjPt_ratio->SetMarkerSize(1.0);
+	gNjetsRecoil_RefObjPt_ratio->Fit("func","","",gNjetsRecoil_RefObjPt_data->GetXaxis()->GetXmin(),gNjetsRecoil_RefObjPt_data->GetXaxis()->GetXmax());
+	
+	myHistoName = "images/NjetsRecoil/NjetsRecoil_RefObjPt" + extension;	
+	drawComparisonResponse("r1", mgNjetsRecoil_RefObjPt, gNjetsRecoil_RefObjPt_mc, gNjetsRecoil_RefObjPt_data, gNjetsRecoil_RefObjPt_ratio,"MC", myHistoName.c_str(), false, false);
+
+//************************************************************************************************************
+//
+//                                      NjetsRecoil as a function of ptrecoil without 2 ptbin
+//
+//************************************************************************************************************
+
+	Double_t aNjetsRecoil_RefObjPt_data_Mean[numberPtBins-2];
+	Double_t aNjetsRecoil_RefObjPt_data_MeanError[numberPtBins-2];
+	Double_t aNjetsRecoil_RefObjPt_mc_Mean[numberPtBins-2];
+	Double_t aNjetsRecoil_RefObjPt_mc_MeanError[numberPtBins-2];
+	Double_t aNjetsRecoilRatio_Mean[numberPtBins-2];
+	Double_t aNjetsRecoilRatio_MeanError[numberPtBins-2];
+	
+	for(int i=1; i<numberPtBins-1; i++) {
+    gNjetsRecoil_RefObjPt_data->GetPoint(i,aRefObjPtBins_Mean[i-1],aNjetsRecoil_RefObjPt_data_Mean[i-1]);
+    gNjetsRecoil_RefObjPt_mc->GetPoint(i,aRefObjPtBins_Mean[i-1],aNjetsRecoil_RefObjPt_mc_Mean[i-1]);
+    gNjetsRecoil_RefObjPt_ratio->GetPoint(i,aRefObjPtBins_Mean[i-1],aNjetsRecoilRatio_Mean[i-1]);
+    aNjetsRecoil_RefObjPt_data_MeanError[i-1] = gNjetsRecoil_RefObjPt_data->GetErrorY(i);
+    aNjetsRecoil_RefObjPt_mc_MeanError[i-1] = gNjetsRecoil_RefObjPt_mc->GetErrorY(i);
+    aNjetsRecoilRatio_MeanError[i-1] = gNjetsRecoil_RefObjPt_ratio->GetErrorY(i);
+	}
+
+	TGraphErrors* gNjetsRecoil_RefObjPt_data_resize = new TGraphErrors(numberPtBins-2,aRefObjPtBins_Mean, aNjetsRecoil_RefObjPt_data_Mean, aRefObjPtBins_MeanError, aNjetsRecoil_RefObjPt_data_MeanError);
+	TGraphErrors* gNjetsRecoil_RefObjPt_mc_resize = new TGraphErrors(numberPtBins-2,aRefObjPtBins_Mean, aNjetsRecoil_RefObjPt_mc_Mean, aRefObjPtBins_MeanError, aNjetsRecoil_RefObjPt_mc_MeanError);	
+	TGraph* gNjetsRecoil_RefObjPt_mc_resize_pointsOnly = new TGraph(numberPtBins-2,aRefObjPtBins_Mean, aNjetsRecoil_RefObjPt_mc_Mean);	
+
+  TGraphErrors* gNjetsRecoil_RefObjPt_mc_clone_resize = (TGraphErrors*)gNjetsRecoil_RefObjPt_mc_resize->Clone();
+	
+	TGraph_data_style (gNjetsRecoil_RefObjPt_data_resize);
+	TGraph_mc_style (gNjetsRecoil_RefObjPt_mc_resize);
+	TGraph_mc_style (gNjetsRecoil_RefObjPt_mc_resize_pointsOnly);
+	TGraph_mc_style (gNjetsRecoil_RefObjPt_mc_clone_resize);
+
+	gNjetsRecoil_RefObjPt_mc_clone_resize->SetFillColor(17);
+	//gNjetsRecoil_RefObjPt_mc_resize->SetFillStyle(3002);
+  gNjetsRecoil_RefObjPt_mc_resize->SetFillColor(17);
+	
+	TMultiGraph *mgNjetsRecoil_RefObjPt_resize = new TMultiGraph();
+  mgNjetsRecoil_RefObjPt_resize->Add(gNjetsRecoil_RefObjPt_mc_resize,"e3");
+	mgNjetsRecoil_RefObjPt_resize->Add(gNjetsRecoil_RefObjPt_mc_resize_pointsOnly,"p");
+	mgNjetsRecoil_RefObjPt_resize->Add(gNjetsRecoil_RefObjPt_data_resize,"pe");
+  if(useRecoilPtBin) {
+	  mgNjetsRecoil_RefObjPt_resize->SetTitle("N_{jets in Recoil} as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];N_{jets in Recoil}");
+  }
+  else {
+    mgNjetsRecoil_RefObjPt_resize->SetTitle("N_{jets in Recoil} as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];N_{jets in Recoil}");
+  }
+	
+	TGraphErrors *gNjetsRecoil_RefObjPt_ratio_resize = NULL;
+  if(useRecoilPtBin) {
+    gNjetsRecoil_RefObjPt_ratio_resize = getDataMcResponseRatio(gNjetsRecoil_RefObjPt_data_resize,gNjetsRecoil_RefObjPt_mc_resize,numberPtBins-2, "p_{t}^{Recoil} [GeV/c]");
+	  gNjetsRecoil_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+  }
+  else {
+    gNjetsRecoil_RefObjPt_ratio_resize = getDataMcResponseRatio(gNjetsRecoil_RefObjPt_data_resize,gNjetsRecoil_RefObjPt_mc_resize,numberPtBins-2, "p_{t}^{Leading Jet} [GeV/c]");
+	  gNjetsRecoil_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");
+  }
+	gNjetsRecoil_RefObjPt_ratio_resize->GetYaxis()->SetTitle("N_{jets in Recoil}^{data}/N_{jets in Recoil}^{MC}");
+	gNjetsRecoil_RefObjPt_ratio_resize->SetName("Data/MC");
+	gNjetsRecoil_RefObjPt_ratio_resize->SetTitle("Data/MC");
+	gNjetsRecoil_RefObjPt_ratio_resize->SetMarkerSize(1.0);
+	gNjetsRecoil_RefObjPt_ratio_resize->Fit("func","","",gNjetsRecoil_RefObjPt_data_resize->GetXaxis()->GetXmin(),gNjetsRecoil_RefObjPt_data_resize->GetXaxis()->GetXmax());
+	
+	myHistoName = "images/NjetsRecoil/NjetsRecoil_RefObjPt_resize" + extension;	
+	drawComparisonResponse("r1", mgNjetsRecoil_RefObjPt_resize, gNjetsRecoil_RefObjPt_mc_resize, gNjetsRecoil_RefObjPt_data_resize, gNjetsRecoil_RefObjPt_ratio_resize,"MC", myHistoName.c_str(), false, false);
+
+
+//************************************************************************************************************
+//
+//                                      NjetsRecoil_068E as a function of reference object pt 
+//
+//************************************************************************************************************
+
+	TGraphErrors* gNjetsRecoil_068E_RefObjPt_data=(TGraphErrors*)f_data->Get("recoilJets/gNjetsRecoil_068E_RecoilPt");
+	TGraphErrors* gNjetsRecoil_068E_RefObjPt_mc=(TGraphErrors*)f_mc->Get("recoilJets/gNjetsRecoil_068E_RecoilPt");
+
+    TGraphErrors* gNjetsRecoil_068E_RefObjPt_mc_clone = (TGraphErrors*)gNjetsRecoil_068E_RefObjPt_mc->Clone();
+
+	TGraph_data_style (gNjetsRecoil_068E_RefObjPt_data);
+	TGraph_mc_style (gNjetsRecoil_068E_RefObjPt_mc);
+	TGraph_mc_style (gNjetsRecoil_068E_RefObjPt_mc_clone);
+
+	gNjetsRecoil_068E_RefObjPt_mc_clone->SetFillColor(17);
+	//gNjetsRecoil_068E_RefObjPt_mc_clone->SetFillStyle(3002);
+  gNjetsRecoil_068E_RefObjPt_mc->SetLineColor(17);
+	
+	TMultiGraph *mgNjetsRecoil_068E_RefObjPt = new TMultiGraph();
+	mgNjetsRecoil_068E_RefObjPt->Add(gNjetsRecoil_068E_RefObjPt_mc_clone,"e3");
+	mgNjetsRecoil_068E_RefObjPt->Add(gNjetsRecoil_068E_RefObjPt_mc,"p");
+	mgNjetsRecoil_068E_RefObjPt->Add(gNjetsRecoil_068E_RefObjPt_data,"pe");
+  if(useRecoilPtBin) {
+	  mgNjetsRecoil_068E_RefObjPt->SetTitle("Number of necessary recoil jets to carry 68% of p_{T}^{Recoil} as a function of p_{T}^{Recoil} as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];N_{jets in Recoil}^{carrying 68% p_{t}^{Recoil}}");
+  }
+  else {
+	  mgNjetsRecoil_068E_RefObjPt->SetTitle("Number of necessary recoil jets to carry 68% of p_{T}^{Recoil} as a function of p_{T}^{Recoil} as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];N_{jets in Recoil}^{carrying 68% p_{t}^{Recoil}}");
+  }
+	
+	TGraphErrors *gNjetsRecoil_068E_RefObjPt_ratio = NULL;
+  if(useRecoilPtBin) {
+    gNjetsRecoil_068E_RefObjPt_ratio = getDataMcResponseRatio(gNjetsRecoil_068E_RefObjPt_data,gNjetsRecoil_068E_RefObjPt_mc,numberPtBins, "p_{t}^{Recoil} [GeV/c]");
+	  gNjetsRecoil_068E_RefObjPt_ratio->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+  }
+  else {
+    gNjetsRecoil_068E_RefObjPt_ratio = getDataMcResponseRatio(gNjetsRecoil_068E_RefObjPt_data,gNjetsRecoil_068E_RefObjPt_mc,numberPtBins, "p_{t}^{Leading Jet} [GeV/c]");
+	  gNjetsRecoil_068E_RefObjPt_ratio->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");  
+  }
+	gNjetsRecoil_068E_RefObjPt_ratio->GetYaxis()->SetTitle("N_{jets in Recoil, 68%}^{data}/N_{jets in Recoil,68%}^{MC}");
+	gNjetsRecoil_068E_RefObjPt_ratio->SetName("Data/MC");
+	gNjetsRecoil_068E_RefObjPt_ratio->SetTitle("Data/MC");
+	gNjetsRecoil_068E_RefObjPt_ratio->SetMarkerSize(1.0);
+	gNjetsRecoil_068E_RefObjPt_ratio->Fit("func","","",gNjetsRecoil_068E_RefObjPt_data->GetXaxis()->GetXmin(),gNjetsRecoil_068E_RefObjPt_data->GetXaxis()->GetXmax());
+	
+	myHistoName = "images/NjetsRecoil/NjetsRecoil_068E_RefObjPt" + extension;	
+	drawComparisonResponse("r1", mgNjetsRecoil_068E_RefObjPt, gNjetsRecoil_068E_RefObjPt_mc, gNjetsRecoil_068E_RefObjPt_data, gNjetsRecoil_068E_RefObjPt_ratio,"MC", myHistoName.c_str(), false, false);
+
+//************************************************************************************************************
+//
+//                                      NjetsRecoil_068E as a function of ptrecoil without 2 ptbin
+//
+//************************************************************************************************************
+
+	Double_t aNjetsRecoil_068E_RefObjPt_data_Mean[numberPtBins-2];
+	Double_t aNjetsRecoil_068E_RefObjPt_data_MeanError[numberPtBins-2];
+	Double_t aNjetsRecoil_068E_RefObjPt_mc_Mean[numberPtBins-2];
+	Double_t aNjetsRecoil_068E_RefObjPt_mc_MeanError[numberPtBins-2];
+	Double_t aNjetsRecoil_068ERatio_Mean[numberPtBins-2];
+	Double_t aNjetsRecoil_068ERatio_MeanError[numberPtBins-2];
+	
+	for(int i=1; i<numberPtBins-1; i++) {
+    gNjetsRecoil_068E_RefObjPt_data->GetPoint(i,aRefObjPtBins_Mean[i-1],aNjetsRecoil_068E_RefObjPt_data_Mean[i-1]);
+    gNjetsRecoil_068E_RefObjPt_mc->GetPoint(i,aRefObjPtBins_Mean[i-1],aNjetsRecoil_068E_RefObjPt_mc_Mean[i-1]);
+    gNjetsRecoil_068E_RefObjPt_ratio->GetPoint(i,aRefObjPtBins_Mean[i-1],aNjetsRecoil_068ERatio_Mean[i-1]);
+    aNjetsRecoil_068E_RefObjPt_data_MeanError[i-1] = gNjetsRecoil_068E_RefObjPt_data->GetErrorY(i);
+    aNjetsRecoil_068E_RefObjPt_mc_MeanError[i-1] = gNjetsRecoil_068E_RefObjPt_mc->GetErrorY(i);
+    aNjetsRecoil_068ERatio_MeanError[i-1] = gNjetsRecoil_068E_RefObjPt_ratio->GetErrorY(i);
+	}
+
+	TGraphErrors* gNjetsRecoil_068E_RefObjPt_data_resize = new TGraphErrors(numberPtBins-2,aRefObjPtBins_Mean, aNjetsRecoil_068E_RefObjPt_data_Mean, aRefObjPtBins_MeanError, aNjetsRecoil_068E_RefObjPt_data_MeanError);
+	TGraphErrors* gNjetsRecoil_068E_RefObjPt_mc_resize = new TGraphErrors(numberPtBins-2,aRefObjPtBins_Mean, aNjetsRecoil_068E_RefObjPt_mc_Mean, aRefObjPtBins_MeanError, aNjetsRecoil_068E_RefObjPt_mc_MeanError);	
+	TGraph* gNjetsRecoil_068E_RefObjPt_mc_resize_pointsOnly = new TGraph(numberPtBins-2,aRefObjPtBins_Mean, aNjetsRecoil_068E_RefObjPt_mc_Mean);	
+
+  TGraphErrors* gNjetsRecoil_068E_RefObjPt_mc_clone_resize = (TGraphErrors*)gNjetsRecoil_068E_RefObjPt_mc_resize->Clone();
+	
+	TGraph_data_style (gNjetsRecoil_068E_RefObjPt_data_resize);
+	TGraph_mc_style (gNjetsRecoil_068E_RefObjPt_mc_resize);
+	TGraph_mc_style (gNjetsRecoil_068E_RefObjPt_mc_resize_pointsOnly);
+	TGraph_mc_style (gNjetsRecoil_068E_RefObjPt_mc_clone_resize);
+
+	gNjetsRecoil_068E_RefObjPt_mc_clone_resize->SetFillColor(17);
+	//gNjetsRecoil_068E_RefObjPt_mc_resize->SetFillStyle(3002);
+  gNjetsRecoil_068E_RefObjPt_mc_resize->SetFillColor(17);
+	
+	TMultiGraph *mgNjetsRecoil_068E_RefObjPt_resize = new TMultiGraph();
+  mgNjetsRecoil_068E_RefObjPt_resize->Add(gNjetsRecoil_068E_RefObjPt_mc_resize,"e3");
+	mgNjetsRecoil_068E_RefObjPt_resize->Add(gNjetsRecoil_068E_RefObjPt_mc_resize_pointsOnly,"p");
+	mgNjetsRecoil_068E_RefObjPt_resize->Add(gNjetsRecoil_068E_RefObjPt_data_resize,"pe");
+  if(useRecoilPtBin) {
+	  mgNjetsRecoil_068E_RefObjPt_resize->SetTitle("Number of necessary recoil jets to carry 68% of p_{T}^{Recoil} as a function of p_{T}^{Recoil} as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];N_{jets in Recoil}^{carrying 68% p_{t}^{Recoil}}");
+  }
+  else {
+    mgNjetsRecoil_068E_RefObjPt_resize->SetTitle("Number of necessary recoil jets to carry 68% of p_{T}^{Recoil} as a function of p_{T}^{Recoil} as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];N_{jets in Recoil}^{carrying 68% p_{t}^{Recoil}}");
+  }
+
+  mgNjetsRecoil_068E_RefObjPt_resize->SetMinimum(1.8);
+  mgNjetsRecoil_068E_RefObjPt_resize->SetMaximum(2.2);
+	
+	TGraphErrors *gNjetsRecoil_068E_RefObjPt_ratio_resize = NULL;
+  if(useRecoilPtBin) {
+    gNjetsRecoil_068E_RefObjPt_ratio_resize = getDataMcResponseRatio(gNjetsRecoil_068E_RefObjPt_data_resize,gNjetsRecoil_068E_RefObjPt_mc_resize,numberPtBins-2, "p_{t}^{Recoil} [GeV/c]");
+	  gNjetsRecoil_068E_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+  }
+  else {
+    gNjetsRecoil_068E_RefObjPt_ratio_resize = getDataMcResponseRatio(gNjetsRecoil_068E_RefObjPt_data_resize,gNjetsRecoil_068E_RefObjPt_mc_resize,numberPtBins-2, "p_{t}^{Leading Jet} [GeV/c]");
+	  gNjetsRecoil_068E_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");
+  }
+	gNjetsRecoil_068E_RefObjPt_ratio_resize->GetYaxis()->SetTitle("N_{jets in Recoil, 68%}^{data}/N_{jets in Recoil, 68%}^{MC}");
+	gNjetsRecoil_068E_RefObjPt_ratio_resize->SetName("Data/MC");
+	gNjetsRecoil_068E_RefObjPt_ratio_resize->SetTitle("Data/MC");
+	gNjetsRecoil_068E_RefObjPt_ratio_resize->SetMarkerSize(1.0);
+	gNjetsRecoil_068E_RefObjPt_ratio_resize->Fit("func","","",gNjetsRecoil_068E_RefObjPt_data_resize->GetXaxis()->GetXmin(),gNjetsRecoil_068E_RefObjPt_data_resize->GetXaxis()->GetXmax());
+	
+	myHistoName = "images/NjetsRecoil/NjetsRecoil_068E_RefObjPt_resize" + extension;	
+	drawComparisonResponse("r1", mgNjetsRecoil_068E_RefObjPt_resize, gNjetsRecoil_068E_RefObjPt_mc_resize, gNjetsRecoil_068E_RefObjPt_data_resize, gNjetsRecoil_068E_RefObjPt_ratio_resize,"MC", myHistoName.c_str(), false, false);
+
+
+
+//************************************************************************************************************
+//
+//                                      NjetsRecoil_095E as a function of reference object pt 
+//
+//************************************************************************************************************
+
+	TGraphErrors* gNjetsRecoil_095E_RefObjPt_data=(TGraphErrors*)f_data->Get("recoilJets/gNjetsRecoil_095E_RecoilPt");
+	TGraphErrors* gNjetsRecoil_095E_RefObjPt_mc=(TGraphErrors*)f_mc->Get("recoilJets/gNjetsRecoil_095E_RecoilPt");
+
+    TGraphErrors* gNjetsRecoil_095E_RefObjPt_mc_clone = (TGraphErrors*)gNjetsRecoil_095E_RefObjPt_mc->Clone();
+
+	TGraph_data_style (gNjetsRecoil_095E_RefObjPt_data);
+	TGraph_mc_style (gNjetsRecoil_095E_RefObjPt_mc);
+	TGraph_mc_style (gNjetsRecoil_095E_RefObjPt_mc_clone);
+
+	gNjetsRecoil_095E_RefObjPt_mc_clone->SetFillColor(17);
+	//gNjetsRecoil_095E_RefObjPt_mc_clone->SetFillStyle(3002);
+  gNjetsRecoil_095E_RefObjPt_mc->SetLineColor(17);
+	
+	TMultiGraph *mgNjetsRecoil_095E_RefObjPt = new TMultiGraph();
+	mgNjetsRecoil_095E_RefObjPt->Add(gNjetsRecoil_095E_RefObjPt_mc_clone,"e3");
+	mgNjetsRecoil_095E_RefObjPt->Add(gNjetsRecoil_095E_RefObjPt_mc,"p");
+	mgNjetsRecoil_095E_RefObjPt->Add(gNjetsRecoil_095E_RefObjPt_data,"pe");
+  if(useRecoilPtBin) {
+	  mgNjetsRecoil_095E_RefObjPt->SetTitle("Number of necessary recoil jets to carry 95% of p_{T}^{Recoil} as a function of p_{T}^{Recoil} as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];N_{jets in Recoil}^{carrying 95% p_{t}^{Recoil}}");
+  }
+  else {
+	  mgNjetsRecoil_095E_RefObjPt->SetTitle("Number of necessary recoil jets to carry 95% of p_{T}^{Recoil} as a function of p_{T}^{Recoil} as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];N_{jets in Recoil}^{carrying 95% p_{t}^{Recoil}}");
+  }
+	
+	TGraphErrors *gNjetsRecoil_095E_RefObjPt_ratio = NULL;
+  if(useRecoilPtBin) {
+    gNjetsRecoil_095E_RefObjPt_ratio = getDataMcResponseRatio(gNjetsRecoil_095E_RefObjPt_data,gNjetsRecoil_095E_RefObjPt_mc,numberPtBins, "p_{t}^{Recoil} [GeV/c]");
+	  gNjetsRecoil_095E_RefObjPt_ratio->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+  }
+  else {
+    gNjetsRecoil_095E_RefObjPt_ratio = getDataMcResponseRatio(gNjetsRecoil_095E_RefObjPt_data,gNjetsRecoil_095E_RefObjPt_mc,numberPtBins, "p_{t}^{Leading Jet} [GeV/c]");
+	  gNjetsRecoil_095E_RefObjPt_ratio->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");  
+  }
+	gNjetsRecoil_095E_RefObjPt_ratio->GetYaxis()->SetTitle("N_{jets in Recoil, 95%}^{data}/N_{jets in Recoil,95%}^{MC}");
+	gNjetsRecoil_095E_RefObjPt_ratio->SetName("Data/MC");
+	gNjetsRecoil_095E_RefObjPt_ratio->SetTitle("Data/MC");
+	gNjetsRecoil_095E_RefObjPt_ratio->SetMarkerSize(1.0);
+	gNjetsRecoil_095E_RefObjPt_ratio->Fit("func","","",gNjetsRecoil_095E_RefObjPt_data->GetXaxis()->GetXmin(),gNjetsRecoil_095E_RefObjPt_data->GetXaxis()->GetXmax());
+	
+	myHistoName = "images/NjetsRecoil/NjetsRecoil_095E_RefObjPt" + extension;	
+	drawComparisonResponse("r1", mgNjetsRecoil_095E_RefObjPt, gNjetsRecoil_095E_RefObjPt_mc, gNjetsRecoil_095E_RefObjPt_data, gNjetsRecoil_095E_RefObjPt_ratio,"MC", myHistoName.c_str(), false, false);
+
+//************************************************************************************************************
+//
+//                                      NjetsRecoil_095E as a function of ptrecoil without 2 ptbin
+//
+//************************************************************************************************************
+
+	Double_t aNjetsRecoil_095E_RefObjPt_data_Mean[numberPtBins-2];
+	Double_t aNjetsRecoil_095E_RefObjPt_data_MeanError[numberPtBins-2];
+	Double_t aNjetsRecoil_095E_RefObjPt_mc_Mean[numberPtBins-2];
+	Double_t aNjetsRecoil_095E_RefObjPt_mc_MeanError[numberPtBins-2];
+	Double_t aNjetsRecoil_095ERatio_Mean[numberPtBins-2];
+	Double_t aNjetsRecoil_095ERatio_MeanError[numberPtBins-2];
+	
+	for(int i=1; i<numberPtBins-1; i++) {
+    gNjetsRecoil_095E_RefObjPt_data->GetPoint(i,aRefObjPtBins_Mean[i-1],aNjetsRecoil_095E_RefObjPt_data_Mean[i-1]);
+    gNjetsRecoil_095E_RefObjPt_mc->GetPoint(i,aRefObjPtBins_Mean[i-1],aNjetsRecoil_095E_RefObjPt_mc_Mean[i-1]);
+    gNjetsRecoil_095E_RefObjPt_ratio->GetPoint(i,aRefObjPtBins_Mean[i-1],aNjetsRecoil_095ERatio_Mean[i-1]);
+    aNjetsRecoil_095E_RefObjPt_data_MeanError[i-1] = gNjetsRecoil_095E_RefObjPt_data->GetErrorY(i);
+    aNjetsRecoil_095E_RefObjPt_mc_MeanError[i-1] = gNjetsRecoil_095E_RefObjPt_mc->GetErrorY(i);
+    aNjetsRecoil_095ERatio_MeanError[i-1] = gNjetsRecoil_095E_RefObjPt_ratio->GetErrorY(i);
+	}
+
+	TGraphErrors* gNjetsRecoil_095E_RefObjPt_data_resize = new TGraphErrors(numberPtBins-2,aRefObjPtBins_Mean, aNjetsRecoil_095E_RefObjPt_data_Mean, aRefObjPtBins_MeanError, aNjetsRecoil_095E_RefObjPt_data_MeanError);
+	TGraphErrors* gNjetsRecoil_095E_RefObjPt_mc_resize = new TGraphErrors(numberPtBins-2,aRefObjPtBins_Mean, aNjetsRecoil_095E_RefObjPt_mc_Mean, aRefObjPtBins_MeanError, aNjetsRecoil_095E_RefObjPt_mc_MeanError);	
+	TGraph* gNjetsRecoil_095E_RefObjPt_mc_resize_pointsOnly = new TGraph(numberPtBins-2,aRefObjPtBins_Mean, aNjetsRecoil_095E_RefObjPt_mc_Mean);	
+
+  TGraphErrors* gNjetsRecoil_095E_RefObjPt_mc_clone_resize = (TGraphErrors*)gNjetsRecoil_095E_RefObjPt_mc_resize->Clone();
+	
+	TGraph_data_style (gNjetsRecoil_095E_RefObjPt_data_resize);
+	TGraph_mc_style (gNjetsRecoil_095E_RefObjPt_mc_resize);
+	TGraph_mc_style (gNjetsRecoil_095E_RefObjPt_mc_resize_pointsOnly);
+	TGraph_mc_style (gNjetsRecoil_095E_RefObjPt_mc_clone_resize);
+
+	gNjetsRecoil_095E_RefObjPt_mc_clone_resize->SetFillColor(17);
+	//gNjetsRecoil_095E_RefObjPt_mc_resize->SetFillStyle(3002);
+  gNjetsRecoil_095E_RefObjPt_mc_resize->SetFillColor(17);
+	
+	TMultiGraph *mgNjetsRecoil_095E_RefObjPt_resize = new TMultiGraph();
+  mgNjetsRecoil_095E_RefObjPt_resize->Add(gNjetsRecoil_095E_RefObjPt_mc_resize,"e3");
+	mgNjetsRecoil_095E_RefObjPt_resize->Add(gNjetsRecoil_095E_RefObjPt_mc_resize_pointsOnly,"p");
+	mgNjetsRecoil_095E_RefObjPt_resize->Add(gNjetsRecoil_095E_RefObjPt_data_resize,"pe");
+  if(useRecoilPtBin) {
+	  mgNjetsRecoil_095E_RefObjPt_resize->SetTitle("Number of necessary recoil jets to carry 95% of p_{T}^{Recoil} as a function of p_{T}^{Recoil} as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];N_{jets in Recoil}^{carrying 95% p_{t}^{Recoil}}");
+  }
+  else {
+    mgNjetsRecoil_095E_RefObjPt_resize->SetTitle("Number of necessary recoil jets to carry 95% of p_{T}^{Recoil} as a function of p_{T}^{Recoil} as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];N_{jets in Recoil}^{carrying 95% p_{t}^{Recoil}}");
+  }
+
+  mgNjetsRecoil_095E_RefObjPt_resize->SetMinimum(1.5);
+  mgNjetsRecoil_095E_RefObjPt_resize->SetMaximum(3.5);
+	
+	TGraphErrors *gNjetsRecoil_095E_RefObjPt_ratio_resize = NULL;
+  if(useRecoilPtBin) {
+    gNjetsRecoil_095E_RefObjPt_ratio_resize = getDataMcResponseRatio(gNjetsRecoil_095E_RefObjPt_data_resize,gNjetsRecoil_095E_RefObjPt_mc_resize,numberPtBins-2, "p_{t}^{Recoil} [GeV/c]");
+	  gNjetsRecoil_095E_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+  }
+  else {
+    gNjetsRecoil_095E_RefObjPt_ratio_resize = getDataMcResponseRatio(gNjetsRecoil_095E_RefObjPt_data_resize,gNjetsRecoil_095E_RefObjPt_mc_resize,numberPtBins-2, "p_{t}^{Leading Jet} [GeV/c]");
+	  gNjetsRecoil_095E_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");
+  }
+	gNjetsRecoil_095E_RefObjPt_ratio_resize->GetYaxis()->SetTitle("N_{jets in Recoil, 95%}^{data}/N_{jets in Recoil, 95%}^{MC}");
+	gNjetsRecoil_095E_RefObjPt_ratio_resize->SetName("Data/MC");
+	gNjetsRecoil_095E_RefObjPt_ratio_resize->SetTitle("Data/MC");
+	gNjetsRecoil_095E_RefObjPt_ratio_resize->SetMarkerSize(1.0);
+	gNjetsRecoil_095E_RefObjPt_ratio_resize->Fit("func","","",gNjetsRecoil_095E_RefObjPt_data_resize->GetXaxis()->GetXmin(),gNjetsRecoil_095E_RefObjPt_data_resize->GetXaxis()->GetXmax());
+	
+	myHistoName = "images/NjetsRecoil/NjetsRecoil_095E_RefObjPt_resize" + extension;	
+	drawComparisonResponse("r1", mgNjetsRecoil_095E_RefObjPt_resize, gNjetsRecoil_095E_RefObjPt_mc_resize, gNjetsRecoil_095E_RefObjPt_data_resize, gNjetsRecoil_095E_RefObjPt_ratio_resize,"MC", myHistoName.c_str(), false, false);
+
+
+
 //************************************************************************************************************
 //
 //                                      MJB as a function of p_{T}^{Recoil}*exp(sum_i[F_i * log(f_i)]) 
