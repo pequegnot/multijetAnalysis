@@ -197,6 +197,7 @@ void drawComparisonResponse(const string& canvasName, TMultiGraph *mgResponse, T
   TLegend* legend = new TLegend(0.55, 0.15, 0.92, 0.38);
   legend->SetFillColor(kWhite);
   legend->SetFillStyle(0);
+  legend->SetLineWidth(0);
 	legend->SetTextFont(42);
   legend->SetTextSize(0.038);
 	legend->AddEntry(gResponseMCnominal,mcSampleNominal.c_str(),"p");
@@ -208,30 +209,61 @@ void drawComparisonResponse(const string& canvasName, TMultiGraph *mgResponse, T
 	cCanvas->SaveAs(path.c_str());
 }
 
+void drawComparisonResponse_4graphs(const string& canvasName, TMultiGraph *mgResponse, TGraphErrors *gResponseMCnominal, TGraphErrors *gResponseMCup, TGraph *gResponseMCdown, TGraph *gResponseMCother, const string& mcSampleNominal, const string& mcSampleUp, const string& mcSampleDown, const string& mcSampleOther, const string& path) {
+	TCanvas *cCanvas = new TCanvas(canvasName.c_str(),canvasName.c_str(), 600, 800);
+	cCanvas->cd();
+
+  gStyle->SetOptStat(0);
+	mgResponse->SetMaximum(1.05);
+	mgResponse->SetMinimum(0.9);
+	mgResponse->Draw("AP");
+	//mgResponse->GetXaxis()->SetLabelSize(0);
+	mgResponse->GetYaxis()->SetTitleOffset(1.3);
+	cCanvas->SetLogx(0);
+	
+  TLegend* legend = new TLegend(0.55, 0.15, 0.92, 0.38);
+  legend->SetFillColor(kWhite);
+  legend->SetFillStyle(0);
+  legend->SetLineWidth(0);
+	legend->SetTextFont(42);
+  legend->SetTextSize(0.038);
+	legend->AddEntry(gResponseMCnominal,mcSampleNominal.c_str(),"p");
+	legend->AddEntry(gResponseMCup,mcSampleUp.c_str(),"p");
+	legend->AddEntry(gResponseMCdown,mcSampleDown.c_str(),"p");
+	legend->AddEntry(gResponseMCother,mcSampleOther.c_str(),"p");
+	legend->Draw("same");
+	gPad->RedrawAxis();
+	cCanvas->Update();
+	cCanvas->SaveAs(path.c_str());
+}
+
+
 
 int main() 
 {
-	TString inname_data = "../analysis/output_rootfile/30Apr14/data/MULTIJET_Run2012ABCD-22Jan2013_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_afterPrescaleReweighting.root";
-	TString inname_mc_HT = "../analysis/output_rootfile/30Apr14/MC/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut.root";
-	TString inname_mc_HT_JECup = "../analysis/output_rootfile/30Apr14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_JECup.root";
-	TString inname_mc_HT_JECdown = "../analysis/output_rootfile/30Apr14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_JECdown.root";
-	TString inname_mc_HT_JERup = "../analysis/output_rootfile/30Apr14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_JERup.root";
-	TString inname_mc_HT_JERdown = "../analysis/output_rootfile/30Apr14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_JERdown.root";
-	TString inname_mc_HT_PUup = "../analysis/output_rootfile/30Apr14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_PUup.root";
-	TString inname_mc_HT_PUdown = "../analysis/output_rootfile/30Apr14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_PUdown.root";
-	TString inname_mc_Pt_pythia = "../analysis/output_rootfile/30Apr14/MC/MULTIJET_MC_QCD-Pt-pythia-120To1400_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut.root";
-	TString inname_mc_Pt_herwig = "../analysis/output_rootfile/30Apr14/MC/MULTIJET_MC_QCD-Pt-herwig-120ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut.root";
+	TString inname_data = "../analysis/output_rootfile/01Jul14/data/MULTIJET_Run2012ABCD-22Jan2013_analysis_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_afterPrescaleReweighting.root";
+	TString inname_mc_HT = "../analysis/output_rootfile/01Jul14/MC/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix.root";
+	TString inname_mc_HT_JECup = "../analysis/output_rootfile/01Jul14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_JECup.root";
+	TString inname_mc_HT_JECdown = "../analysis/output_rootfile/01Jul14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_JECdown.root";
+	TString inname_mc_HT_JERup = "../analysis/output_rootfile/01Jul14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_JERup.root";
+	TString inname_mc_HT_JERdown = "../analysis/output_rootfile/01Jul14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_JERdown.root";
+	TString inname_mc_HT_PUup = "../analysis/output_rootfile/01Jul14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_PUup.root";
+	TString inname_mc_HT_PUdown = "../analysis/output_rootfile/01Jul14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_PUdown.root";
+	TString inname_mc_Pt_pythia = "../analysis/output_rootfile/01Jul14/MC/MULTIJET_MC_QCD-Pt-pythia-120To1400_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix.root";
+	TString inname_mc_Pt_herwig = "../analysis/output_rootfile/01Jul14/MC/MULTIJET_MC_QCD-Pt-herwig-120ToInf_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix.root";
+	TString inname_mc_Pt_flat = "../analysis/output_rootfile/30Jun14/MC/MULTIJET_MC_QCD-Flat-15to3000_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix.root";
 	bool isLumiNorm = false;
 	bool isShapeNorm = false;
 	bool inLinScale = false;
 	bool rmPU = false;
 	
-	string extension = ".pdf";	
+	string extension = "_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf";	
 	
 	//gStyle->SetOptFit(111111);
 	
 	ptBinning myPtBinning;
   HLTPtBinning myHLTPtBinning;
+  myHLTPtBinning.fillHLTPtBins(false);
 	npvBinning myNpvBinning;
 	etaBinning myEtaBinning;
 	
@@ -261,6 +293,7 @@ int main()
 	TFile *f_mc_HT_PUdown=TFile::Open(inname_mc_HT_PUdown);
 	TFile *f_mc_Pt_pythia=TFile::Open(inname_mc_Pt_pythia);
 	TFile *f_mc_Pt_herwig=TFile::Open(inname_mc_Pt_herwig);
+	TFile *f_mc_Pt_flat=TFile::Open(inname_mc_Pt_flat);
 	
 	string myHistoName;
 	
@@ -283,6 +316,7 @@ int main()
 	TGraphErrors* gMJB_RefObjPt_mc_HT_PUdown=(TGraphErrors*)f_mc_HT_PUdown->Get("MJB/PtBin/gMJB_RefObjPt");
 	TGraphErrors* gMJB_RefObjPt_mc_Pt_pythia=(TGraphErrors*)f_mc_Pt_pythia->Get("MJB/PtBin/gMJB_RefObjPt");
 	TGraphErrors* gMJB_RefObjPt_mc_Pt_herwig=(TGraphErrors*)f_mc_Pt_herwig->Get("MJB/PtBin/gMJB_RefObjPt");
+	TGraphErrors* gMJB_RefObjPt_mc_Pt_flat=(TGraphErrors*)f_mc_Pt_flat->Get("MJB/PtBin/gMJB_RefObjPt");
 	
 	TGraph_style (gMJB_RefObjPt_data);
 	TGraph_style (gMJB_RefObjPt_mc_HT);
@@ -294,6 +328,7 @@ int main()
 	TGraph_style (gMJB_RefObjPt_mc_HT_PUdown);
 	TGraph_style (gMJB_RefObjPt_mc_Pt_pythia);
 	TGraph_style (gMJB_RefObjPt_mc_Pt_herwig);
+	TGraph_style (gMJB_RefObjPt_mc_Pt_flat);
 
 	gMJB_RefObjPt_data->SetMarkerColor(1);
 	gMJB_RefObjPt_mc_HT->SetMarkerColor(2);
@@ -305,6 +340,7 @@ int main()
 	gMJB_RefObjPt_mc_HT_PUdown->SetMarkerColor(9);
 	gMJB_RefObjPt_mc_Pt_pythia->SetMarkerColor(42);
 	gMJB_RefObjPt_mc_Pt_herwig->SetMarkerColor(28);
+	gMJB_RefObjPt_mc_Pt_flat->SetMarkerColor(13);
 	
 	TMultiGraph *mgMJB_RefObjPt_JEC = new TMultiGraph();
 	mgMJB_RefObjPt_JEC->Add(gMJB_RefObjPt_mc_HT,"pe");
@@ -325,6 +361,12 @@ int main()
 	mgMJB_RefObjPt_generator->Add(gMJB_RefObjPt_mc_HT,"pe");
 	mgMJB_RefObjPt_generator->Add(gMJB_RefObjPt_mc_Pt_pythia,"pe");
 	mgMJB_RefObjPt_generator->Add(gMJB_RefObjPt_mc_Pt_herwig,"pe");
+
+  TMultiGraph *mgMJB_RefObjPt_generator_plusFlat = new TMultiGraph();
+	mgMJB_RefObjPt_generator_plusFlat->Add(gMJB_RefObjPt_mc_HT,"pe");
+	mgMJB_RefObjPt_generator_plusFlat->Add(gMJB_RefObjPt_mc_Pt_pythia,"pe");
+	mgMJB_RefObjPt_generator_plusFlat->Add(gMJB_RefObjPt_mc_Pt_herwig,"pe");
+	mgMJB_RefObjPt_generator_plusFlat->Add(gMJB_RefObjPt_mc_Pt_flat,"pe");
 	
   if(useRecoilPtBin) {
 	  mgMJB_RefObjPt_JEC->SetTitle("MJB as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];MJB");
@@ -339,10 +381,11 @@ int main()
 	  mgMJB_RefObjPt_PU->SetTitle("MJB as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];MJB");
   }
 	
-	drawComparisonResponse("r1", mgMJB_RefObjPt_JEC, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_HT_JECup, gMJB_RefObjPt_mc_HT_JECdown, "nominal", "JECup", "JECdown", "images/MJB_RefObjPt_JEC.pdf");
-	drawComparisonResponse("r2", mgMJB_RefObjPt_JER, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_HT_JERup, gMJB_RefObjPt_mc_HT_JERdown, "nominal", "JERup", "JERdown", "images/MJB_RefObjPt_JER.pdf");
-	drawComparisonResponse("r3", mgMJB_RefObjPt_PU, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_HT_PUup, gMJB_RefObjPt_mc_HT_PUdown, "nominal", "PUup", "PUdown", "images/MJB_RefObjPt_PU.pdf");
-	drawComparisonResponse("r4", mgMJB_RefObjPt_generator, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_Pt_herwig, gMJB_RefObjPt_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MJB_RefObjPt_generator.pdf");
+	drawComparisonResponse("r1", mgMJB_RefObjPt_JEC, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_HT_JECup, gMJB_RefObjPt_mc_HT_JECdown, "nominal", "JECup", "JECdown", "images/MJB_RefObjPt_JEC_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r2", mgMJB_RefObjPt_JER, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_HT_JERup, gMJB_RefObjPt_mc_HT_JERdown, "nominal", "JERup", "JERdown", "images/MJB_RefObjPt_JER_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r3", mgMJB_RefObjPt_PU, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_HT_PUup, gMJB_RefObjPt_mc_HT_PUdown, "nominal", "PUup", "PUdown", "images/MJB_RefObjPt_PU_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r4", mgMJB_RefObjPt_generator, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_Pt_herwig, gMJB_RefObjPt_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MJB_RefObjPt_generator_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse_4graphs("r4_bis", mgMJB_RefObjPt_generator_plusFlat, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_Pt_herwig, gMJB_RefObjPt_mc_Pt_pythia, gMJB_RefObjPt_mc_Pt_flat, "HT", "Herwig", "Pythia", "Pt-flat", "images/MJB_RefObjPt_generator_plusFlat_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
 
 //************************************************************************************************************
 //
@@ -478,10 +521,10 @@ int main()
   }
 	
 	
-	drawComparisonResponse("r1b", mgMJB_RefObjPt_resize_JEC, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_HT_JECup, gMJB_RefObjPt_resize_mc_HT_JECdown, "nominal", "JECup", "JECdown", "images/MJB_RefObjPt_resize_JEC.pdf");
-	drawComparisonResponse("r2b", mgMJB_RefObjPt_resize_JER, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_HT_JERup, gMJB_RefObjPt_resize_mc_HT_JERdown, "nominal", "JERup", "JERdown", "images/MJB_RefObjPt_resize_JER.pdf");
-	drawComparisonResponse("r3b", mgMJB_RefObjPt_resize_PU, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_HT_PUup, gMJB_RefObjPt_resize_mc_HT_PUdown, "nominal", "PUup", "PUdown", "images/MJB_RefObjPt_resize_PU.pdf");
-	drawComparisonResponse("r4b", mgMJB_RefObjPt_resize_generator, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_Pt_herwig, gMJB_RefObjPt_resize_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MJB_RefObjPt_resize_generator.pdf");
+	drawComparisonResponse("r1b", mgMJB_RefObjPt_resize_JEC, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_HT_JECup, gMJB_RefObjPt_resize_mc_HT_JECdown, "nominal", "JECup", "JECdown", "images/MJB_RefObjPt_resize_JEC_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r2b", mgMJB_RefObjPt_resize_JER, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_HT_JERup, gMJB_RefObjPt_resize_mc_HT_JERdown, "nominal", "JERup", "JERdown", "images/MJB_RefObjPt_resize_JER_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r3b", mgMJB_RefObjPt_resize_PU, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_HT_PUup, gMJB_RefObjPt_resize_mc_HT_PUdown, "nominal", "PUup", "PUdown", "images/MJB_RefObjPt_resize_PU_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r4b", mgMJB_RefObjPt_resize_generator, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_Pt_herwig, gMJB_RefObjPt_resize_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MJB_RefObjPt_resize_generator_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
 
 
 //******************************************************************************************************************************************
@@ -502,7 +545,7 @@ int main()
 
     gMJB_RefObjPt_mc_HT_JECup->GetPoint(i,aRefObjPtBins_Mean[i],valueUp);
     gMJB_RefObjPt_mc_HT_JECdown->GetPoint(i,aRefObjPtBins_Mean[i],valueDown);
-    aMJBDeltaJEC[i] = fabs(valueUp - valueDown)/2.;
+    aMJBDeltaJEC[i] = (valueUp - valueDown)/2.;
 
     std::cout << "Bin " << i << "..." << std::endl;
     std::cout << "JEC: " << std::endl;
@@ -511,7 +554,7 @@ int main()
 
     gMJB_RefObjPt_mc_HT_JERup->GetPoint(i,aRefObjPtBins_Mean[i],valueUp);
     gMJB_RefObjPt_mc_HT_JERdown->GetPoint(i,aRefObjPtBins_Mean[i],valueDown);
-    aMJBDeltaJER[i] = fabs(valueUp - valueDown)/2.;
+    aMJBDeltaJER[i] = (valueUp - valueDown)/2.;
 
     std::cout << "JER: " << std::endl;
     std::cout << "valueUp: " << valueUp << std::endl;
@@ -519,7 +562,7 @@ int main()
 
     gMJB_RefObjPt_mc_HT_PUup->GetPoint(i,aRefObjPtBins_Mean[i],valueUp);
     gMJB_RefObjPt_mc_HT_PUdown->GetPoint(i,aRefObjPtBins_Mean[i],valueDown);
-    aMJBDeltaPU[i] = fabs(valueUp - valueDown)/2.;
+    aMJBDeltaPU[i] = (valueUp - valueDown)/2.;
 
     std::cout << "PU: " << std::endl;
     std::cout << "valueUp: " << valueUp << std::endl;
@@ -557,6 +600,7 @@ int main()
 	TGraphErrors* gMPF_RefObjPt_mc_HT_PUdown=(TGraphErrors*)f_mc_HT_PUdown->Get("MPF/PtBin/gMPF_RefObjPt");
 	TGraphErrors* gMPF_RefObjPt_mc_Pt_pythia=(TGraphErrors*)f_mc_Pt_pythia->Get("MPF/PtBin/gMPF_RefObjPt");
 	TGraphErrors* gMPF_RefObjPt_mc_Pt_herwig=(TGraphErrors*)f_mc_Pt_herwig->Get("MPF/PtBin/gMPF_RefObjPt");
+	TGraphErrors* gMPF_RefObjPt_mc_Pt_flat=(TGraphErrors*)f_mc_Pt_flat->Get("MPF/PtBin/gMPF_RefObjPt");
 	
 	TGraph_style (gMPF_RefObjPt_data);
 	TGraph_style (gMPF_RefObjPt_mc_HT);
@@ -568,6 +612,7 @@ int main()
 	TGraph_style (gMPF_RefObjPt_mc_HT_PUdown);
 	TGraph_style (gMPF_RefObjPt_mc_Pt_pythia);
 	TGraph_style (gMPF_RefObjPt_mc_Pt_herwig);
+	TGraph_style (gMPF_RefObjPt_mc_Pt_flat);
 
 	gMPF_RefObjPt_data->SetMarkerColor(1);
 	gMPF_RefObjPt_mc_HT->SetMarkerColor(2);
@@ -579,6 +624,7 @@ int main()
 	gMPF_RefObjPt_mc_HT_PUdown->SetMarkerColor(9);
 	gMPF_RefObjPt_mc_Pt_pythia->SetMarkerColor(42);
 	gMPF_RefObjPt_mc_Pt_herwig->SetMarkerColor(28);
+	gMPF_RefObjPt_mc_Pt_flat->SetMarkerColor(13);
 
 	gMPF_RefObjPt_data->SetLineColor(1);
 	gMPF_RefObjPt_mc_HT->SetLineColor(2);
@@ -590,6 +636,7 @@ int main()
 	gMPF_RefObjPt_mc_HT_PUdown->SetLineColor(9);
 	gMPF_RefObjPt_mc_Pt_pythia->SetLineColor(42);
 	gMPF_RefObjPt_mc_Pt_herwig->SetLineColor(28);
+	gMPF_RefObjPt_mc_Pt_flat->SetLineColor(13);
 	
 	TMultiGraph *mgMPF_RefObjPt_JEC = new TMultiGraph();
 	mgMPF_RefObjPt_JEC->Add(gMPF_RefObjPt_mc_HT,"pe");
@@ -610,6 +657,13 @@ int main()
 	mgMPF_RefObjPt_generator->Add(gMPF_RefObjPt_mc_HT,"pe");
 	mgMPF_RefObjPt_generator->Add(gMPF_RefObjPt_mc_Pt_pythia,"pe");
 	mgMPF_RefObjPt_generator->Add(gMPF_RefObjPt_mc_Pt_herwig,"pe");
+
+	TMultiGraph *mgMPF_RefObjPt_generator_plusFlat = new TMultiGraph();
+	mgMPF_RefObjPt_generator_plusFlat->Add(gMPF_RefObjPt_mc_HT,"pe");
+	mgMPF_RefObjPt_generator_plusFlat->Add(gMPF_RefObjPt_mc_Pt_pythia,"pe");
+	mgMPF_RefObjPt_generator_plusFlat->Add(gMPF_RefObjPt_mc_Pt_herwig,"pe");
+	mgMPF_RefObjPt_generator_plusFlat->Add(gMPF_RefObjPt_mc_Pt_flat,"pe");
+
 	
   if(useRecoilPtBin) {
 	  mgMPF_RefObjPt_JEC->SetTitle("MPF as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];MPF");
@@ -624,10 +678,11 @@ int main()
 	  mgMPF_RefObjPt_PU->SetTitle("MPF as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];MPF");
   }
 	
-	drawComparisonResponse("r5", mgMPF_RefObjPt_JEC, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_HT_JECup, gMPF_RefObjPt_mc_HT_JECdown, "nominal", "JECup", "JECdown", "images/MPF_RefObjPt_JEC.pdf");
-	drawComparisonResponse("r6", mgMPF_RefObjPt_JER, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_HT_JERup, gMPF_RefObjPt_mc_HT_JERdown, "nominal", "JERup", "JERdown", "images/MPF_RefObjPt_JER.pdf");
-	drawComparisonResponse("r7", mgMPF_RefObjPt_PU, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_HT_PUup, gMPF_RefObjPt_mc_HT_PUdown, "nominal", "PUup", "PUdown", "images/MPF_RefObjPt_PU.pdf");
-	drawComparisonResponse("r8", mgMPF_RefObjPt_generator, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_Pt_herwig, gMPF_RefObjPt_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MPF_RefObjPt_generator.pdf");
+	drawComparisonResponse("r5", mgMPF_RefObjPt_JEC, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_HT_JECup, gMPF_RefObjPt_mc_HT_JECdown, "nominal", "JECup", "JECdown", "images/MPF_RefObjPt_JEC_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r6", mgMPF_RefObjPt_JER, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_HT_JERup, gMPF_RefObjPt_mc_HT_JERdown, "nominal", "JERup", "JERdown", "images/MPF_RefObjPt_JER_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r7", mgMPF_RefObjPt_PU, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_HT_PUup, gMPF_RefObjPt_mc_HT_PUdown, "nominal", "PUup", "PUdown", "images/MPF_RefObjPt_PU_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r8", mgMPF_RefObjPt_generator, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_Pt_herwig, gMPF_RefObjPt_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MPF_RefObjPt_generator_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse_4graphs("r8_bis", mgMPF_RefObjPt_generator, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_Pt_herwig, gMPF_RefObjPt_mc_Pt_pythia, gMPF_RefObjPt_mc_Pt_flat, "HT", "Herwig", "Pythia", "Pt-flat", "images/MPF_RefObjPt_generator_plusFlat_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
 
 
 //************************************************************************************************************
@@ -763,10 +818,10 @@ int main()
 	  mgMPF_RefObjPt_resize_PU->SetTitle("MPF as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];MPF");
   }
 	
-	drawComparisonResponse("r5b", mgMPF_RefObjPt_resize_JEC, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_HT_JECup, gMPF_RefObjPt_resize_mc_HT_JECdown, "nominal", "JECup", "JECdown", "images/MPF_RefObjPt_resize_JEC.pdf");
-	drawComparisonResponse("r6b", mgMPF_RefObjPt_resize_JER, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_HT_JERup, gMPF_RefObjPt_resize_mc_HT_JERdown, "nominal", "JERup", "JERdown", "images/MPF_RefObjPt_resize_JER.pdf");
-	drawComparisonResponse("r7b", mgMPF_RefObjPt_resize_PU, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_HT_PUup, gMPF_RefObjPt_resize_mc_HT_PUdown, "nominal", "PUup", "PUdown", "images/MPF_RefObjPt_resize_PU.pdf");
-	drawComparisonResponse("r8b", mgMPF_RefObjPt_resize_generator, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_Pt_herwig, gMPF_RefObjPt_resize_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MPF_RefObjPt_resize_generator.pdf");
+	drawComparisonResponse("r5b", mgMPF_RefObjPt_resize_JEC, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_HT_JECup, gMPF_RefObjPt_resize_mc_HT_JECdown, "nominal", "JECup", "JECdown", "images/MPF_RefObjPt_resize_JEC_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r6b", mgMPF_RefObjPt_resize_JER, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_HT_JERup, gMPF_RefObjPt_resize_mc_HT_JERdown, "nominal", "JERup", "JERdown", "images/MPF_RefObjPt_resize_JER_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r7b", mgMPF_RefObjPt_resize_PU, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_HT_PUup, gMPF_RefObjPt_resize_mc_HT_PUdown, "nominal", "PUup", "PUdown", "images/MPF_RefObjPt_resize_PU_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r8b", mgMPF_RefObjPt_resize_generator, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_Pt_herwig, gMPF_RefObjPt_resize_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MPF_RefObjPt_resize_generator_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
 
 
 //******************************************************************************************************************************************
@@ -782,7 +837,7 @@ int main()
 
     gMPF_RefObjPt_mc_HT_JECup->GetPoint(i,aRefObjPtBins_Mean[i],valueUp);
     gMPF_RefObjPt_mc_HT_JECdown->GetPoint(i,aRefObjPtBins_Mean[i],valueDown);
-    aMPFDeltaJEC[i] = fabs(valueUp - valueDown)/2.;
+    aMPFDeltaJEC[i] = (valueUp - valueDown)/2.;
 
     std::cout << "Bin " << i << "..." << std::endl;
     std::cout << "JEC: " << std::endl;
@@ -791,7 +846,7 @@ int main()
 
     gMPF_RefObjPt_mc_HT_JERup->GetPoint(i,aRefObjPtBins_Mean[i],valueUp);
     gMPF_RefObjPt_mc_HT_JERdown->GetPoint(i,aRefObjPtBins_Mean[i],valueDown);
-    aMPFDeltaJER[i] = fabs(valueUp - valueDown)/2.;
+    aMPFDeltaJER[i] = (valueUp - valueDown)/2.;
 
     std::cout << "JER: " << std::endl;
     std::cout << "valueUp: " << valueUp << std::endl;
@@ -799,7 +854,7 @@ int main()
 
     gMPF_RefObjPt_mc_HT_PUup->GetPoint(i,aRefObjPtBins_Mean[i],valueUp);
     gMPF_RefObjPt_mc_HT_PUdown->GetPoint(i,aRefObjPtBins_Mean[i],valueDown);
-    aMPFDeltaPU[i] = fabs(valueUp - valueDown)/2.;
+    aMPFDeltaPU[i] = (valueUp - valueDown)/2.;
 
     std::cout << "PU: " << std::endl;
     std::cout << "valueUp: " << valueUp << std::endl;
@@ -827,7 +882,7 @@ int main()
 //*********************************************************************************************************
 
 	//create the output file and write into it
-	TFile *out = new TFile("output_rootfile/compareMC.root", "recreate");
+  TFile *out = new TFile("output_rootfile/compareMC_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.root", "recreate");
 	
 	out->cd();	
 
