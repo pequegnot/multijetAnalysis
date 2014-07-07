@@ -34,7 +34,8 @@ inputs = [
     ]
 
 def launch(input, output, HLTPrescaleFactor):
-    args = ["./multijet_weight_common", "--input-list", input, "-o", output, "--data", "--recoilPtBin", "--recoilPtHLTBin"]
+    #args = ["./multijet_weight_common", "--input-list", input, "-o", output, "--data", "--recoilPtBin", "--recoilPtHLTBin"]
+    args = ["./multijet_weight_common", "--input-list", input, "-o", output, "--data", "--recoilPtBin", "--firstJetPtHLTBin"]
     for HLTPath, weight in HLTPrescaleFactor.items():
       opt = "--" + HLTPath
       args.append(opt)

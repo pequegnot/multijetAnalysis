@@ -7,14 +7,14 @@ d = datetime.datetime.now().strftime("%d%b%y")
 inputs = [
 
     # Systematics HT
-    ['MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_%s.root', '../weightPlots/output_rootfile/29Apr14/MC/Systematics/MULTIJET_MC_QCD-HT_merged_woPU_pt30_eta50_puJetIdT_%s.root', "_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_QCD-HT-%s", ".pdf"],
+    ['MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_%s.root', '../weightPlots/output_rootfile/01Jul14/MC/Systematics/MULTIJET_MC_QCD_HT-1000ToInf_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_%s.root', "_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_QCD-HT-%s", ".pdf"],
 
         ]
 
 systs = ["JECup", "JECdown", "JERup", "JERdown", "PUup", "PUdown"]
 
 def launch(input, output, plotName, extension):
-    args = ["./multijet_analysis_common", "-i", input, "-o", output, "--mc", "--rmPU", "--plotName", plotName, "--extension", extension]
+    args = ["./multijet_analysis_common", "-i", input, "-o", output, "--mc", "--rmPU", "--plotName", plotName, "--extension", extension, "--recoilPtBin", "--recoilPtHLTBin"]
     return " ".join(args)
 
 tmpfile = tempfile.NamedTemporaryFile(dir = '/scratch/', delete = False)

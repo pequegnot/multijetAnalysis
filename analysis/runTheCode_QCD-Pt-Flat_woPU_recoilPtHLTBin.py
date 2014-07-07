@@ -5,9 +5,7 @@ import os, subprocess, datetime, tempfile
 d = datetime.datetime.now().strftime("%d%b%y")
 
 inputs = [
-    ['MULTIJET_MC_QCD-Pt-pythia-120To1400_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix.root', '../weightPlots/output_rootfile/01Jul14/MC/MULTIJET_MC_QCD-Pt-pythia_merged_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix.root', "isMC", "_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_QCD-Pt-pythia", ".pdf"],
-    #['MULTIJET_Run2012ABCD-22Jan2013_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_afterPrescaleReweighting.root', '../weightPlots/output_rootfile/29Apr14/data/MULTIJET_Data_merged_2012_woPU_pt10_eta50_puJetIdT_afterPrecaleReweighting.root', "isData", "_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_afterPrescaleReweighting", ".pdf"],
-
+    ['MULTIJET_MC_QCD-Flat-15to3000_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix.root', '../weightPlots/output_rootfile/30Jun14/MC/MULTIJET_MC_QCD-Flat_merged_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix.root', "isMC", "_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_QCD-Pt-Flat", ".pdf"],
         ]
 
 def launch(input, output, type, plotName, extension):
