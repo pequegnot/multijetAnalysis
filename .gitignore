@@ -8,10 +8,13 @@
 *.swo
 *.swn
 *.orig
+*.py~
 common/npvBinning_cpp.so
 common/ptBinning_cpp.so
 weightPlots/multijet_weight_common
 weightPlots/list
+../compareMC/compareMC
+0001-use-raw-jet-pt-instead-of-corrected-jet-pt-for-the-H.patch
 weightPlots/listTriggers
 dataMcComparison/dataMcComparison
 analysis/multijet_analysis_common
