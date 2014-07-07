@@ -12,6 +12,7 @@ BOOST_PYTHON_MODULE(HLTPtBinning)
 
     class_<HLTPtBinning, bases<ptBinning> >("HLTPtBinning")
         .def("fillHLTPtBins", &HLTPtBinning::fillHLTPtBins)
+        .def("fillHLTName", &HLTPtBinning::fillHLTName)
         .def("getHLTName", &HLTPtBinning::getHLTName)
     ;
 }

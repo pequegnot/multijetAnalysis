@@ -249,6 +249,7 @@ int main (int argc, char** argv)
 
   //MJB per pt bin
   vector<TH1F*> vMJB_RefObjPtBin = buildPtVectorH1(myPtBinning,"MJB",nbinsx,xlow,xup) ;
+  vector<TH1F*> vMJB_gen_RefObjPtBin = buildPtVectorH1(myPtBinning,"MJB_gen",nbinsx,xlow,xup) ;
 
   //ptLeadingJet per pt bin
   vector<TH1F*> vLeadingJetPt_RefObjPtBin;
@@ -270,6 +271,8 @@ int main (int argc, char** argv)
 	
   //Rmpf per pt bin
   vector<TH1F*> vMPF_RefObjPtBin = buildPtVectorH1(myPtBinning,"MPF",nbinsx,xlow,xup) ;
+  vector<TH1F*> vMPF_gen_RefObjPtBin = buildPtVectorH1(myPtBinning,"MPF_gen",nbinsx,xlow,xup) ;
+  vector<TH1F*> vMPF_corr_RefObjPtBin = buildPtVectorH1(myPtBinning,"MPF_corr",nbinsx,xlow,xup) ;
 	
   //NjetsRecoil per recoilpt
   vector<TH1F*> vNjetsRecoil_RecoilPt = buildPtVectorH1(myPtBinning,"NjetsRecoil",35,0,35) ;
@@ -294,14 +297,21 @@ int main (int argc, char** argv)
 
 
   //ptLeadingJet per HLT pt bin
-  vector<TH1F*> vLeadingJetPt_HLTRefObjPtBin = buildBinnedDistriVectorH1(myHLTPtBinning,"LeadingJetPt", 5);;
+  //vector<TH1F*> vLeadingJetPt_HLTRefObjPtBin = buildBinnedDistriVectorH1(myHLTPtBinning,"LeadingJetPt", 5);;
+  vector<TH1F*> vLeadingJetPt_HLTRefObjPtBin = buildPtVectorH1(myHLTPtBinning,"LeadingJetPt_HLTPtBin",190, 100, 2000);
+  
+  // Nvtx per HLT recoil bins
+  vector<TH1F*> vNvtx_HLTRefObjPtBin = buildPtVectorH1(myHLTPtBinning,"Nvtx_HLTPtBin",70, 0, 70);
 	
   //RecoilPt per HLT pt bin
   vector<TH1F*> vRecoilPt_HLTRefObjPtBin = buildBinnedDistriVectorH1(myHLTPtBinning,"RecoilPt", 5);;
 	
   for(int j=0; j<myPtBinning.getSize(); j++) {
-    vMJB_RefObjPtBin[j]->Sumw2();
+    vMJB_RefObjPtBin[j]->Sumw2(); 
+    vMJB_gen_RefObjPtBin[j]->Sumw2();
     vMPF_RefObjPtBin[j]->Sumw2();
+    vMPF_gen_RefObjPtBin[j]->Sumw2();
+    vMPF_corr_RefObjPtBin[j]->Sumw2();
     vLeadingJetPt_RefObjPtBin[j]->Sumw2();
     vRecoilPt_RefObjPtBin[j]->Sumw2();
 
@@ -647,9 +657,18 @@ int main (int argc, char** argv)
 	
 	TClonesArray* recoil_4vector = new TClonesArray("TLorentzVector");
 	t_multijet->SetBranchAddress("recoil_4vector",&recoil_4vector);
+
+	TClonesArray* genrecoil_4vector = NULL;
+	t_multijet->SetBranchAddress("genrecoil_4vector",&genrecoil_4vector);
 	
 	TClonesArray* met_4vector = new TClonesArray("TLorentzVector");
 	t_multijet->SetBranchAddress("met_4vector",&met_4vector);
+
+	TClonesArray* genmet_4vector = NULL;
+	t_multijet->SetBranchAddress("genmet_4vector",&genmet_4vector);
+
+	TClonesArray* met_corr_4vector = new TClonesArray("TLorentzVector");
+	//t_multijet->SetBranchAddress("met_puSubstract_4vector",&met_corr_4vector);
 	
 	TClonesArray* leadingjet_4vector = new TClonesArray("TLorentzVector");
 	t_multijet->SetBranchAddress("leadingjet_4vector",&leadingjet_4vector);
@@ -762,20 +781,37 @@ int main (int argc, char** argv)
   int binRecoilEta;//bin en recoileta		
   int binLeadingJetEta;//bin en leading jet eta		
 	int binGenPt;//bin en firstjetgenpt
+	int binGenRecoilPt;//bin en firstjetgenpt
 	int binJetPt;//bin en pt des jets		
   float recoilpt;
   float recoilpx;
   float recoilpy;
   float recoileta;
+  float recoilpt_gen;
+  float recoilpx_gen;
+  float recoilpy_gen;
+  float recoileta_gen;
   float metpx;
   float metpy;
   float metpt;
+  float metphi;
+  float metpx_corr;
+  float metpy_corr;
+  float metpt_corr;
+  float metphi_corr;
+  float metpx_gen;
+  float metpy_gen;
+  float metpt_gen;
+  float metphi_gen;
   float secondjetpt;	
   float leadingjetgenpt;
   float leadingjetrawpt;
   float leadingjetpt;
   float leadingjeteta;
+  float MJB_gen = -1.;
   float Rmpf = -1.;
+  float Rmpf_gen = -1.;
+  float Rmpf_corr = -1.;
   float Rtrue = -1.;
   float Rrecoil = -1.;
   float recoilrecopt = -1;
@@ -824,6 +860,8 @@ int main (int argc, char** argv)
 		t_event->GetEntry(ievt);
 		t_jet_PF->GetEntry(ievt);
 		t_HLT->GetEntry(ievt);
+
+        met_corr_4vector = met_4vector;
     
 		if(ievt%10000 == 0) {
 			cout<<"Event # "<<ievt<<", file ended at "<<(ievt*100.)/(nEvents*1.)<<" %"<<endl;
@@ -905,16 +943,6 @@ int main (int argc, char** argv)
           //std::cout << "binHLTLeadingJetPt: " << binHLTLeadingJetPt << std::endl;
           //std::cout << "binLeadingJetPt: " << binLeadingJetPt << std::endl;
 
-          TLorentzVector* leadingjetgen = NULL;
-          if(isMC) {
-            leadingjetgen = (TLorentzVector*) leadingjetgen_4vector->At(0);
-            leadingjetgenpt = leadingjetgen->Pt();
-          
-            binGenPt = myPtBinning.getPtBin(leadingjetgenpt);
-            
-            Rtrue = leadingjetpt/leadingjetgenpt;
-          }
-          
           recoilpx = recoil->Px();
           recoilpy = recoil->Py();
           recoileta = recoil->Eta();
@@ -952,13 +980,54 @@ int main (int argc, char** argv)
           metpy = met->Py();
           metpt = met->Pt();
           metphi = met->Phi();
+
+          TLorentzVector* met_corr = (TLorentzVector*) met_corr_4vector->At(0);
+          metpx_corr = met_corr->Px();
+          metpy_corr = met_corr->Py();
+          metpt_corr = met_corr->Pt();
+          metphi_corr = met_corr->Phi();
+
+          TLorentzVector* leadingjetgen = NULL;
+          TLorentzVector* met_gen = NULL;
+          TLorentzVector* recoil_gen = NULL; 
+          if(isMC) {
+            leadingjetgen = (TLorentzVector*) leadingjetgen_4vector->At(0);
+            leadingjetgenpt = leadingjetgen->Pt();
+          
+            binGenPt = myPtBinning.getPtBin(leadingjetgenpt);
+            
+            Rtrue = leadingjetpt/leadingjetgenpt;
+
+            if (genmet_4vector && genmet_4vector->GetEntriesFast() != 0) {
+                met_gen = (TLorentzVector*) genmet_4vector->At(0);
+                metpx_gen = met_gen->Px();
+                metpy_gen = met_gen->Py();
+                metpt_gen = met_gen->Pt();
+                metphi_gen = met_gen->Phi();
+            }
+
+            if (genrecoil_4vector && genrecoil_4vector->GetEntriesFast() != 0) {
+                 recoil_gen = (TLorentzVector*) genrecoil_4vector->At(0);
+
+                recoilpt_gen = recoil_gen->Pt();
+                recoilpx_gen = recoil_gen->Px();
+                recoilpy_gen = recoil_gen->Py();
+                recoileta_gen = recoil_gen->Eta();           
+                Rmpf_gen = 1 + (recoilpx_gen*metpx_gen + recoilpy_gen*metpy_gen)/(pow(recoilpt_gen,2));		
+                MJB_gen = leadingjetgenpt/recoilpt_gen;
+            }
+            binGenRecoilPt = myPtBinning.getPtBin(recoilpt_gen);
+          }
           
           Rmpf = 1 + (recoilpx*metpx + recoilpy*metpy)/(pow(recoilpt,2));		
+          Rmpf_corr = 1 + (recoilpx*metpx_corr + recoilpy*metpy_corr)/(pow(recoilpt,2));		
           
           recoilrecopt = 0.;
           recoilgenpt = 0.;
         
           nRecoilJets = jets_recoil_4vector->GetSize();
+
+          h2LeadingJet_Recoil_pt_beforeSel->Fill(leadingjetpt, recoilpt);
 
 
 //*****************************************************************************************************
@@ -1161,7 +1230,6 @@ int main (int argc, char** argv)
             }
           
             if(binRefObjPt < 0) continue;
-            if(isMC && binGenPt < 0) continue;
       
             //angular selection
             if(alpha < 0.3 && beta > 1.0) {
@@ -1271,6 +1339,7 @@ int main (int argc, char** argv)
                       vRecoilPt_RefObjPtBin[binRefObjPt]->Fill(recoilpt, weight);
                       vLeadingJetPt_RefObjPtBin[binRefObjPt]->Fill(leadingjetpt, weight);
                       vMPF_RefObjPtBin[binRefObjPt]->Fill(Rmpf, weight);
+                      vMPF_corr_RefObjPtBin[binRefObjPt]->Fill(Rmpf_corr, weight);
                       vMJB_RefObjEtaBin[binRefObjEta]->Fill(MJB, weight);
                     
                       for(int i=0; i<(jets_recoil_4vector->GetEntriesFast()+1); i++) {
@@ -1342,6 +1411,9 @@ int main (int argc, char** argv)
                       hFracJetsPt->Fill(puJetsPt/jetsPt,weight);
                     
                       if(isMC) {
+                        if(isMC && (binGenPt < 0 || binGenRecoilPt < 0)) continue;
+                        vMPF_gen_RefObjPtBin[binGenRecoilPt]->Fill(Rmpf_gen, weight);
+                        vMJB_gen_RefObjPtBin[binGenRecoilPt]->Fill(MJB_gen, weight);
                         if(*leadingjetgen != TLorentzVector(0.,0.,0.,0.)) {//check if a gen jet matches the reco jet
                           vPtRatio_GenPt[binGenPt]->Fill(recoilpt/leadingjetgenpt, weight);							
                           vRtrue_leadingJet_RefObjPtBin[binRefObjPt]->Fill(Rtrue, weight);
@@ -1435,6 +1507,7 @@ int main (int argc, char** argv)
 	ptbinmpfDir->cd();
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vMPF_RefObjPtBin[j]->Write();
+		vMPF_corr_RefObjPtBin[j]->Write();
 	}
 
   TDirectory *leadingJetDir = out->mkdir("leadingJet","leadingJet");
@@ -1448,14 +1521,31 @@ int main (int argc, char** argv)
     leadingjet_hltptbin_Dir->cd();
     for (int i = 0; i < numberHLTBins; i++) {
       vLeadingJetPt_HLTRefObjPtBin[i]->Write();
+      vLeadingJetPt_perHLTTrigger[i]->Write();
     }
 
-	
-	if(isMC) {
-		TDirectory *trueDir = out->mkdir("Rtrue","Rtrue");
-		trueDir->cd();
-		for(int j=0; j<myPtBinning.getSize(); j++) {
-			vRtrue_leadingJet_RefObjPtBin[j]->Write();
+
+    if(isMC) {
+        TDirectory *mjb_genDir = out->mkdir("MJB_gen","MJB_gen");
+        mjb_genDir->cd();
+        TDirectory *ptbin_genDir = mjb_genDir->mkdir("PtBin","PtBin");
+        ptbin_genDir->cd();
+        for(int j=0; j<myPtBinning.getSize(); j++) {
+            vMJB_gen_RefObjPtBin[j]->Write();
+        }
+
+        TDirectory *mpf_genDir = out->mkdir("MPF_gen","MPF_gen");
+        mpf_genDir->cd();
+        TDirectory *ptbinmpf_genDir = mpf_genDir->mkdir("PtBin","PtBin");
+        ptbinmpf_genDir->cd();
+        for(int j=0; j<myPtBinning.getSize(); j++) {
+            vMPF_gen_RefObjPtBin[j]->Write();
+        }
+
+        TDirectory *trueDir = out->mkdir("Rtrue","Rtrue");
+        trueDir->cd();
+        for(int j=0; j<myPtBinning.getSize(); j++) {
+            vRtrue_leadingJet_RefObjPtBin[j]->Write();
 			vRrecoil_RefObjPtBin[j]->Write();
 		}
 		for(int j=0; j<myLowPtBinning.getSize(); j++) {
@@ -1595,6 +1685,7 @@ int main (int argc, char** argv)
 
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vMPF_RefObjPtBin[j]->Delete();
+		vMPF_corr_RefObjPtBin[j]->Delete();
 	}	
 	
 	if(isMC) {

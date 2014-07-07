@@ -194,6 +194,16 @@ int main (int argc, char** argv)
 	vector<TH1F*> vMPF_RefObjPtBin;
 	vMPF_RefObjPtBin.resize(numberPtBins);
 
+	vector<TH1F*> vMJB_gen_RefObjPtBin;
+	vMJB_gen_RefObjPtBin.resize(numberPtBins);
+
+	//MPF per recoilpt
+	vector<TH1F*> vMPF_gen_RefObjPtBin;
+	vMPF_gen_RefObjPtBin.resize(numberPtBins);
+
+	vector<TH1F*> vMPF_corr_RefObjPtBin;
+	vMPF_corr_RefObjPtBin.resize(numberPtBins);
+
 	//leadingJetPt per recoilpt
 	vector<TH1F*> vLeadingJetPt_RefObjPtBin;
 	vLeadingJetPt_RefObjPtBin.resize(numberPtBins);
@@ -239,15 +249,21 @@ int main (int argc, char** argv)
 	
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		ptBinName = myPtBinning.getName(j);
-		vectorName = "MJB/PtBin/MJB_" + ptBinName;
-		vMJB_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
-		vectorName = "MPF/PtBin/MPF_" + ptBinName;
-		vMPF_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
-        vectorName = "leadingJet/PtBin/LeadingJetPt_" + ptBinName;
-		vLeadingJetPt_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
-        vectorName = "recoil/PtBin/RecoilPt_" + ptBinName;
-        //vectorName = "recoil/recoilPtBin/RecoilPt_" + ptBinName;
-		vRecoilPt_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
+    vectorName = "MJB/PtBin/MJB_" + ptBinName;
+    vMJB_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
+    vectorName = "MPF/PtBin/MPF_" + ptBinName;
+    vMPF_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
+    vectorName = "MJB_gen/PtBin/MJB_gen_" + ptBinName;
+    vMJB_gen_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
+    vectorName = "MPF_gen/PtBin/MPF_gen_" + ptBinName;
+    vMPF_gen_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
+    vectorName = "MPF/PtBin/MPF_corr_" + ptBinName;
+    vMPF_corr_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
+    vectorName = "leadingJet/PtBin/LeadingJetPt_" + ptBinName;
+    vLeadingJetPt_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
+    vectorName = "recoil/PtBin/RecoilPt_" + ptBinName;
+    //vectorName = "recoil/recoilPtBin/RecoilPt_" + ptBinName;
+    vRecoilPt_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
 	}
 
   for(int j=0; j<myHLTPtBinning.getSize(); j++) {
@@ -879,6 +895,137 @@ int main (int argc, char** argv)
 	saveName = "images/MPF/cMPF_RefObjPt" + typeName + extension;
 	cMPF_RefObjPt->SaveAs(saveName.c_str());
 
+
+  //************************************************************************************************************
+//
+//                                      MPF_corr as a function of ref obj pt
+//
+//************************************************************************************************************	
+
+	float aMPF_corr_RefObjPt_Mean[numberPtBins];
+	float aMPF_corr_RefObjPt_MeanError[numberPtBins];
+	
+	for(int i=0; i<numberPtBins; i++) {
+		aMPF_corr_RefObjPt_Mean[i] = vMPF_corr_RefObjPtBin[i]->GetMean();
+		aMPF_corr_RefObjPt_MeanError[i] = vMPF_corr_RefObjPtBin[i]->GetMeanError();
+	}
+	
+	TCanvas *cMPF_corr_RefObjPt = new TCanvas("cMPF_corr_RefObjPt","cMPF_corr_RefObjPt");
+	cMPF_corr_RefObjPt->cd();
+	
+	TGraphErrors *gMPF_corr_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aMPF_corr_RefObjPt_Mean, aRefObjPtBins_MeanError, aMPF_corr_RefObjPt_MeanError);
+	gMPF_corr_RefObjPt->SetName("MPF corrected with PU");
+    if(useRecoilPtBin) {
+	  gMPF_corr_RefObjPt->SetTitle("MPF corrected with PU as a function of p_{T}^{Recoil}");
+	  gMPF_corr_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+    }
+    else {
+	  gMPF_corr_RefObjPt->SetTitle("MPF corrected with PU as a function of p_{T}^{Leading Jet}");
+	  gMPF_corr_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Leading Jet} (GeV)");    
+    }
+	gMPF_corr_RefObjPt->GetYaxis()->SetTitle("MPF corrected with PU");
+	gMPF_corr_RefObjPt->SetMarkerStyle(20);
+	gMPF_corr_RefObjPt->SetMarkerColor(plotColor);
+	gMPF_corr_RefObjPt->SetLineColor(plotColor);
+	//gMPF_corr_RefObjPt->SetMarkerSize(0.5);	
+	cMPF_corr_RefObjPt->cd();
+	//gMPF_corr_RefObjPt->SetLogx(1);
+	//gMPF_corr_RefObjPt->GetYaxis()->SetRangeUser(0.7,1.1);
+	gMPF_corr_RefObjPt->Draw("ape");
+	TGraph_style (gMPF_corr_RefObjPt);
+	saveName = "images/MPF/cMPF_corr_RefObjPt" + typeName + extension;
+	cMPF_corr_RefObjPt->SaveAs(saveName.c_str());
+
+  TGraphErrors *gMJB_gen_RefObjPt = NULL;
+  TGraphErrors *gMPF_gen_RefObjPt = NULL;
+
+  if (isMC){
+
+
+//************************************************************************************************************
+//
+//                                      MJB_gen as a function of reference object pt
+//
+//************************************************************************************************************	
+
+	float aMJB_gen_RefObjPt_Mean[numberPtBins];
+	float aMJB_gen_RefObjPt_MeanError[numberPtBins];
+	
+	for(int i=0; i<numberPtBins; i++) {
+		aMJB_gen_RefObjPt_Mean[i] = vMJB_gen_RefObjPtBin[i]->GetMean();
+		aMJB_gen_RefObjPt_MeanError[i] = vMJB_gen_RefObjPtBin[i]->GetMeanError();
+	}
+	
+	TCanvas *cMJB_gen_RefObjPt = new TCanvas("cMJB_gen_RefObjPt","cMJB_gen_RefObjPt");
+	cMJB_gen_RefObjPt->cd();
+	
+	gMJB_gen_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aMJB_gen_RefObjPt_Mean, aRefObjPtBins_MeanError, aMJB_gen_RefObjPt_MeanError);
+	gMJB_gen_RefObjPt->SetName("MJB_gen");
+    if(useRecoilPtBin) {
+	  gMJB_gen_RefObjPt->SetTitle("MJB_gen as a function of p_{T}^{Recoil}");
+	  gMJB_gen_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+    }
+    else {
+	  gMJB_gen_RefObjPt->SetTitle("MJB_gen as a function of p_{T}^{Leading Jet}");
+	  gMJB_gen_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Leading Jet} (GeV)");    
+    }
+	gMJB_gen_RefObjPt->GetYaxis()->SetTitle("MJB_gen");
+	gMJB_gen_RefObjPt->SetMarkerStyle(20);
+	gMJB_gen_RefObjPt->SetMarkerColor(plotColor);
+	gMJB_gen_RefObjPt->SetLineColor(plotColor);
+	//gMJB_gen_RefObjPt->SetMarkerSize(0.5);	
+	cMJB_gen_RefObjPt->cd();
+	//gMJB_gen_RefObjPt->SetLogx(1);
+	//gMJB_gen_RefObjPt->GetYaxis()->SetRangeUser(0.7,1.1);
+	gMJB_gen_RefObjPt->Draw("ape");
+	TGraph_style (gMJB_gen_RefObjPt);
+	saveName = "images/MJB_gen/cMJB_gen_RefObjPt" + typeName + extension;
+	cMJB_gen_RefObjPt->SaveAs(saveName.c_str());
+	
+
+//************************************************************************************************************
+//
+//                                      MPF_gen as a function of ref obj pt
+//
+//************************************************************************************************************	
+
+	float aMPF_gen_RefObjPt_Mean[numberPtBins];
+	float aMPF_gen_RefObjPt_MeanError[numberPtBins];
+	
+	for(int i=0; i<numberPtBins; i++) {
+		aMPF_gen_RefObjPt_Mean[i] = vMPF_gen_RefObjPtBin[i]->GetMean();
+		aMPF_gen_RefObjPt_MeanError[i] = vMPF_gen_RefObjPtBin[i]->GetMeanError();
+	}
+	
+	TCanvas *cMPF_gen_RefObjPt = new TCanvas("cMPF_gen_RefObjPt","cMPF_gen_RefObjPt");
+	cMPF_gen_RefObjPt->cd();
+	
+	gMPF_gen_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aMPF_gen_RefObjPt_Mean, aRefObjPtBins_MeanError, aMPF_gen_RefObjPt_MeanError);
+	gMPF_gen_RefObjPt->SetName("MPF_gen");
+    if(useRecoilPtBin) {
+	  gMPF_gen_RefObjPt->SetTitle("MPF_gen as a function of p_{T}^{Recoil}");
+	  gMPF_gen_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+    }
+    else {
+	  gMPF_gen_RefObjPt->SetTitle("MPF_gen as a function of p_{T}^{Leading Jet}");
+	  gMPF_gen_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Leading Jet} (GeV)");    
+    }
+	gMPF_gen_RefObjPt->GetYaxis()->SetTitle("MPF_gen");
+	gMPF_gen_RefObjPt->SetMarkerStyle(20);
+	gMPF_gen_RefObjPt->SetMarkerColor(plotColor);
+	gMPF_gen_RefObjPt->SetLineColor(plotColor);
+	//gMPF_gen_RefObjPt->SetMarkerSize(0.5);	
+	cMPF_gen_RefObjPt->cd();
+	//gMPF_gen_RefObjPt->SetLogx(1);
+	//gMPF_gen_RefObjPt->GetYaxis()->SetRangeUser(0.7,1.1);
+	gMPF_gen_RefObjPt->Draw("ape");
+	TGraph_style (gMPF_gen_RefObjPt);
+	saveName = "images/MPF_gen/cMPF_gen_RefObjPt" + typeName + extension;
+	cMPF_gen_RefObjPt->SaveAs(saveName.c_str());
+
+
+  } // end if isMC
+
 //************************************************************************************************************
 //
 //                                      MJB as a function of ref obj eta
@@ -1394,8 +1541,10 @@ int main (int argc, char** argv)
 	TDirectory *ptbinmpfDir = mpfDir->mkdir("PtBin","PtBin");
 	ptbinmpfDir->cd();
 	gMPF_RefObjPt->Write("gMPF_RefObjPt");
+	gMPF_corr_RefObjPt->Write("gMPF_corr_RefObjPt");
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vMPF_RefObjPtBin[j]->Write();
+		vMPF_corr_RefObjPtBin[j]->Write();
 	}
 
   TDirectory *leadingJetDir = out->mkdir("leadingJet","leadingJet");
@@ -1412,6 +1561,25 @@ int main (int argc, char** argv)
   }
 
 	if(isMC) {
+        TDirectory *mjb_genDir = out->mkdir("MJB_gen","MJB_gen");
+        mjb_genDir->cd();
+        TDirectory *ptbin_genDir = mjb_genDir->mkdir("PtBin","PtBin");
+        ptbin_genDir->cd();
+        gMJB_gen_RefObjPt->Write("gMJB_gen_RefObjPt");
+        for(int j=0; j<myPtBinning.getSize(); j++) {
+            vMJB_gen_RefObjPtBin[j]->Write();
+        }
+
+        TDirectory *mpf_genDir = out->mkdir("MPF_gen","MPF_gen");
+        mpf_genDir->cd();
+        TDirectory *ptbinmpf_genDir = mpf_genDir->mkdir("PtBin","PtBin");
+        ptbinmpf_genDir->cd();
+        gMPF_gen_RefObjPt->Write("gMPF_gen_RefObjPt");
+        for(int j=0; j<myPtBinning.getSize(); j++) {
+            vMPF_gen_RefObjPtBin[j]->Write();
+        }
+
+
 		TDirectory *trueDir = out->mkdir("Rtrue","Rtrue");
 		trueDir->cd();
 		for(int j=0; j<myPtBinning.getSize(); j++) {
@@ -1527,6 +1695,7 @@ int main (int argc, char** argv)
 
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vMPF_RefObjPtBin[j]->Delete();
+		vMPF_corr_RefObjPtBin[j]->Delete();
 	}
 	
 	for(int j=0; j<myPtBinning.getSize(); j++) {

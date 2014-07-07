@@ -18,13 +18,18 @@ class HLTPtBinning : public ptBinning
     HLTPtBinning();
     ~HLTPtBinning();
     std::string getHLTName(int bin);
-    void fillHLTPtBins();
+    void fillHLTPtBins(bool useRecoilPtBinHLTSel);
+    void fillHLTName();
+    int getHLTNumber() {
+      return mPtNames.size();
+    }
 
     private:
     std::vector<std::string> mPtNames;
 };
 
 #endif
+
 
 
 

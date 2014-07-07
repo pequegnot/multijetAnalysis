@@ -20,7 +20,7 @@ class ptBinning
     void fillLowPtBins();
     int getPtBin(float pt);
     size_t getSize();
-    std::string getName(int bin);
+    virtual std::string getName(int bin);
     std::pair<float, float> getBinValue(int bin);
     float getBinValueInf(int bin);
     float getBinValueSup(int bin);
