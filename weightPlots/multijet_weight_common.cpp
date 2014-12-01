@@ -325,6 +325,8 @@ int main (int argc, char** argv)
   for(int j=0; j<myHLTPtBinning.getSize(); j++) {
         vHLTRefObjPt_HLTRefObjPtBin[j]->Sumw2();
         vLeadingJetPt_HLTRefObjPtBin[j]->Sumw2();
+        vNvtx_HLTRefObjPtBin[j]->Sumw2();
+        vLeadingJetPt_perHLTTrigger[j]->Sumw2();
         vRecoilPt_HLTRefObjPtBin[j]->Sumw2();
 	}
 	
@@ -630,6 +632,10 @@ int main (int argc, char** argv)
   hNjets_ptSup30_etaInf5_beforeSel->SetXTitle("N_{jets} with p_{t} > 30 GeV and |#eta| < 5.0");
   hNjets_ptSup30_etaInf5_beforeSel->Sumw2();
 
+  TH1F* hNjets_ptSup10_beforeSel = new TH1F("hNjets_ptSup10_beforeSel", "hNjets_ptSup10_beforeSel", 25, 0, 25);
+  hNjets_ptSup10_beforeSel->SetXTitle("N_{jets} with p_{t} > 10 GeV");
+  hNjets_ptSup10_beforeSel->Sumw2();
+
 //*****************************************************************************************************
 //
 //                                      reading the root file 
@@ -827,6 +833,7 @@ int main (int argc, char** argv)
   float recoilDeltaEta;
   float jet_PF_pt;
   float Njets_ptSup30_etaInf5_beforeSel;
+  float Njets_ptSup10_beforeSel;
   float leadingjetphi;
   float recoilphi;
   Double_t DeltaPhi_METRecoil;
@@ -1192,11 +1199,14 @@ int main (int argc, char** argv)
             }
 
             Njets_ptSup30_etaInf5_beforeSel = 0;
+            Njets_ptSup10_beforeSel = 0;
             for(int i = 0; i < goodJetsIndex->size(); i++) {
               TLorentzVector* goodjet_PF = (TLorentzVector*) jet_PF_4vector->At( goodJetsIndex->at(i) );
               if(goodjet_PF->Pt() < 30. && fabs(goodjet_PF->Eta() < 5.0)) {Njets_ptSup30_etaInf5_beforeSel ++;}
+              if(goodjet_PF->Pt() < 10.) {Njets_ptSup10_beforeSel ++;}
             }
             hNjets_ptSup30_etaInf5_beforeSel->Fill(Njets_ptSup30_etaInf5_beforeSel, weight);
+            hNjets_ptSup10_beforeSel->Fill(Njets_ptSup10_beforeSel, weight);
             for(int i=0; i<jet_PF_4vector->GetEntriesFast(); i++) {
               jet_PF_pt = ((TLorentzVector*) jet_PF_4vector->At(i))->Pt();
               hNjet_Npv->Fill(n_vertices, weight);
@@ -1524,6 +1534,14 @@ int main (int argc, char** argv)
       vLeadingJetPt_perHLTTrigger[i]->Write();
     }
 
+    TDirectory *nvtxDir = out->mkdir("Nvtx","Nvtx");
+    nvtxDir->cd();
+    TDirectory *nvtx_hltptbin_Dir = nvtxDir->mkdir("HLTPtBin","HLTPtBin");
+    nvtx_hltptbin_Dir->cd();
+    for (int i = 0; i < numberHLTBins; i++) {
+      vNvtx_HLTRefObjPtBin[i]->Write();
+    }
+
 
     if(isMC) {
         TDirectory *mjb_genDir = out->mkdir("MJB_gen","MJB_gen");
@@ -1614,6 +1632,7 @@ int main (int argc, char** argv)
   hJetsEta_beforeSel->Write();
   hJetsPhi_beforeSel->Write();
   hNjets_ptSup30_etaInf5_beforeSel->Write();
+  hNjets_ptSup10_beforeSel->Write();
 	
 	TDirectory *afterSelDir = variablesDir->mkdir("afterSel","afterSel");
 	afterSelDir->cd();
