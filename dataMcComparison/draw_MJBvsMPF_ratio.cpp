@@ -622,16 +622,16 @@ int main (int argc, char** argv)
 	
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		ptBinName = myPtBinning.getName(j);
-		vectorName = "MJB/recoilPtBin/MJB_" + ptBinName;
+		vectorName = "MJB/PtBin/MJB_" + ptBinName;
 		vMJB_RecoilPt_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
 		vMJB_RecoilPt_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
-		vectorName = "MPF/recoilPtBin/MPF_" + ptBinName;
+		vectorName = "MPF/PtBin/MPF_" + ptBinName;
 		vMPF_RecoilPt_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
 		vMPF_RecoilPt_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
-    vectorName = "leadingJet/recoilPtBin/LeadingJetPt_" + ptBinName;
+    vectorName = "leadingJet/PtBin/LeadingJetPt_" + ptBinName;
 		vLeadingJetPt_RecoilPt_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
 		vLeadingJetPt_RecoilPt_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
-    vectorName = "recoil/recoilPtBin/RecoilPt_" + ptBinName;
+    vectorName = "recoil/PtBin/RecoilPt_" + ptBinName;
 		vRecoilPt_RecoilPt_data_lumi[j] = (TH1F*)f_data->Get(vectorName.c_str());
 		vRecoilPt_RecoilPt_mc_lumi[j] = (TH1F*)f_mc->Get(vectorName.c_str());	
 	}
@@ -664,8 +664,8 @@ int main (int argc, char** argv)
 //
 //************************************************************************************************************
 
-	TGraphErrors* gMJB_RecoilPt_data=(TGraphErrors*)f_data->Get("MJB/recoilPtBin/gMJB_RecoilPt");
-	TGraphErrors* gMPF_RecoilPt_data=(TGraphErrors*)f_data->Get("MPF/recoilPtBin/gMPF_RecoilPt");
+	TGraphErrors* gMJB_RecoilPt_data=(TGraphErrors*)f_data->Get("MJB/PtBin/gMJB_RefObjPt");
+	TGraphErrors* gMPF_RecoilPt_data=(TGraphErrors*)f_data->Get("MPF/PtBin/gMPF_RefObjPt");
 	
 	TGraph_data_style (gMJB_RecoilPt_data);
 	TGraph_mc_style (gMPF_RecoilPt_data);
@@ -702,14 +702,14 @@ int main (int argc, char** argv)
 	Double_t aMJBRatio_Mean[numberPtBins-1];
 	Double_t aMJBRatio_MeanError[numberPtBins-1];
 	
-	for(int i=1; i<numberPtBins; i++) {
-    gMJB_RecoilPt_data->GetPoint(i,aRecoilPtBins_Mean[i-1],aMJB_RecoilPt_data_Mean[i-1]);
-    gMPF_RecoilPt_data->GetPoint(i,aRecoilPtBins_Mean[i-1],aMPF_RecoilPt_data_Mean[i-1]);
-    gMJB_RecoilPt_ratio->GetPoint(i,aRecoilPtBins_Mean[i-1],aMJBRatio_Mean[i-1]);
-    aMJB_RecoilPt_data_MeanError[i-1] = gMJB_RecoilPt_data->GetErrorY(i);
-    aMPF_RecoilPt_data_MeanError[i-1] = gMPF_RecoilPt_data->GetErrorY(i);
-    aRecoilPtBins_MeanError[i-1] = gMJB_RecoilPt_data->GetErrorX(i);
-    aMJBRatio_MeanError[i-1] = gMJB_RecoilPt_ratio->GetErrorY(i);
+	for(int i=0; i<numberPtBins-1; i++) {
+    gMJB_RecoilPt_data->GetPoint(i,aRecoilPtBins_Mean[i],aMJB_RecoilPt_data_Mean[i]);
+    gMPF_RecoilPt_data->GetPoint(i,aRecoilPtBins_Mean[i],aMPF_RecoilPt_data_Mean[i]);
+    gMJB_RecoilPt_ratio->GetPoint(i,aRecoilPtBins_Mean[i],aMJBRatio_Mean[i]);
+    aMJB_RecoilPt_data_MeanError[i] = gMJB_RecoilPt_data->GetErrorY(i);
+    aMPF_RecoilPt_data_MeanError[i] = gMPF_RecoilPt_data->GetErrorY(i);
+    aRecoilPtBins_MeanError[i] = gMJB_RecoilPt_data->GetErrorX(i);
+    aMJBRatio_MeanError[i] = gMJB_RecoilPt_ratio->GetErrorY(i);
 	}
 
 	TGraphErrors* gMJB_RecoilPt_data_resize = new TGraphErrors(numberPtBins-1,aRecoilPtBins_Mean, aMJB_RecoilPt_data_Mean, aRecoilPtBins_MeanError, aMJB_RecoilPt_data_MeanError);
