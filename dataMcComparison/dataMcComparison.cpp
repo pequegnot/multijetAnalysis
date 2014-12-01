@@ -38,6 +38,7 @@
 #include <TPaveText.h>
 #include "TROOT.h"
 #include <tclap/CmdLine.h>
+#include <boost/shared_ptr.hpp>
 
 #include "../common/common.h"
 
@@ -50,8 +51,177 @@
 
 using namespace std;
 
+#define TITLE_FONTSIZE 26
+#define LABEL_FONTSIZE 18
+#define LEFT_MARGIN 0.17
+#define RIGHT_MARGIN 0.03
+#define TOP_MARGIN 0.05
+#define BOTTOM_MARGIN 0.13
 
-using namespace std;
+TStyle* createStyle() {
+  TStyle *style = new TStyle("style", "style");
+
+  // For the canvas:
+  style->SetCanvasBorderMode(0);
+  style->SetCanvasColor(kWhite);
+  style->SetCanvasDefH(800); //Height of canvas
+  style->SetCanvasDefW(800); //Width of canvas
+  style->SetCanvasDefX(0);   //POsition on screen
+  style->SetCanvasDefY(0);
+
+  // For the Pad:
+  style->SetPadBorderMode(0);
+  style->SetPadColor(kWhite);
+  style->SetPadGridX(false);
+  style->SetPadGridY(false);
+  style->SetGridColor(0);
+  style->SetGridStyle(3);
+  style->SetGridWidth(1);
+
+  // For the frame:
+  style->SetFrameBorderMode(0);
+  style->SetFrameBorderSize(1);
+  style->SetFrameFillColor(0);
+  style->SetFrameFillStyle(0);
+  style->SetFrameLineColor(1);
+  style->SetFrameLineStyle(1);
+  style->SetFrameLineWidth(1);
+
+  // For the histo:
+  style->SetHistLineStyle(1);
+  style->SetHistLineWidth(2);
+  style->SetEndErrorSize(2);
+  style->SetMarkerStyle(20);
+
+  //For the fit/function:
+  style->SetFitFormat("5.4g");
+  style->SetFuncColor(2);
+  style->SetFuncStyle(1);
+  style->SetFuncWidth(1);
+
+  // For the statistics box:
+  style->SetOptFile(0);
+  style->SetStatColor(kWhite);
+  //style->SetStatFont(43);
+  //style->SetStatFontSize(0.025);
+  style->SetStatTextColor(1);
+  style->SetStatFormat("6.4g");
+  style->SetStatBorderSize(1);
+  //style->SetStatH(0.1);
+  //style->SetStatW(0.15);
+
+  //For the date:
+  style->SetOptDate(0);
+
+  // Margins:
+  style->SetPadTopMargin(TOP_MARGIN);
+  style->SetPadBottomMargin(BOTTOM_MARGIN);
+  style->SetPadLeftMargin(LEFT_MARGIN);
+  style->SetPadRightMargin(RIGHT_MARGIN);
+
+  // For the Global title:
+  style->SetOptTitle(0);
+  style->SetTitleFont(63);
+  style->SetTitleColor(1);
+  style->SetTitleFillColor(10);
+  style->SetTitleBorderSize(0);
+  style->SetTitleAlign(33);
+  style->SetTitleX(1);
+  style->SetTitleFontSize(TITLE_FONTSIZE);
+
+  // For the axis titles:
+
+  style->SetTitleColor(1, "XYZ");
+  style->SetTitleFont(43, "XYZ");
+  style->SetTitleSize(TITLE_FONTSIZE, "XYZ");
+  //style->SetTitleXOffset(3.5); //FIXME
+  style->SetTitleYOffset(2.5); //FIXME
+  style->SetTitleXOffset(1.5);
+  //style->SetTitleYOffset(1.5);
+
+  style->SetLabelColor(1, "XYZ");
+  style->SetLabelFont(43, "XYZ");
+  style->SetLabelOffset(0.01, "YZ");
+  style->SetLabelOffset(0.015, "X");
+  style->SetLabelSize(LABEL_FONTSIZE, "XYZ");
+
+  style->SetAxisColor(1, "XYZ");
+  style->SetStripDecimals(kTRUE);
+  style->SetTickLength(0.03, "XYZ");
+  style->SetNdivisions(510, "XYZ");
+  style->SetPadTickX(1);  // To get tick marks on the opposite side of the frame
+  style->SetPadTickY(1);
+
+  style->SetOptLogx(0);
+  style->SetOptLogy(0);
+  style->SetOptLogz(0);
+
+  style->SetHatchesSpacing(1.3);
+  style->SetHatchesLineWidth(1);
+
+  style->cd();
+
+  return style;
+}
+
+void cms_style(bool isData = false){
+  std::string status = "Simulation preliminary";
+  if (isData) status = "Preliminary";
+  TPaveText* pt_exp = new TPaveText(LEFT_MARGIN, 1 - 0.5 * TOP_MARGIN, 1 - RIGHT_MARGIN, 1, "brNDC");
+  pt_exp->SetFillStyle(0);
+  pt_exp->SetBorderSize(0);
+  pt_exp->SetMargin(0);
+  pt_exp->SetTextFont(62);
+  //pt_exp->SetTextSize(0.75 * TOP_MARGIN);
+  pt_exp->SetTextSize(1.0 * TOP_MARGIN);
+  pt_exp->SetTextAlign(13);
+  TString d = TString::Format("CMS #font[52]{#scale[0.76]{%s}}", status.c_str());
+  pt_exp->AddText(d);
+  pt_exp->Draw();
+
+  TString lumi_s = "19.8 fb^{-1} (8 TeV)";
+  TPaveText* pt_lumi = new TPaveText(LEFT_MARGIN, 1 - 0.5 * TOP_MARGIN, 1 - RIGHT_MARGIN, 1, "brNDC");
+  pt_lumi->SetFillStyle(0);
+  pt_lumi->SetBorderSize(0);
+  pt_lumi->SetMargin(0);
+  pt_lumi->SetTextFont(42);
+  //pt_lumi->SetTextSize(0.6 * TOP_MARGIN);
+  pt_lumi->SetTextSize(1.0 * TOP_MARGIN);
+  pt_lumi->SetTextAlign(33);
+  pt_lumi->AddText(lumi_s);
+  pt_lumi->Draw();
+
+}
+
+ template<class T>
+void setDefaultStyle(T* object, float topBottomScaleFactor) {
+object->GetXaxis()->SetLabelFont(43);
+object->GetYaxis()->SetLabelFont(43);
+object->GetXaxis()->SetTitleFont(43);
+object->GetYaxis()->SetTitleFont(43);
+object->GetXaxis()->SetLabelSize(LABEL_FONTSIZE);
+object->GetYaxis()->SetLabelSize(LABEL_FONTSIZE);
+object->GetXaxis()->SetTitleSize(TITLE_FONTSIZE);
+object->GetYaxis()->SetTitleSize(TITLE_FONTSIZE);
+//object->GetYaxis()->SetTitle("Data / MC");
+object->GetYaxis()->SetNdivisions(510);
+object->GetYaxis()->SetTitleOffset(2.5);
+object->GetYaxis()->SetLabelOffset(0.01);
+object->GetYaxis()->SetTickLength(0.03);
+object->GetXaxis()->SetTitleOffset(1.5 * topBottomScaleFactor);
+object->GetXaxis()->SetLabelOffset(0.012 * topBottomScaleFactor);
+object->GetXaxis()->SetTickLength(0.03);
+}
+void setDefaultStyle(TObject* object, float topBottomScaleFactor);
+
+ void setDefaultStyle(TObject* object, float topBottomScaleFactor) {
+   if (dynamic_cast<TH1*>(object))
+     setDefaultStyle(dynamic_cast<TH1*>(object), topBottomScaleFactor);
+   else if (dynamic_cast<THStack*>(object))
+     setDefaultStyle(dynamic_cast<THStack*>(object)->GetHistogram(), topBottomScaleFactor);
+   else if (dynamic_cast<TGraph*>(object))
+     setDefaultStyle(dynamic_cast<THStack*>(object)->GetHistogram(), topBottomScaleFactor);
+}
 
 void applyStyle() {
 
@@ -189,23 +359,40 @@ void applyStyle() {
 
 
 void drawDataMcComparison(const string& canvasName, TH1 *hMc, TH1 *hData, const string& Xtitle, const string& path, bool inLinScale = false, const string& Ytitle = "", string legendPos = "r", int withratio = 1){
-	TCanvas *cCanvas = new TCanvas(canvasName.c_str(),canvasName.c_str(), 600, 800);
+	TCanvas *cCanvas = new TCanvas(canvasName.c_str(),canvasName.c_str(), 800, 800);
 	cCanvas->cd();
 	if(withratio == 1) {
   		// Data / MC comparison
-  		TPad* pad_hi = new TPad("pad_hi", "", 0., 0.33, 0.99, 0.99);
-  		pad_hi->Draw();
-  		//pad_hi->SetLogx();
-  		pad_hi->SetLeftMargin(0.12);
-  		pad_hi->SetBottomMargin(0.015);
 
-  		// Data / MC ratio
-		TPad* pad_lo = new TPad("pad_lo", "", 0., 0., 0.99, 0.33);
-		pad_lo->Draw();
-		//pad_lo->SetLogx();
-		pad_lo->SetLeftMargin(0.12);
-		pad_lo->SetTopMargin(1.);
-		pad_lo->SetBottomMargin(0.3);
+std::shared_ptr<TPad> pad_hi;
+std::shared_ptr<TPad> pad_lo;
+pad_hi = std::make_shared<TPad>("pad_hi", "", 0., 0.33333, 1, 1);
+pad_hi->Draw();
+pad_hi->SetTopMargin(TOP_MARGIN / .6666);
+pad_hi->SetLeftMargin(LEFT_MARGIN);
+pad_hi->SetBottomMargin(0.015);
+pad_hi->SetRightMargin(RIGHT_MARGIN);
+pad_lo = std::make_shared<TPad>("pad_lo", "", 0., 0., 1, 0.33333);
+pad_lo->Draw();
+pad_lo->SetLeftMargin(LEFT_MARGIN);
+pad_lo->SetTopMargin(1.);
+pad_lo->SetBottomMargin(BOTTOM_MARGIN / .3333);
+pad_lo->SetRightMargin(RIGHT_MARGIN);
+pad_lo->SetTickx(1);
+
+/*  		TPad* pad_hi = new TPad("pad_hi", "", 0., 0.33, 0.99, 0.99);*/
+      //pad_hi->Draw();
+      ////pad_hi->SetLogx();
+      //pad_hi->SetLeftMargin(0.12);
+      //pad_hi->SetBottomMargin(0.015);
+
+      //// Data / MC ratio
+		//TPad* pad_lo = new TPad("pad_lo", "", 0., 0., 0.99, 0.33);
+		//pad_lo->Draw();
+		////pad_lo->SetLogx();
+		//pad_lo->SetLeftMargin(0.12);
+		//pad_lo->SetTopMargin(1.);
+		/*pad_lo->SetBottomMargin(0.3);*/
 		
 		pad_lo->cd();
    		TF1* ratioFit = new TF1("ratioFit", "[0]", hData->GetXaxis()->GetXmin(), hData->GetXaxis()->GetXmax());
@@ -216,12 +403,18 @@ void drawDataMcComparison(const string& canvasName, TH1 *hMc, TH1 *hData, const 
 		h->Divide(hMc);
 		h1_style_lo(h);
 		h->SetStats(1);
-		h->SetTitle("Data/MC");
+		h->SetTitle("Data / MC");
 		h->SetXTitle(Xtitle.c_str());
     if(Ytitle != "") {
-      h->SetYTitle("Data/MC");
+      h->SetYTitle("Data / MC");
     }
-		h->SetMarkerSize(0.5);
+    h->SetMarkerSize(1.0);
+    h->SetMaximum(2);
+    h->SetMinimum(0);
+    setDefaultStyle(h, 1. / 0.3333);
+    h->GetYaxis()->SetTickLength(0.04);
+    h->GetYaxis()->SetNdivisions(505, true);
+    h->GetXaxis()->SetTickLength(0.07);
 		
 		//for(int i=1;i<h->GetEntries();i++){
 			//h->SetBinError(i,sqrt(pow(hData->GetBinError(i)/hMc->GetBinContent(i),2)+pow(hMc->GetBinError(i)*hData->GetBinContent(i)/(pow(hMc->GetBinContent(i),2)),2)));
@@ -234,7 +427,7 @@ void drawDataMcComparison(const string& canvasName, TH1 *hMc, TH1 *hData, const 
     		TPaveText* fitlabel = new TPaveText(0.55, 0.77, 0.88, 0.83, "brNDC");
     		fitlabel->SetTextSize(0.08);
     		fitlabel->SetFillColor(0);
-		fitlabel->SetTextFont(42);
+		fitlabel->SetTextFont(43);
     		TString fitLabelText = TString::Format("Fit: %.3f #pm %.3f", fitValue, fitError);
     		fitlabel->AddText(fitLabelText);
     		fitlabel->Draw("same");
@@ -270,19 +463,24 @@ void drawDataMcComparison(const string& canvasName, TH1 *hMc, TH1 *hData, const 
 	}
     //TLegend* legend = new TLegend(0.55, 0.15, 0.92, 0.38);
     TLegend* legend = new TLegend(0.55, 0.65, 0.92, 0.88);
+    //TLegend* legend = new TLegend(0.6, 0.6, 0.9, 0.9);
   	legend->SetFillColor(kWhite);
   	legend->SetFillStyle(0);
-  	legend->SetTextSize(0.038);
+    //legend->SetTextSize(0.038);
     legend->SetLineWidth(0);
-	legend->SetTextFont(42);
+		legend->SetTextFont(43);
+  legend->SetBorderSize(0);
 	legend->AddEntry(hMc,"MC","f");
 	legend->AddEntry(hData,"Data 2012","p");
 	legend->Draw("same");
 		
-  	Float_t cmsTextSize = 0.043;
-  	TPaveText* label_cms = get_labelCMS(1);
-  	label_cms->SetTextSize(cmsTextSize);
-	label_cms->Draw("same");
+/*  	Float_t cmsTextSize = 0.043;*/
+    //TPaveText* label_cms = get_labelCMS(1);
+    //label_cms->SetTextSize(cmsTextSize);
+	/*label_cms->Draw("same");*/
+
+  cms_style(true);
+
 	gPad->RedrawAxis();
 
 	cCanvas->SaveAs(path.c_str());
@@ -321,7 +519,7 @@ TGraphErrors* getDataMcResponseRatio(TGraphErrors* gData, TGraphErrors* gMc, int
 	gDataMcResponseratio->SetMarkerStyle(20);
 	gDataMcResponseratio->SetMarkerColor(1);
 	gDataMcResponseratio->SetLineColor(1);
-	gDataMcResponseratio->SetMarkerSize(0.5);
+	gDataMcResponseratio->SetMarkerSize(1.0);
 	//gDataMcResponseratio->SetMaximum(1.08);
 	//gDataMcResponseratio->SetMinimum(0.90);
 	gDataMcResponseratio->GetXaxis()->SetTitle(XTitle.c_str());
@@ -330,22 +528,39 @@ TGraphErrors* getDataMcResponseRatio(TGraphErrors* gData, TGraphErrors* gMc, int
 }
 
 void drawComparisonResponse(const string& canvasName, TMultiGraph *mgResponse, TGraphErrors *gResponseMC, TGraphErrors *gResponseData, TGraph *gratio,const string& mcSample, const string& path, bool doFit = false, bool setRangeUser = true) {
-	TCanvas *cCanvas = new TCanvas(canvasName.c_str(),canvasName.c_str(), 600, 800);
+	TCanvas *cCanvas = new TCanvas(canvasName.c_str(),canvasName.c_str(), 800, 800);
 	cCanvas->cd();
   	// Data / MC comparison
-  	TPad* pad_hi = new TPad("pad_hi", "", 0., 0.33, 0.99, 0.99);
-  	pad_hi->Draw();
-  	//pad_hi->SetLogx();
-  	pad_hi->SetLeftMargin(0.15);
-  	pad_hi->SetBottomMargin(0.015);
 
-  	// Data / MC ratio
-	TPad* pad_lo = new TPad("pad_lo", "", 0., 0., 0.99, 0.33);
-	pad_lo->Draw();
-	//pad_lo->SetLogx();
-	pad_lo->SetLeftMargin(0.15);
-	pad_lo->SetTopMargin(1.);
-	pad_lo->SetBottomMargin(0.3);
+std::shared_ptr<TPad> pad_hi;
+std::shared_ptr<TPad> pad_lo;
+pad_hi = std::make_shared<TPad>("pad_hi", "", 0., 0.33333, 1, 1);
+pad_hi->Draw();
+pad_hi->SetTopMargin(TOP_MARGIN / .6666);
+pad_hi->SetLeftMargin(LEFT_MARGIN);
+pad_hi->SetBottomMargin(0.015);
+pad_hi->SetRightMargin(RIGHT_MARGIN);
+pad_lo = std::make_shared<TPad>("pad_lo", "", 0., 0., 1, 0.33333);
+pad_lo->Draw();
+pad_lo->SetLeftMargin(LEFT_MARGIN);
+pad_lo->SetTopMargin(1.);
+pad_lo->SetBottomMargin(BOTTOM_MARGIN / .3333);
+pad_lo->SetRightMargin(RIGHT_MARGIN);
+pad_lo->SetTickx(1);
+
+/*  	TPad* pad_hi = new TPad("pad_hi", "", 0., 0.33, 0.99, 0.99);*/
+    //pad_hi->Draw();
+    ////pad_hi->SetLogx();
+    //pad_hi->SetLeftMargin(0.15);
+    //pad_hi->SetBottomMargin(0.015);
+
+    //// Data / MC ratio
+	//TPad* pad_lo = new TPad("pad_lo", "", 0., 0., 0.99, 0.33);
+	//pad_lo->Draw();
+	////pad_lo->SetLogx();
+	//pad_lo->SetLeftMargin(0.15);
+	//pad_lo->SetTopMargin(1.);
+	/*pad_lo->SetBottomMargin(0.3);*/
 	
 		
     	pad_hi->cd();
@@ -354,10 +569,14 @@ void drawComparisonResponse(const string& canvasName, TMultiGraph *mgResponse, T
     if (setRangeUser) {
 	  mgResponse->SetMaximum(1.05);
 	  mgResponse->SetMinimum(0.9);
+    } else {
+    mgResponse->SetMaximum(0.5);
+    mgResponse->SetMinimum(0.3);    
     }
 	mgResponse->Draw("AP");
-	mgResponse->GetXaxis()->SetLabelSize(0);
-	mgResponse->GetYaxis()->SetTitleOffset(1.3);
+  setDefaultStyle(mgResponse, 1. / 0.3333);
+	//mgResponse->GetXaxis()->SetLabelSize(0);
+	//mgResponse->GetYaxis()->SetTitleOffset(1.3);
 	cCanvas->SetLogx(1);
 	
 	if(doFit) {
@@ -375,7 +594,7 @@ void drawComparisonResponse(const string& canvasName, TMultiGraph *mgResponse, T
     	  TPaveText* linfitlabel = new TPaveText(0.55, 0.77, 0.88, 0.83, "brNDC");
     	  linfitlabel->SetTextSize(0.035);
     	  linfitlabel->SetFillColor(0);
-	  linfitlabel->SetTextFont(42);
+	  linfitlabel->SetTextFont(43);
     	  TString linfitLabelText = TString::Format("Data slope: %.5f #pm %.5f", linfitValue, linfitError);
     	  linfitlabel->AddText(linfitLabelText);
     	  linfitlabel->Draw("same");
@@ -383,19 +602,23 @@ void drawComparisonResponse(const string& canvasName, TMultiGraph *mgResponse, T
     	  gPad->RedrawAxis();	
 	}
 	
-  	TLegend* legend = new TLegend(0.55, 0.15, 0.92, 0.38);
+    //TLegend* legend = new TLegend(0.55, 0.15, 0.92, 0.38);
+    TLegend* legend = new TLegend(0.65, 0.15, 0.95, 0.30);
   	legend->SetFillColor(kWhite);
   	legend->SetFillStyle(0);
-	legend->SetTextFont(42);
-  	legend->SetTextSize(0.038);
+	legend->SetTextFont(43);
+  legend->SetBorderSize(0);
+    //legend->SetTextSize(0.038);
 	legend->AddEntry(gResponseMC,"MC","p");
 	legend->AddEntry(gResponseData,"Data 2012","p");
 	legend->Draw("same");
 		
-  	Float_t cmsTextSize = 0.043;
-  	TPaveText* label_cms = get_labelCMS(1);
-  	label_cms->SetTextSize(cmsTextSize);
-	label_cms->Draw("same");
+/*  	Float_t cmsTextSize = 0.043;*/
+    //TPaveText* label_cms = get_labelCMS(1);
+    //label_cms->SetTextSize(cmsTextSize);
+	/*label_cms->Draw("same");*/
+  cms_style(true);
+
 	gPad->RedrawAxis();
 		
 	pad_lo->cd();
@@ -404,7 +627,7 @@ void drawComparisonResponse(const string& canvasName, TMultiGraph *mgResponse, T
     	ratioFit->SetLineColor(46);
     	ratioFit->SetLineWidth(2);
 	gratio->Draw("APE1");
-	gratio->GetYaxis()->SetTitle("Data/MC");
+	gratio->GetYaxis()->SetTitle("Data / MC");
 // 	//gratio->GetXaxis()->SetLabelOffset(0.1);
 // 	gratio->GetXaxis()->SetLabelFont(42);
 // 	gratio->GetXaxis()->SetLabelSize(0.06);
@@ -414,9 +637,17 @@ void drawComparisonResponse(const string& canvasName, TMultiGraph *mgResponse, T
 // 	gratio->GetXaxis()->SetTitleOffset(-0.6);
 // 	gratio->GetXaxis()->SetTitleFont(42);
 // 	gratio->GetXaxis()->SetTitleSize(0.06);
- 	gratio->GetYaxis()->SetTitleOffset(1.3);
+   //gratio->GetYaxis()->SetTitleOffset(1.3);
 // 	gratio->GetYaxis()->SetTitleFont(42);
 // 	gratio->GetYaxis()->SetTitleSize(0.06);
+
+  gratio->SetMarkerSize(1.0);
+  gratio->SetMaximum(1.05);
+  gratio->SetMinimum(0.95);
+  setDefaultStyle(gratio, 1. / 0.3333);
+  gratio->GetYaxis()->SetTickLength(0.04);
+  gratio->GetYaxis()->SetNdivisions(505, true);
+  gratio->GetXaxis()->SetTickLength(0.07);
 	
 	gratio->GetXaxis()->SetLimits(mgResponse->GetXaxis()->GetXmin(),mgResponse->GetXaxis()->GetXmax());
 	
@@ -562,7 +793,9 @@ int main (int argc, char** argv)
 	
 	string myHistoName;
 	
-	applyStyle();
+	//applyStyle();
+  TStyle* m_style = createStyle();
+  m_style->cd();
 
 //************************************************************************************************************
 //
@@ -750,20 +983,83 @@ int main (int argc, char** argv)
 
 //************************************************************************************************************
 //
-//                                      MJB as a function of ptrecoil without 2 ptbin
+//                                      MJB as a function of ptrecoil without last ptbin (response equal to zero)
 //
 //************************************************************************************************************
 
-	Double_t aMJB_RefObjPt_data_Mean[numberPtBins-2];
-	Double_t aMJB_RefObjPt_data_MeanError[numberPtBins-2];
-	Double_t aMJB_RefObjPt_mc_Mean[numberPtBins-2];
-	Double_t aMJB_RefObjPt_mc_MeanError[numberPtBins-2];
-	Double_t aRefObjPtBins_Mean[numberPtBins-2];
-	Double_t aRefObjPtBins_MeanError[numberPtBins-2];
-	Double_t aMJBRatio_Mean[numberPtBins-2];
-	Double_t aMJBRatio_MeanError[numberPtBins-2];
+ /* Double_t aMJB_RefObjPt_data_Mean[numberPtBins-1];*/
+	//Double_t aMJB_RefObjPt_data_MeanError[numberPtBins-1];
+	//Double_t aMJB_RefObjPt_mc_Mean[numberPtBins-1];
+	//Double_t aMJB_RefObjPt_mc_MeanError[numberPtBins-1];
+	//Double_t aRefObjPtBins_Mean[numberPtBins-1];
+	//Double_t aRefObjPtBins_MeanError[numberPtBins-1];
+	//Double_t aMJBRatio_Mean[numberPtBins-1];
+	//Double_t aMJBRatio_MeanError[numberPtBins-1];
 	
-	for(int i=1; i<numberPtBins-1; i++) {
+	//for(int i=0; i<numberPtBins-1; i++) {
+    //gMJB_RefObjPt_data->GetPoint(i,aRefObjPtBins_Mean[i],aMJB_RefObjPt_data_Mean[i]);
+    //gMJB_RefObjPt_mc->GetPoint(i,aRefObjPtBins_Mean[i],aMJB_RefObjPt_mc_Mean[i]);
+    //gMJB_RefObjPt_ratio->GetPoint(i,aRefObjPtBins_Mean[i],aMJBRatio_Mean[i]);
+    //aMJB_RefObjPt_data_MeanError[i] = gMJB_RefObjPt_data->GetErrorY(i);
+    //aMJB_RefObjPt_mc_MeanError[i] = gMJB_RefObjPt_mc->GetErrorY(i);
+    //aRefObjPtBins_MeanError[i] = gMJB_RefObjPt_data->GetErrorX(i);
+    //aMJBRatio_MeanError[i] = gMJB_RefObjPt_ratio->GetErrorY(i);
+	//}
+
+	//TGraphErrors* gMJB_RefObjPt_data_resize = new TGraphErrors(numberPtBins-1,aRefObjPtBins_Mean, aMJB_RefObjPt_data_Mean, aRefObjPtBins_MeanError, aMJB_RefObjPt_data_MeanError);
+	//TGraphErrors* gMJB_RefObjPt_mc_resize = new TGraphErrors(numberPtBins-1,aRefObjPtBins_Mean, aMJB_RefObjPt_mc_Mean, aRefObjPtBins_MeanError, aMJB_RefObjPt_mc_MeanError);	
+	//TGraph* gMJB_RefObjPt_mc_resize_pointsOnly = new TGraph(numberPtBins-1,aRefObjPtBins_Mean, aMJB_RefObjPt_mc_Mean);	
+
+  //TGraphErrors* gMJB_RefObjPt_mc_clone_resize = (TGraphErrors*)gMJB_RefObjPt_mc_resize->Clone();
+	
+	//TGraph_data_style (gMJB_RefObjPt_data_resize);
+	//TGraph_mc_style (gMJB_RefObjPt_mc_resize);
+	//TGraph_mc_style (gMJB_RefObjPt_mc_resize_pointsOnly);
+	//TGraph_mc_style (gMJB_RefObjPt_mc_clone_resize);
+
+	//gMJB_RefObjPt_mc_clone_resize->SetFillColor(17);
+	////gMJB_RefObjPt_mc_resize->SetFillStyle(3002);
+  //gMJB_RefObjPt_mc_resize->SetFillColor(17);
+	
+	//TMultiGraph *mgMJB_RefObjPt_resize = new TMultiGraph();
+  //mgMJB_RefObjPt_resize->Add(gMJB_RefObjPt_mc_resize,"e3");
+	//mgMJB_RefObjPt_resize->Add(gMJB_RefObjPt_mc_resize_pointsOnly,"p");
+	//mgMJB_RefObjPt_resize->Add(gMJB_RefObjPt_data_resize,"pe");
+  //if(useRecoilPtBin) {
+		//mgMJB_RefObjPt_resize->SetTitle("MJB as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];MJB");
+  //}
+  //else {
+    //mgMJB_RefObjPt_resize->SetTitle("MJB as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];MJB");
+  //}
+	
+	//TGraphErrors *gMJB_RefObjPt_ratio_resize = NULL;
+  //if(useRecoilPtBin) {
+    //gMJB_RefObjPt_ratio_resize = getDataMcResponseRatio(gMJB_RefObjPt_data_resize,gMJB_RefObjPt_mc_resize,numberPtBins-1, "p_{t}^{Recoil} [GeV/c]");
+		//gMJB_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+  //}
+  //else {
+    //gMJB_RefObjPt_ratio_resize = getDataMcResponseRatio(gMJB_RefObjPt_data_resize,gMJB_RefObjPt_mc_resize,numberPtBins-1, "p_{t}^{Leading Jet} [GeV/c]");
+		//gMJB_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");
+  //}
+	//gMJB_RefObjPt_ratio_resize->GetYaxis()->SetTitle("MJB^{data}/MJB^{MC}");
+	//gMJB_RefObjPt_ratio_resize->SetName("Data/MC");
+	//gMJB_RefObjPt_ratio_resize->SetTitle("Data/MC");
+	//gMJB_RefObjPt_ratio_resize->SetMarkerSize(1.0);
+	//gMJB_RefObjPt_ratio_resize->Fit("func","","",gMJB_RefObjPt_data_resize->GetXaxis()->GetXmin(),gMJB_RefObjPt_data_resize->GetXaxis()->GetXmax());
+	
+	//myHistoName = "images/response/MJB_RefObjPt_resize" + extension;	
+	/*drawComparisonResponse("r1", mgMJB_RefObjPt_resize, gMJB_RefObjPt_mc_resize, gMJB_RefObjPt_data_resize, gMJB_RefObjPt_ratio_resize,"MC", myHistoName.c_str());*/
+
+	Double_t aMJB_RefObjPt_data_Mean[numberPtBins-3];
+	Double_t aMJB_RefObjPt_data_MeanError[numberPtBins-3];
+	Double_t aMJB_RefObjPt_mc_Mean[numberPtBins-3];
+	Double_t aMJB_RefObjPt_mc_MeanError[numberPtBins-3];
+	Double_t aMJBRatio_Mean[numberPtBins-3];
+	Double_t aMJBRatio_MeanError[numberPtBins-3];
+	Double_t aRefObjPtBins_Mean[numberPtBins-3];
+	Double_t aRefObjPtBins_MeanError[numberPtBins-3];
+	
+	for(int i=1; i<numberPtBins-2; i++) {
     gMJB_RefObjPt_data->GetPoint(i,aRefObjPtBins_Mean[i-1],aMJB_RefObjPt_data_Mean[i-1]);
     gMJB_RefObjPt_mc->GetPoint(i,aRefObjPtBins_Mean[i-1],aMJB_RefObjPt_mc_Mean[i-1]);
     gMJB_RefObjPt_ratio->GetPoint(i,aRefObjPtBins_Mean[i-1],aMJBRatio_Mean[i-1]);
@@ -773,9 +1069,9 @@ int main (int argc, char** argv)
     aMJBRatio_MeanError[i-1] = gMJB_RefObjPt_ratio->GetErrorY(i);
 	}
 
-	TGraphErrors* gMJB_RefObjPt_data_resize = new TGraphErrors(numberPtBins-2,aRefObjPtBins_Mean, aMJB_RefObjPt_data_Mean, aRefObjPtBins_MeanError, aMJB_RefObjPt_data_MeanError);
-	TGraphErrors* gMJB_RefObjPt_mc_resize = new TGraphErrors(numberPtBins-2,aRefObjPtBins_Mean, aMJB_RefObjPt_mc_Mean, aRefObjPtBins_MeanError, aMJB_RefObjPt_mc_MeanError);	
-	TGraph* gMJB_RefObjPt_mc_resize_pointsOnly = new TGraph(numberPtBins-2,aRefObjPtBins_Mean, aMJB_RefObjPt_mc_Mean);	
+	TGraphErrors* gMJB_RefObjPt_data_resize = new TGraphErrors(numberPtBins-3,aRefObjPtBins_Mean, aMJB_RefObjPt_data_Mean, aRefObjPtBins_MeanError, aMJB_RefObjPt_data_MeanError);
+	TGraphErrors* gMJB_RefObjPt_mc_resize = new TGraphErrors(numberPtBins-3,aRefObjPtBins_Mean, aMJB_RefObjPt_mc_Mean, aRefObjPtBins_MeanError, aMJB_RefObjPt_mc_MeanError);	
+	TGraph* gMJB_RefObjPt_mc_resize_pointsOnly = new TGraph(numberPtBins-3,aRefObjPtBins_Mean, aMJB_RefObjPt_mc_Mean);	
 
   TGraphErrors* gMJB_RefObjPt_mc_clone_resize = (TGraphErrors*)gMJB_RefObjPt_mc_resize->Clone();
 	
@@ -801,11 +1097,11 @@ int main (int argc, char** argv)
 	
 	TGraphErrors *gMJB_RefObjPt_ratio_resize = NULL;
   if(useRecoilPtBin) {
-    gMJB_RefObjPt_ratio_resize = getDataMcResponseRatio(gMJB_RefObjPt_data_resize,gMJB_RefObjPt_mc_resize,numberPtBins-2, "p_{t}^{Recoil} [GeV/c]");
+    gMJB_RefObjPt_ratio_resize = getDataMcResponseRatio(gMJB_RefObjPt_data_resize,gMJB_RefObjPt_mc_resize,numberPtBins-3, "p_{t}^{Recoil} [GeV/c]");
 	  gMJB_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
   }
   else {
-    gMJB_RefObjPt_ratio_resize = getDataMcResponseRatio(gMJB_RefObjPt_data_resize,gMJB_RefObjPt_mc_resize,numberPtBins-2, "p_{t}^{Leading Jet} [GeV/c]");
+    gMJB_RefObjPt_ratio_resize = getDataMcResponseRatio(gMJB_RefObjPt_data_resize,gMJB_RefObjPt_mc_resize,numberPtBins-3, "p_{t}^{Leading Jet} [GeV/c]");
 	  gMJB_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");
   }
 	gMJB_RefObjPt_ratio_resize->GetYaxis()->SetTitle("MJB^{data}/MJB^{MC}");
@@ -886,14 +1182,14 @@ int main (int argc, char** argv)
 //
 //************************************************************************************************************
 
-	Double_t aMPF_RefObjPt_data_Mean[numberPtBins-2];
-	Double_t aMPF_RefObjPt_data_MeanError[numberPtBins-2];
-	Double_t aMPF_RefObjPt_mc_Mean[numberPtBins-2];
-	Double_t aMPF_RefObjPt_mc_MeanError[numberPtBins-2];
-	Double_t aMPFRatio_Mean[numberPtBins-2];
-	Double_t aMPFRatio_MeanError[numberPtBins-2];
+	Double_t aMPF_RefObjPt_data_Mean[numberPtBins-3];
+	Double_t aMPF_RefObjPt_data_MeanError[numberPtBins-3];
+	Double_t aMPF_RefObjPt_mc_Mean[numberPtBins-3];
+	Double_t aMPF_RefObjPt_mc_MeanError[numberPtBins-3];
+	Double_t aMPFRatio_Mean[numberPtBins-3];
+	Double_t aMPFRatio_MeanError[numberPtBins-3];
 	
-	for(int i=1; i<numberPtBins-1; i++) {
+	for(int i=1; i<numberPtBins-2; i++) {
     gMPF_RefObjPt_data->GetPoint(i,aRefObjPtBins_Mean[i-1],aMPF_RefObjPt_data_Mean[i-1]);
     gMPF_RefObjPt_mc->GetPoint(i,aRefObjPtBins_Mean[i-1],aMPF_RefObjPt_mc_Mean[i-1]);
     gMPF_RefObjPt_ratio->GetPoint(i,aRefObjPtBins_Mean[i-1],aMPFRatio_Mean[i-1]);
@@ -903,9 +1199,9 @@ int main (int argc, char** argv)
     aMPFRatio_MeanError[i-1] = gMPF_RefObjPt_ratio->GetErrorY(i);
 	}
 
-	TGraphErrors* gMPF_RefObjPt_data_resize = new TGraphErrors(numberPtBins-2,aRefObjPtBins_Mean, aMPF_RefObjPt_data_Mean, aRefObjPtBins_MeanError, aMPF_RefObjPt_data_MeanError);
-	TGraphErrors* gMPF_RefObjPt_mc_resize = new TGraphErrors(numberPtBins-2,aRefObjPtBins_Mean, aMPF_RefObjPt_mc_Mean, aRefObjPtBins_MeanError, aMPF_RefObjPt_mc_MeanError);	
-	TGraph* gMPF_RefObjPt_mc_resize_pointsOnly = new TGraph(numberPtBins-2,aRefObjPtBins_Mean, aMPF_RefObjPt_mc_Mean);	
+	TGraphErrors* gMPF_RefObjPt_data_resize = new TGraphErrors(numberPtBins-3,aRefObjPtBins_Mean, aMPF_RefObjPt_data_Mean, aRefObjPtBins_MeanError, aMPF_RefObjPt_data_MeanError);
+	TGraphErrors* gMPF_RefObjPt_mc_resize = new TGraphErrors(numberPtBins-3,aRefObjPtBins_Mean, aMPF_RefObjPt_mc_Mean, aRefObjPtBins_MeanError, aMPF_RefObjPt_mc_MeanError);	
+	TGraph* gMPF_RefObjPt_mc_resize_pointsOnly = new TGraph(numberPtBins-3,aRefObjPtBins_Mean, aMPF_RefObjPt_mc_Mean);	
 
   TGraphErrors* gMPF_RefObjPt_mc_clone_resize = (TGraphErrors*)gMPF_RefObjPt_mc_resize->Clone();
 	
@@ -931,11 +1227,11 @@ int main (int argc, char** argv)
 	
 	TGraphErrors *gMPF_RefObjPt_ratio_resize = NULL;
   if(useRecoilPtBin) {
-    gMPF_RefObjPt_ratio_resize = getDataMcResponseRatio(gMPF_RefObjPt_data_resize,gMPF_RefObjPt_mc_resize,numberPtBins-2, "p_{t}^{Recoil} [GeV/c]");
+    gMPF_RefObjPt_ratio_resize = getDataMcResponseRatio(gMPF_RefObjPt_data_resize,gMPF_RefObjPt_mc_resize,numberPtBins-3, "p_{t}^{Recoil} [GeV/c]");
 	  gMPF_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
   }
   else {
-    gMPF_RefObjPt_ratio_resize = getDataMcResponseRatio(gMPF_RefObjPt_data_resize,gMPF_RefObjPt_mc_resize,numberPtBins-2, "p_{t}^{Leading Jet} [GeV/c]");
+    gMPF_RefObjPt_ratio_resize = getDataMcResponseRatio(gMPF_RefObjPt_data_resize,gMPF_RefObjPt_mc_resize,numberPtBins-3, "p_{t}^{Leading Jet} [GeV/c]");
 	  gMPF_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");
   }
 	gMPF_RefObjPt_ratio_resize->GetYaxis()->SetTitle("MPF^{data}/MPF^{MC}");
@@ -946,6 +1242,121 @@ int main (int argc, char** argv)
 	
 	myHistoName = "images/response/MPF_RefObjPt_resize" + extension;	
 	drawComparisonResponse("r1", mgMPF_RefObjPt_resize, gMPF_RefObjPt_mc_resize, gMPF_RefObjPt_data_resize, gMPF_RefObjPt_ratio_resize,"MC", myHistoName.c_str());
+
+//************************************************************************************************************
+//
+//                                      cExp as a function of reference object pt 
+//
+//************************************************************************************************************
+
+	TGraphErrors* gcExp_RefObjPt_data=(TGraphErrors*)f_data->Get("recoilJets/gExp_sum_Fi_log_fi_RecoilPt");
+	TGraphErrors* gcExp_RefObjPt_mc=(TGraphErrors*)f_mc->Get("recoilJets/gExp_sum_Fi_log_fi_RecoilPt");
+
+  TGraphErrors* gcExp_RefObjPt_mc_clone = (TGraphErrors*)gcExp_RefObjPt_mc->Clone();
+
+	TGraph_data_style (gcExp_RefObjPt_data);
+	TGraph_mc_style (gcExp_RefObjPt_mc);
+	TGraph_mc_style (gcExp_RefObjPt_mc_clone);
+
+	gcExp_RefObjPt_mc_clone->SetFillColor(17);
+	//gcExp_RefObjPt_mc_clone->SetFillStyle(3002);
+  gcExp_RefObjPt_mc->SetLineColor(17);
+	
+	TMultiGraph *mgcExp_RefObjPt = new TMultiGraph();
+	mgcExp_RefObjPt->Add(gcExp_RefObjPt_mc_clone,"e3");
+	mgcExp_RefObjPt->Add(gcExp_RefObjPt_mc,"p");
+	mgcExp_RefObjPt->Add(gcExp_RefObjPt_data,"pe");
+  if(useRecoilPtBin) {
+	  mgcExp_RefObjPt->SetTitle("exp(#sum_{i}[F_{i} * log(f_{i})]) as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];exp(#sum_{i}[F_{i} * log(f_{i})])");
+  }
+  else {
+	  mgcExp_RefObjPt->SetTitle("exp(#sum_{i}[F_{i} * log(f_{i})]) as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];exp(#sum_{i}[F_{i} * log(f_{i})])");
+  }
+	
+	TGraphErrors *gcExp_RefObjPt_ratio = NULL;
+  if(useRecoilPtBin) {
+    gcExp_RefObjPt_ratio = getDataMcResponseRatio(gcExp_RefObjPt_data,gcExp_RefObjPt_mc,numberPtBins, "p_{t}^{Recoil} [GeV/c]");
+	  gcExp_RefObjPt_ratio->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+  }
+  else {
+    gcExp_RefObjPt_ratio = getDataMcResponseRatio(gcExp_RefObjPt_data,gcExp_RefObjPt_mc,numberPtBins, "p_{t}^{Leading Jet} [GeV/c]");
+	  gcExp_RefObjPt_ratio->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");  
+  }
+	gcExp_RefObjPt_ratio->GetYaxis()->SetTitle("Data / MC");
+	gcExp_RefObjPt_ratio->SetName("Data / MC");
+	gcExp_RefObjPt_ratio->SetTitle("Data / MC");
+	gcExp_RefObjPt_ratio->SetMarkerSize(1.0);
+	gcExp_RefObjPt_ratio->Fit("func","","",gcExp_RefObjPt_data->GetXaxis()->GetXmin(),gcExp_RefObjPt_data->GetXaxis()->GetXmax());
+	
+	myHistoName = "images/cExp/cExp_sum_Fi_log_fi_RecoilPt_RefObjPt" + extension;	
+	drawComparisonResponse("r1", mgcExp_RefObjPt, gcExp_RefObjPt_mc, gcExp_RefObjPt_data, gcExp_RefObjPt_ratio,"MC", myHistoName.c_str(), false, false);
+
+//************************************************************************************************************
+//
+//                                      cExp as a function of ptrecoil without 2 ptbin
+//
+//************************************************************************************************************
+
+	Double_t acExp_RefObjPt_data_Mean[numberPtBins-3];
+	Double_t acExp_RefObjPt_data_MeanError[numberPtBins-3];
+	Double_t acExp_RefObjPt_mc_Mean[numberPtBins-3];
+	Double_t acExp_RefObjPt_mc_MeanError[numberPtBins-3];
+	Double_t acExpRatio_Mean[numberPtBins-3];
+	Double_t acExpRatio_MeanError[numberPtBins-3];
+	
+	for(int i=1; i<numberPtBins-2; i++) {
+    gcExp_RefObjPt_data->GetPoint(i,aRefObjPtBins_Mean[i-1],acExp_RefObjPt_data_Mean[i-1]);
+    gcExp_RefObjPt_mc->GetPoint(i,aRefObjPtBins_Mean[i-1],acExp_RefObjPt_mc_Mean[i-1]);
+    gcExp_RefObjPt_ratio->GetPoint(i,aRefObjPtBins_Mean[i-1],acExpRatio_Mean[i-1]);
+    acExp_RefObjPt_data_MeanError[i-1] = gcExp_RefObjPt_data->GetErrorY(i);
+    acExp_RefObjPt_mc_MeanError[i-1] = gcExp_RefObjPt_mc->GetErrorY(i);
+    aRefObjPtBins_MeanError[i-1] = gcExp_RefObjPt_data->GetErrorX(i);
+    acExpRatio_MeanError[i-1] = gcExp_RefObjPt_ratio->GetErrorY(i);
+	}
+
+	TGraphErrors* gcExp_RefObjPt_data_resize = new TGraphErrors(numberPtBins-3,aRefObjPtBins_Mean, acExp_RefObjPt_data_Mean, aRefObjPtBins_MeanError, acExp_RefObjPt_data_MeanError);
+	TGraphErrors* gcExp_RefObjPt_mc_resize = new TGraphErrors(numberPtBins-3,aRefObjPtBins_Mean, acExp_RefObjPt_mc_Mean, aRefObjPtBins_MeanError, acExp_RefObjPt_mc_MeanError);	
+	TGraph* gcExp_RefObjPt_mc_resize_pointsOnly = new TGraph(numberPtBins-3,aRefObjPtBins_Mean, acExp_RefObjPt_mc_Mean);	
+
+  TGraphErrors* gcExp_RefObjPt_mc_clone_resize = (TGraphErrors*)gcExp_RefObjPt_mc_resize->Clone();
+	
+	TGraph_data_style (gcExp_RefObjPt_data_resize);
+	TGraph_mc_style (gcExp_RefObjPt_mc_resize);
+	TGraph_mc_style (gcExp_RefObjPt_mc_resize_pointsOnly);
+	TGraph_mc_style (gcExp_RefObjPt_mc_clone_resize);
+
+	gcExp_RefObjPt_mc_clone_resize->SetFillColor(17);
+	//gcExp_RefObjPt_mc_resize->SetFillStyle(3002);
+  gcExp_RefObjPt_mc_resize->SetFillColor(17);
+	
+	TMultiGraph *mgcExp_RefObjPt_resize = new TMultiGraph();
+  mgcExp_RefObjPt_resize->Add(gcExp_RefObjPt_mc_resize,"e3");
+	mgcExp_RefObjPt_resize->Add(gcExp_RefObjPt_mc_resize_pointsOnly,"p");
+	mgcExp_RefObjPt_resize->Add(gcExp_RefObjPt_data_resize,"pe");
+  if(useRecoilPtBin) {
+	  mgcExp_RefObjPt_resize->SetTitle("exp(#sum_{i}[F_{i} * log(f_{i})]) as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];exp(#sum_{i}[F_{i} * log(f_{i})])");
+  }
+  else {
+    mgcExp_RefObjPt_resize->SetTitle("exp(#sum_{i}[F_{i} * log(f_{i})]) as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];exp(#sum_{i}[F_{i} * log(f_{i})])");
+  }
+	
+	TGraphErrors *gcExp_RefObjPt_ratio_resize = NULL;
+  if(useRecoilPtBin) {
+    gcExp_RefObjPt_ratio_resize = getDataMcResponseRatio(gcExp_RefObjPt_data_resize,gcExp_RefObjPt_mc_resize,numberPtBins-3, "p_{t}^{Recoil} [GeV/c]");
+	  gcExp_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+  }
+  else {
+    gcExp_RefObjPt_ratio_resize = getDataMcResponseRatio(gcExp_RefObjPt_data_resize,gcExp_RefObjPt_mc_resize,numberPtBins-3, "p_{t}^{Leading Jet} [GeV/c]");
+	  gcExp_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");
+  }
+	gcExp_RefObjPt_ratio_resize->GetYaxis()->SetTitle("Data / MC");
+	gcExp_RefObjPt_ratio_resize->SetName("Data / MC");
+	gcExp_RefObjPt_ratio_resize->SetTitle("Data / MC");
+	gcExp_RefObjPt_ratio_resize->SetMarkerSize(1.0);
+	gcExp_RefObjPt_ratio_resize->Fit("func","","",gcExp_RefObjPt_data_resize->GetXaxis()->GetXmin(),gcExp_RefObjPt_data_resize->GetXaxis()->GetXmax());
+	
+	myHistoName = "images/cExp/cExp_sum_Fi_log_fi_RecoilPt_RefObjPt_resize" + extension;	
+	drawComparisonResponse("r1", mgcExp_RefObjPt_resize, gcExp_RefObjPt_mc_resize, gcExp_RefObjPt_data_resize, gcExp_RefObjPt_ratio_resize,"MC", myHistoName.c_str(), false, false);
 
 //************************************************************************************************************
 //
@@ -1068,14 +1479,14 @@ int main (int argc, char** argv)
 //
 //************************************************************************************************************
 
-	Double_t aNjetsRecoil_RefObjPt_data_Mean[numberPtBins-2];
-	Double_t aNjetsRecoil_RefObjPt_data_MeanError[numberPtBins-2];
-	Double_t aNjetsRecoil_RefObjPt_mc_Mean[numberPtBins-2];
-	Double_t aNjetsRecoil_RefObjPt_mc_MeanError[numberPtBins-2];
-	Double_t aNjetsRecoilRatio_Mean[numberPtBins-2];
-	Double_t aNjetsRecoilRatio_MeanError[numberPtBins-2];
+	Double_t aNjetsRecoil_RefObjPt_data_Mean[numberPtBins-3];
+	Double_t aNjetsRecoil_RefObjPt_data_MeanError[numberPtBins-3];
+	Double_t aNjetsRecoil_RefObjPt_mc_Mean[numberPtBins-3];
+	Double_t aNjetsRecoil_RefObjPt_mc_MeanError[numberPtBins-3];
+	Double_t aNjetsRecoilRatio_Mean[numberPtBins-3];
+	Double_t aNjetsRecoilRatio_MeanError[numberPtBins-3];
 	
-	for(int i=1; i<numberPtBins-1; i++) {
+	for(int i=1; i<numberPtBins-2; i++) {
     gNjetsRecoil_RefObjPt_data->GetPoint(i,aRefObjPtBins_Mean[i-1],aNjetsRecoil_RefObjPt_data_Mean[i-1]);
     gNjetsRecoil_RefObjPt_mc->GetPoint(i,aRefObjPtBins_Mean[i-1],aNjetsRecoil_RefObjPt_mc_Mean[i-1]);
     gNjetsRecoil_RefObjPt_ratio->GetPoint(i,aRefObjPtBins_Mean[i-1],aNjetsRecoilRatio_Mean[i-1]);
@@ -1084,9 +1495,9 @@ int main (int argc, char** argv)
     aNjetsRecoilRatio_MeanError[i-1] = gNjetsRecoil_RefObjPt_ratio->GetErrorY(i);
 	}
 
-	TGraphErrors* gNjetsRecoil_RefObjPt_data_resize = new TGraphErrors(numberPtBins-2,aRefObjPtBins_Mean, aNjetsRecoil_RefObjPt_data_Mean, aRefObjPtBins_MeanError, aNjetsRecoil_RefObjPt_data_MeanError);
-	TGraphErrors* gNjetsRecoil_RefObjPt_mc_resize = new TGraphErrors(numberPtBins-2,aRefObjPtBins_Mean, aNjetsRecoil_RefObjPt_mc_Mean, aRefObjPtBins_MeanError, aNjetsRecoil_RefObjPt_mc_MeanError);	
-	TGraph* gNjetsRecoil_RefObjPt_mc_resize_pointsOnly = new TGraph(numberPtBins-2,aRefObjPtBins_Mean, aNjetsRecoil_RefObjPt_mc_Mean);	
+	TGraphErrors* gNjetsRecoil_RefObjPt_data_resize = new TGraphErrors(numberPtBins-3,aRefObjPtBins_Mean, aNjetsRecoil_RefObjPt_data_Mean, aRefObjPtBins_MeanError, aNjetsRecoil_RefObjPt_data_MeanError);
+	TGraphErrors* gNjetsRecoil_RefObjPt_mc_resize = new TGraphErrors(numberPtBins-3,aRefObjPtBins_Mean, aNjetsRecoil_RefObjPt_mc_Mean, aRefObjPtBins_MeanError, aNjetsRecoil_RefObjPt_mc_MeanError);	
+	TGraph* gNjetsRecoil_RefObjPt_mc_resize_pointsOnly = new TGraph(numberPtBins-3,aRefObjPtBins_Mean, aNjetsRecoil_RefObjPt_mc_Mean);	
 
   TGraphErrors* gNjetsRecoil_RefObjPt_mc_clone_resize = (TGraphErrors*)gNjetsRecoil_RefObjPt_mc_resize->Clone();
 	
@@ -1112,11 +1523,11 @@ int main (int argc, char** argv)
 	
 	TGraphErrors *gNjetsRecoil_RefObjPt_ratio_resize = NULL;
   if(useRecoilPtBin) {
-    gNjetsRecoil_RefObjPt_ratio_resize = getDataMcResponseRatio(gNjetsRecoil_RefObjPt_data_resize,gNjetsRecoil_RefObjPt_mc_resize,numberPtBins-2, "p_{t}^{Recoil} [GeV/c]");
+    gNjetsRecoil_RefObjPt_ratio_resize = getDataMcResponseRatio(gNjetsRecoil_RefObjPt_data_resize,gNjetsRecoil_RefObjPt_mc_resize,numberPtBins-3, "p_{t}^{Recoil} [GeV/c]");
 	  gNjetsRecoil_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
   }
   else {
-    gNjetsRecoil_RefObjPt_ratio_resize = getDataMcResponseRatio(gNjetsRecoil_RefObjPt_data_resize,gNjetsRecoil_RefObjPt_mc_resize,numberPtBins-2, "p_{t}^{Leading Jet} [GeV/c]");
+    gNjetsRecoil_RefObjPt_ratio_resize = getDataMcResponseRatio(gNjetsRecoil_RefObjPt_data_resize,gNjetsRecoil_RefObjPt_mc_resize,numberPtBins-3, "p_{t}^{Leading Jet} [GeV/c]");
 	  gNjetsRecoil_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");
   }
 	gNjetsRecoil_RefObjPt_ratio_resize->GetYaxis()->SetTitle("N_{jets in Recoil}^{data}/N_{jets in Recoil}^{MC}");
@@ -1514,6 +1925,9 @@ int main (int argc, char** argv)
 	
 	TH1F* hNpv_afterSel_mc_lumi=(TH1F*)f_mc->Get("variables/afterSel/hNpv_afterSel");
 	TH1F* hNpv_afterSel_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hNpv_afterSel");
+
+	TH1F* hNjetsRecoil_mc_lumi=(TH1F*)f_mc->Get("variables/afterSel/hNjetsRecoil");
+	TH1F* hNjetsRecoil_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hNjetsRecoil");
 	
 	TH1F* hAlpha_beforeSel_mc_lumi=(TH1F*)f_mc->Get("variables/beforeSel/hAlpha_beforeSel");
 	TH1F* hAlpha_beforeSel_data_lumi=(TH1F*)f_data->Get("variables/beforeSel/hAlpha_beforeSel");
@@ -1522,10 +1936,14 @@ int main (int argc, char** argv)
 	TH1F* hAlpha_afterSel_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hAlpha_afterSel");
 	
 	TH1F* hBeta_beforeSel_mc_lumi=(TH1F*)f_mc->Get("variables/beforeSel/hBeta_beforeSel");
+	hBeta_beforeSel_mc_lumi->GetXaxis()->SetRangeUser(0.,3.15);
 	TH1F* hBeta_beforeSel_data_lumi=(TH1F*)f_data->Get("variables/beforeSel/hBeta_beforeSel");
+	hBeta_beforeSel_data_lumi->GetXaxis()->SetRangeUser(0.,3.15);;
 	
 	TH1F* hBeta_afterSel_mc_lumi=(TH1F*)f_mc->Get("variables/afterSel/hBeta_afterSel");
+  hBeta_afterSel_mc_lumi->GetXaxis()->SetRangeUser(0.,3.15);
 	TH1F* hBeta_afterSel_data_lumi=(TH1F*)f_data->Get("variables/afterSel/hBeta_afterSel");
+	hBeta_afterSel_data_lumi->GetXaxis()->SetRangeUser(0.,3.15);;
 	
 	TH1F* hA_beforeSel_mc_lumi=(TH1F*)f_mc->Get("variables/beforeSel/hA_beforeSel");
 	TH1F* hA_beforeSel_data_lumi=(TH1F*)f_data->Get("variables/beforeSel/hA_beforeSel");
@@ -1975,6 +2393,25 @@ int main (int argc, char** argv)
 	myHistoName = "images/variables/RecoilPt_afterSel_lumi_inLogScale" + extension;
 	drawDataMcComparison("RecoilPt_afterSel", hRecoilPt_afterSel_mc_lumi, hRecoilPt_afterSel_data_lumi,"p_{t}^{Recoil} [GeV/c]", myHistoName.c_str());
 		
+
+//************************************************************************************************************
+//
+//                                      RecoilPt afterSel zoom 
+//
+//************************************************************************************************************	
+			
+	TH1* hRecoilPt_afterSel_mc_lumi_zoom = (TH1F*)hRecoilPt_afterSel_mc_lumi->Clone();
+	TH1* hRecoilPt_afterSel_data_lumi_zoom = (TH1F*)hRecoilPt_afterSel_data_lumi->Clone();
+
+
+	h1_style(hRecoilPt_afterSel_mc_lumi_zoom);
+	h1_style(hRecoilPt_afterSel_data_lumi_zoom);
+
+    hRecoilPt_afterSel_mc_lumi_zoom->GetXaxis()->SetRangeUser(0., 600.);
+    hRecoilPt_afterSel_data_lumi_zoom->GetXaxis()->SetRangeUser(0., 600.);
+		
+	myHistoName = "images/variables/RecoilPt_afterSel_zoom_lumi_inLogScale" + extension;
+	drawDataMcComparison("RecoilPt_afterSel_zoom", hRecoilPt_afterSel_mc_lumi_zoom, hRecoilPt_afterSel_data_lumi_zoom,"p_{t}^{leading jet} [GeV/c]", myHistoName.c_str());
 	
 
 //************************************************************************************************************
@@ -2009,6 +2446,21 @@ int main (int argc, char** argv)
 	hNpv_afterSel_mc_lumi->Scale(getLumi());
 	myHistoName = "images/variables/Npv_afterSel_lumi_inLogScale" + extension;
 	drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_lumi, hNpv_afterSel_data_lumi, "N_{PV}", myHistoName.c_str());
+
+//************************************************************************************************************
+//
+//                                      Njets in recoil afterSel 
+//
+//************************************************************************************************************	
+			
+	
+	h1_style(hNjetsRecoil_mc_lumi);
+	h1_style(hNjetsRecoil_data_lumi);
+		
+	//rescale the Monte Carlo histogramm with luminosity
+	hNjetsRecoil_mc_lumi->Scale(getLumi());
+	myHistoName = "images/variables/NjetsRecoil_lumi_inLogScale" + extension;
+	drawDataMcComparison("NjetsRecoil", hNjetsRecoil_mc_lumi, hNjetsRecoil_data_lumi, "N_{PV}", myHistoName.c_str());
 		
 
 //************************************************************************************************************
@@ -2260,6 +2712,9 @@ int main (int argc, char** argv)
       drawDataMcComparison("Npv_beforeSel", hNpv_beforeSel_mc_lumi, hNpv_beforeSel_data_lumi,  "N_{PV}", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/Npv_afterSel_lumi_inLinScale" + extension;
       drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_lumi, hNpv_afterSel_data_lumi,  "N_{PV}", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/NjetsRecoil_lumi_inLinScale" + extension;
+      drawDataMcComparison("NjetsRecoil", hNjetsRecoil_mc_lumi, hNjetsRecoil_data_lumi,  "N_{jets in recoil}", myHistoName.c_str(), inLinScale);
+
       myHistoName = "images/variables/FracRmPuJets_JetPt_lumi_inLinScale" + extension;
       drawDataMcComparison("FracRmPuJets_JetPt", hFracRmPuJets_JetPt_mc_lumi, hFracRmPuJets_JetPt_data_lumi,  "p_{t}^{jet} [GeV/c]", myHistoName.c_str(), inLinScale, "N_{removed PU jets}/N_{total jets}");
       myHistoName = "images/variables/FracRmPuJets_JetPt_zoomed_lumi_inLinScale" + extension;
@@ -2878,6 +3333,26 @@ int main (int argc, char** argv)
 
 	myHistoName = "images/variables/Npv_afterSel_shape_inLogScale" + extension;
 	drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_shape, hNpv_afterSel_data_shape, "N_{PV}", myHistoName.c_str());
+
+//************************************************************************************************************
+//
+//                                      Njets in recoil afterSel 
+//
+//************************************************************************************************************	
+	
+	TH1F* hNjetsRecoil_mc_shape=(TH1F*)hNjetsRecoil_mc_lumi->Clone();
+	TH1F* hNjetsRecoil_data_shape=(TH1F*)hNjetsRecoil_data_lumi->Clone();
+
+	h1_style(hNjetsRecoil_mc_shape);
+	h1_style(hNjetsRecoil_data_shape);
+		
+	//rescale the Monte Carlo histogramm with number of entries
+	float Nentries_NjetsRecoil_mc = hNjetsRecoil_mc_shape->Integral();
+	float Nentries_NjetsRecoil_Data = hNjetsRecoil_data_shape->Integral();	
+	hNjetsRecoil_mc_shape->Scale(Nentries_NjetsRecoil_Data/Nentries_NjetsRecoil_mc);
+
+	myHistoName = "images/variables/NjetsRecoil_shape_inLogScale" + extension;
+	drawDataMcComparison("NjetsRecoil", hNjetsRecoil_mc_shape, hNjetsRecoil_data_shape, "N_{PV}", myHistoName.c_str());
 	
 //************************************************************************************************************
 //
@@ -3161,6 +3636,8 @@ int main (int argc, char** argv)
       drawDataMcComparison("Npv_beforeSel", hNpv_beforeSel_mc_shape, hNpv_beforeSel_data_shape, "N_{PV}", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/Npv_afterSel_shape_inLinScale" + extension;
       drawDataMcComparison("Npv_afterSel", hNpv_afterSel_mc_shape, hNpv_afterSel_data_shape, "N_{PV}", myHistoName.c_str(), inLinScale);
+      myHistoName = "images/variables/NjetsRecoil_shape_inLinScale" + extension;
+      drawDataMcComparison("NjetsRecoil", hNjetsRecoil_mc_shape, hNjetsRecoil_data_shape, "N_{jets in recoil}", myHistoName.c_str(), inLinScale);
       myHistoName = "images/variables/FracRmPuJets_JetPt_shape_inLinScale" + extension;
       drawDataMcComparison("FracRmPuJets_JetPt", hFracRmPuJets_JetPt_mc_shape, hFracRmPuJets_JetPt_data_shape, "p_{t}^{jet} [GeV/c]", myHistoName.c_str(), inLinScale, "N_{removed PU jets}/N_{total jets}");
       myHistoName = "images/variables/FracRmPuJets_JetPt_zoomed_shape_inLinScale" + extension;
