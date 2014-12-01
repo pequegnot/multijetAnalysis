@@ -10,7 +10,7 @@ Double_t mybw(Double_t* x, Double_t* par)
 
 #include "tdrstyle.C"
 
-void fit_invMJB() {
+void fit_invMJB_mc() {
 
   setTDRStyle();
 
@@ -51,7 +51,8 @@ void fit_invMJB() {
   gPad->Modified();
   gPad->Update();
 
-  c->Print("images/MJB/invmjb_response_fit_pt20_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_Data_run2012ABCD.pdf");
+  c->Print("images/MJB/invmjb_response_fit_pt20_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_QCD-HT.pdf");
 }
+
 
 
