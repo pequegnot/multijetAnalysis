@@ -34,20 +34,23 @@ inputs_data = []
 
 if option.run:
     for aRun, aDataset in runs.items():
-        input = "output_rootfile/%s/data/MULTIJET_Data_%s_merged_2012_woPU_pt30_eta50_puJetIdT_beforePrecaleReweighting.root" % (d,aRun)
+        input = "output_rootfile/%s/data/MULTIJET_Data_%s_merged_2012_notRmPUJets_pt10_eta50_recoilPtHLTBin_type1fix_beforePrescaleReweighting.root" % (d,aRun)
+        #input = "output_rootfile/21Jun14/data/MULTIJET_Data_%s_merged_2012_woPU_pt30_eta50_puJetIdT_recoilPtHLTBin_type1fix_beforePrescaleReweighting.root" % (aRun)
         #input = "output_rootfile/%s/data_woPrescaleReweighting/MULTIJET_Data_%s_merged_2012.root" % (d,aRun)
         inputs_data.append(input)
 else:
-    input = "output_rootfile/%s/data/MULTIJET_Data_merged_2012_woPU_pt30_eta50_puJetIdT_beforePrecaleReweighting.root" % (d)
+    input = "output_rootfile/%s/data/MULTIJET_Data_merged_2012_notRmPUJets_pt10_eta50_beforePrecaleReweighting.root" % (d)
     inputs_data.append(input)
 
-inputs_mc = ["output_rootfile/%s/MC/MULTIJET_MC_QCD-HT_merged_woPU_pt30_eta50_puJetIdT.root" % (d)]
+inputs_mc = ["output_rootfile/%s/MC/MULTIJET_MC_QCD-HT_merged_notRmPUJets_pt10_eta50_recoilPtHLTBin_type1fix.root" % (d)]
+#inputs_mc = ["output_rootfile/21Jun14/MC/MULTIJET_MC_QCD-HT_merged_woPU_pt30_eta50_puJetIdT_recoilPtHLTBin_type1fix.root"]
 
 #inputs_data = ["output_rootfile/28Apr14_finalSel/data/MULTIJET_Data_merged_2012_woPU_pt30_eta50_puJetIdT_afterPrecaleReweighting.root"]
 #inputs_mc = ["output_rootfile/28Apr14_finalSel/MC/MULTIJET_MC_QCD-HT_merged_woPU_pt30_eta50_puJetIdT.root"]
 
 
 myHLTPtBinning = HLTPtBinning.HLTPtBinning()
+myHLTPtBinning.fillHLTPtBins(option.useRecoilForHLT)
 numberHLTPtBins = myHLTPtBinning.getSize()
 f_mc = TFile.Open(inputs_mc[0])
 hmc = f_mc.Get("variables/afterSel/hLeadingJetPt_afterSel")
