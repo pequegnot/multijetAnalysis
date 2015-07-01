@@ -93,6 +93,7 @@ void setTDRStyle() {
 
 // For the canvas:
   tdrStyle->SetCanvasBorderMode(0);
+  tdrStyle->SetCanvasBorderSize(0);
   tdrStyle->SetCanvasColor(kWhite);
   tdrStyle->SetCanvasDefH(600); //Height of canvas
   tdrStyle->SetCanvasDefW(600); //Width of canvas
@@ -101,7 +102,7 @@ void setTDRStyle() {
 
 // For the Pad:
   tdrStyle->SetPadBorderMode(0);
-  // tdrStyle->SetPadBorderSize(Width_t size = 1);
+  tdrStyle->SetPadBorderSize(0);
   tdrStyle->SetPadColor(kWhite);
   tdrStyle->SetPadGridX(false);
   tdrStyle->SetPadGridY(false);
@@ -111,12 +112,12 @@ void setTDRStyle() {
 
 // For the frame:
   tdrStyle->SetFrameBorderMode(0);
-  tdrStyle->SetFrameBorderSize(1);
+  tdrStyle->SetFrameBorderSize(0);
   tdrStyle->SetFrameFillColor(0);
   tdrStyle->SetFrameFillStyle(0);
-  tdrStyle->SetFrameLineColor(1);
-  tdrStyle->SetFrameLineStyle(1);
-  tdrStyle->SetFrameLineWidth(1);
+  //tdrStyle->SetFrameLineColor(1);
+  //tdrStyle->SetFrameLineStyle(1);
+  //tdrStyle->SetFrameLineWidth(1);
   
 // For the histo:
   // tdrStyle->SetHistFillColor(1);
@@ -196,10 +197,10 @@ void setTDRStyle() {
 
   tdrStyle->SetLabelColor(1, "XYZ");
   tdrStyle->SetLabelFont(42, "XYZ");
-  tdrStyle->SetLabelOffset(0.007, "XYZ");
-  tdrStyle->SetLabelSize(0.05, "XYZ");
-
-// For the axis:
+  tdrStyle->SetLabelOffset(0.0065, "XYZ");
+  tdrStyle->SetLabelSize(0.045, "XYZ");
+  
+  // For the axis:
 
   tdrStyle->SetAxisColor(1, "XYZ");
   tdrStyle->SetStripDecimals(kTRUE);
@@ -675,6 +676,8 @@ TCanvas* tdrDiCanvas(const char* canvName, TMultiGraph *hup, TGraph *hdw,
   //canv->SetTickx(0);
   //canv->SetTicky(0);
 
+  canv->SetFrameLineColor(0);
+  canv->SetFrameLineWidth(0);
   canv->Divide(1,2);
 
   canv->cd(1);
@@ -691,6 +694,7 @@ TCanvas* tdrDiCanvas(const char* canvName, TMultiGraph *hup, TGraph *hdw,
   
   // Scale text sizes and margins to match normal size
   hup->GetYaxis()->SetTitleOffset(1.25 * Hup / H_ref);
+  //hup->GetYaxis()->SetTitleOffset(1.25 * Hup / H_ref - 0.01);
   hup->GetXaxis()->SetTitleOffset(1.0);
   hup->GetYaxis()->SetTitleSize(hup->GetYaxis()->GetTitleSize() * H_ref / Hup);
   hup->GetYaxis()->SetLabelSize(hup->GetYaxis()->GetLabelSize() * H_ref / Hup);
@@ -720,7 +724,8 @@ TCanvas* tdrDiCanvas(const char* canvName, TMultiGraph *hup, TGraph *hdw,
 
   // Scale text sizes and margins to match normal size
   hdw->GetYaxis()->SetTitleOffset(1.25 * Hdw / H_ref);
-  hdw->GetXaxis()->SetTitleOffset(1.0);
+  //hdw->GetXaxis()->SetTitleOffset(1.0);
+  hdw->GetXaxis()->SetTitleOffset(1.0 - 0.1);
   hdw->GetYaxis()->SetTitleSize(hdw->GetYaxis()->GetTitleSize() * H_ref / Hdw);
   hdw->GetYaxis()->SetLabelSize(hdw->GetYaxis()->GetLabelSize() * H_ref / Hdw);
   hdw->GetXaxis()->SetTitleSize(hdw->GetXaxis()->GetTitleSize() * H_ref / Hdw);
@@ -743,3 +748,4 @@ TCanvas* tdrDiCanvas(const char* canvName, TMultiGraph *hup, TGraph *hdw,
   
   return canv;
 }
+
