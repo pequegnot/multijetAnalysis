@@ -814,16 +814,20 @@ int main (int argc, char** argv)
 //
 //                                      MJB as a function of reference object pt
 //
-//************************************************************************************************************	
+//************************************************************************************************************
 
 	float aMJB_RefObjPt_Mean[numberPtBins];
 	float aMJB_RefObjPt_MeanError[numberPtBins];
+	float aMJB_RefObjPt_RMS[numberPtBins];
+	float aMJB_RefObjPt_RMSError[numberPtBins];
 	float aRefObjPtBins_Mean[numberPtBins];
 	float aRefObjPtBins_MeanError[numberPtBins];
 	
 	for(int i=0; i<numberPtBins; i++) {
 		aMJB_RefObjPt_Mean[i] = vMJB_RefObjPtBin[i]->GetMean();
 		aMJB_RefObjPt_MeanError[i] = vMJB_RefObjPtBin[i]->GetMeanError();
+		aMJB_RefObjPt_RMS[i] = vMJB_RefObjPtBin[i]->GetRMS();
+		aMJB_RefObjPt_RMSError[i] = vMJB_RefObjPtBin[i]->GetRMSError();
 		aRefObjPtBins_Mean[i] = ( myPtBinning.getBinValueInf(i)+myPtBinning.getBinValueSup(i) )/2.;
 		aRefObjPtBins_MeanError[i]=0.;
 	}
@@ -853,7 +857,80 @@ int main (int argc, char** argv)
 	TGraph_style (gMJB_RefObjPt);
 	saveName = "images/MJB/cMJB_RefObjPt" + typeName + extension;
 	cMJB_RefObjPt->SaveAs(saveName.c_str());
-	
+
+	TCanvas *cMJB_RMS_RefObjPt = new TCanvas("cMJB_RMS_RefObjPt","cMJB_RMS_RefObjPt");
+	cMJB_RMS_RefObjPt->cd();
+
+	TGraphErrors *gMJB_RMS_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aMJB_RefObjPt_RMS, aRefObjPtBins_MeanError, aMJB_RefObjPt_RMSError);
+	gMJB_RMS_RefObjPt->SetName("MJB RMS");
+    if(useRecoilPtBin) {
+	  gMJB_RMS_RefObjPt->SetTitle("MJB RMS as a function of p_{T}^{Recoil}");
+	  gMJB_RMS_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+    }
+    else {
+	  gMJB_RMS_RefObjPt->SetTitle("MJB RMS as a function of p_{T}^{Leading Jet}");
+	  gMJB_RMS_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Leading Jet} (GeV)");
+    }
+	gMJB_RMS_RefObjPt->GetYaxis()->SetTitle("MJB RMS");
+	gMJB_RMS_RefObjPt->SetMarkerStyle(20);
+	gMJB_RMS_RefObjPt->SetMarkerColor(plotColor);
+	gMJB_RMS_RefObjPt->SetLineColor(plotColor);
+	//gMJB_RMS_RefObjPt->SetMarkerSize(0.5);
+	cMJB_RMS_RefObjPt->cd();
+	//gMJB_RMS_RefObjPt->SetLogx(1);
+	//gMJB_RMS_RefObjPt->GetYaxis()->SetRangeUser(0.7,1.1);
+	gMJB_RMS_RefObjPt->Draw("ape");
+	TGraph_style (gMJB_RMS_RefObjPt);
+	saveName = "images/MJB/cMJB_RMS_RefObjPt" + typeName + extension;
+	cMJB_RMS_RefObjPt->SaveAs(saveName.c_str());
+
+//************************************************************************************************************
+//
+//                                      MJB as a function of reference object pt resize
+//
+//************************************************************************************************************
+
+
+  //Double_t aMJB_RefObjPt_data_Mean[numberPtBins-3];
+  //Double_t aMJB_RefObjPt_data_MeanError[numberPtBins-3];
+  //Double_t aRefObjPtBins_Mean_r[numberPtBins-3];
+  //Double_t aRefObjPtBins_MeanError_r[numberPtBins-3];
+
+  //for(int i=0; i<numberPtBins-3; i++) {
+    //gMJB_RefObjPt->GetPoint(i,aRefObjPtBins_Mean_r[i],aMJB_RefObjPt_data_Mean[i]);
+    //aMJB_RefObjPt_data_MeanError[i] = gMJB_RefObjPt->GetErrorY(i);
+    //aRefObjPtBins_MeanError_r[i] = gMJB_RefObjPt->GetErrorX(i);
+    //std::cout << "aRefObjPtBins_Mean_r[" << i<< "]: " << aRefObjPtBins_Mean_r[i] << std::endl;
+    //std::cout << "aMJB_RefObjPt_data_Mean[" << i<< "]: " << aMJB_RefObjPt_data_Mean[i] << std::endl;
+  //}
+
+  //std::cout << "numberPtBins-3: " << numberPtBins-3 << std::endl;
+
+
+	//TCanvas *cMJB_RefObjPt_resize = new TCanvas("cMJB_RefObjPt_resize","cMJB_RefObjPtresize");
+	//cMJB_RefObjPt_resize->cd();
+
+  //TGraphErrors* gMJB_RefObjPt_data_resize = new TGraphErrors(numberPtBins-3,aRefObjPtBins_Mean_r, aMJB_RefObjPt_data_Mean, aRefObjPtBins_MeanError_r, aMJB_RefObjPt_data_MeanError);
+    //if(useRecoilPtBin) {
+		//gMJB_RefObjPt_data_resize->SetTitle("MJB as a function of p_{T}^{Recoil}");
+		//gMJB_RefObjPt_data_resize->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+    //}
+    //else {
+		//gMJB_RefObjPt_data_resize->SetTitle("MJB as a function of p_{T}^{Leading Jet}");
+		//gMJB_RefObjPt_data_resize->GetXaxis()->SetTitle("p_{T}^{Leading Jet} (GeV)");
+    //}
+	//gMJB_RefObjPt_data_resize->GetYaxis()->SetTitle("MJB");
+	//gMJB_RefObjPt_data_resize->SetMarkerStyle(20);
+	//gMJB_RefObjPt_data_resize->SetMarkerColor(plotColor);
+	//gMJB_RefObjPt_data_resize->SetLineColor(plotColor);
+	////gMJB_RefObjPt->SetMarkerSize(0.5);
+	//cMJB_RefObjPt_resize->cd();
+	////gMJB_RefObjPt->SetLogx(1);
+	////gMJB_RefObjPt->GetYaxis()->SetRangeUser(0.7,1.1);
+	//gMJB_RefObjPt_data_resize->Draw("ape");
+	//TGraph_style(gMJB_RefObjPt_data_resize);
+	//saveName = "images/MJB/cMJB_RefObjPt_resize" + typeName + extension;
+	/*cMJB_RefObjPt_resize->SaveAs(saveName.c_str());*/
 
 //************************************************************************************************************
 //
@@ -863,10 +940,14 @@ int main (int argc, char** argv)
 
 	float aMPF_RefObjPt_Mean[numberPtBins];
 	float aMPF_RefObjPt_MeanError[numberPtBins];
+	float aMPF_RefObjPt_RMS[numberPtBins];
+	float aMPF_RefObjPt_RMSError[numberPtBins];
 	
 	for(int i=0; i<numberPtBins; i++) {
 		aMPF_RefObjPt_Mean[i] = vMPF_RefObjPtBin[i]->GetMean();
 		aMPF_RefObjPt_MeanError[i] = vMPF_RefObjPtBin[i]->GetMeanError();
+		aMPF_RefObjPt_RMS[i] = vMPF_RefObjPtBin[i]->GetRMS();
+		aMPF_RefObjPt_RMSError[i] = vMPF_RefObjPtBin[i]->GetRMSError();
 	}
 	
 	TCanvas *cMPF_RefObjPt = new TCanvas("cMPF_RefObjPt","cMPF_RefObjPt");
@@ -895,6 +976,32 @@ int main (int argc, char** argv)
 	saveName = "images/MPF/cMPF_RefObjPt" + typeName + extension;
 	cMPF_RefObjPt->SaveAs(saveName.c_str());
 
+  TCanvas *cMPF_RMS_RefObjPt = new TCanvas("cMPF_RMS_RefObjPt","cMPF_RMS_RefObjPt");
+	cMPF_RMS_RefObjPt->cd();
+
+	TGraphErrors *gMPF_RMS_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aMPF_RefObjPt_RMS, aRefObjPtBins_MeanError, aMPF_RefObjPt_RMSError);
+	gMPF_RMS_RefObjPt->SetName("MPF RMS");
+    if(useRecoilPtBin) {
+	  gMPF_RMS_RefObjPt->SetTitle("MPF RMS as a function of p_{T}^{Recoil}");
+	  gMPF_RMS_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+    }
+    else {
+	  gMPF_RMS_RefObjPt->SetTitle("MPF RMS as a function of p_{T}^{Leading Jet}");
+	  gMPF_RMS_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Leading Jet} (GeV)");
+    }
+	gMPF_RMS_RefObjPt->GetYaxis()->SetTitle("MPF RMS");
+	gMPF_RMS_RefObjPt->SetMarkerStyle(20);
+	gMPF_RMS_RefObjPt->SetMarkerColor(plotColor);
+	gMPF_RMS_RefObjPt->SetLineColor(plotColor);
+	//gMPF_RMS_RefObjPt->SetMarkerSize(0.5);
+	cMPF_RMS_RefObjPt->cd();
+	//gMPF_RMS_RefObjPt->SetLogx(1);
+	//gMPF_RMS_RefObjPt->GetYaxis()->SetRangeUser(0.7,1.1);
+	gMPF_RMS_RefObjPt->Draw("ape");
+	TGraph_style (gMPF_RMS_RefObjPt);
+	saveName = "images/MPF/cMPF_RMS_RefObjPt" + typeName + extension;
+	cMPF_RMS_RefObjPt->SaveAs(saveName.c_str());
+
 
   //************************************************************************************************************
 //
@@ -904,10 +1011,14 @@ int main (int argc, char** argv)
 
 	float aMPF_corr_RefObjPt_Mean[numberPtBins];
 	float aMPF_corr_RefObjPt_MeanError[numberPtBins];
+	float aMPF_corr_RefObjPt_RMS[numberPtBins];
+	float aMPF_corr_RefObjPt_RMSError[numberPtBins];
 	
 	for(int i=0; i<numberPtBins; i++) {
 		aMPF_corr_RefObjPt_Mean[i] = vMPF_corr_RefObjPtBin[i]->GetMean();
 		aMPF_corr_RefObjPt_MeanError[i] = vMPF_corr_RefObjPtBin[i]->GetMeanError();
+		aMPF_corr_RefObjPt_RMS[i] = vMPF_corr_RefObjPtBin[i]->GetRMS();
+		aMPF_corr_RefObjPt_RMSError[i] = vMPF_corr_RefObjPtBin[i]->GetRMSError();
 	}
 	
 	TCanvas *cMPF_corr_RefObjPt = new TCanvas("cMPF_corr_RefObjPt","cMPF_corr_RefObjPt");
@@ -935,6 +1046,33 @@ int main (int argc, char** argv)
 	TGraph_style (gMPF_corr_RefObjPt);
 	saveName = "images/MPF/cMPF_corr_RefObjPt" + typeName + extension;
 	cMPF_corr_RefObjPt->SaveAs(saveName.c_str());
+
+	TCanvas *cMPF_RMS_corr_RefObjPt = new TCanvas("cMPF_RMS_corr_RefObjPt","cMPF_RMS_corr_RefObjPt");
+	cMPF_RMS_corr_RefObjPt->cd();
+
+	TGraphErrors *gMPF_RMS_corr_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aMPF_corr_RefObjPt_RMS, aRefObjPtBins_MeanError, aMPF_corr_RefObjPt_RMSError);
+	gMPF_RMS_corr_RefObjPt->SetName("MPF RMS corrected with PU");
+    if(useRecoilPtBin) {
+	  gMPF_RMS_corr_RefObjPt->SetTitle("MPF RMS corrected with PU as a function of p_{T}^{Recoil}");
+	  gMPF_RMS_corr_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+    }
+    else {
+	  gMPF_RMS_corr_RefObjPt->SetTitle("MPF RMS corrected with PU as a function of p_{T}^{Leading Jet}");
+	  gMPF_RMS_corr_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Leading Jet} (GeV)");
+    }
+	gMPF_RMS_corr_RefObjPt->GetYaxis()->SetTitle("MPF RMS corrected with PU");
+	gMPF_RMS_corr_RefObjPt->SetMarkerStyle(20);
+	gMPF_RMS_corr_RefObjPt->SetMarkerColor(plotColor);
+	gMPF_RMS_corr_RefObjPt->SetLineColor(plotColor);
+	//gMPF_RMS_corr_RefObjPt->SetMarkerSize(0.5);
+	cMPF_RMS_corr_RefObjPt->cd();
+	//gMPF_RMS_corr_RefObjPt->SetLogx(1);
+	//gMPF_RMS_corr_RefObjPt->GetYaxis()->SetRangeUser(0.7,1.1);
+	gMPF_RMS_corr_RefObjPt->Draw("ape");
+	TGraph_style (gMPF_RMS_corr_RefObjPt);
+	saveName = "images/MPF/cMPF_RMS_corr_RefObjPt" + typeName + extension;
+	cMPF_RMS_corr_RefObjPt->SaveAs(saveName.c_str());
+
 
   TGraphErrors *gMJB_gen_RefObjPt = NULL;
   TGraphErrors *gMPF_gen_RefObjPt = NULL;
@@ -1509,6 +1647,7 @@ int main (int argc, char** argv)
 	TDirectory *ptbinDir = mjbDir->mkdir("PtBin","PtBin");
 	ptbinDir->cd();
 	gMJB_RefObjPt->Write("gMJB_RefObjPt");
+	gMJB_RMS_RefObjPt->Write("gMJB_RMS_RefObjPt");
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vMJB_RefObjPtBin[j]->Write();
 	}
@@ -1541,7 +1680,9 @@ int main (int argc, char** argv)
 	TDirectory *ptbinmpfDir = mpfDir->mkdir("PtBin","PtBin");
 	ptbinmpfDir->cd();
 	gMPF_RefObjPt->Write("gMPF_RefObjPt");
+	gMPF_RMS_RefObjPt->Write("gMPF_RMS_RefObjPt");
 	gMPF_corr_RefObjPt->Write("gMPF_corr_RefObjPt");
+	gMPF_RMS_corr_RefObjPt->Write("gMPF_RMS_corr_RefObjPt");
 	for(int j=0; j<myPtBinning.getSize(); j++) {
 		vMPF_RefObjPtBin[j]->Write();
 		vMPF_corr_RefObjPtBin[j]->Write();
