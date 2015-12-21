@@ -60,6 +60,7 @@ int main (int argc, char** argv)
 	std::vector<std::string> inputFiles;
 	string outputName;
 	string inputName;
+	string inputName_mc;
 	bool rmPU = false;		
     bool useRecoilPtBin = true;
     bool useRecoilPtHLTBin = false; 	
@@ -81,6 +82,7 @@ int main (int argc, char** argv)
     // such as "-n Bishop".
 
     TCLAP::ValueArg<std::string> inputFileArg("i", "input-file", "The input file", true, "", "string", cmd);
+    TCLAP::ValueArg<std::string> inputFileMCArg("", "input-file-mc", "The corresponding mc input file", false, "", "string", cmd);
     TCLAP::ValueArg<std::string> outputFileArg("o", "output-file", "output file", true, "", "string", cmd);
     TCLAP::ValueArg<std::string> plotNameArg("", "plotName", "plotName", false, "", "string", cmd);
     TCLAP::ValueArg<std::string> extensionArg("", "extension", "extension", false, ".pdf", "string", cmd);
@@ -116,6 +118,7 @@ int main (int argc, char** argv)
     isMC = mcArg.getValue();
     outputName = outputFileArg.getValue();
     inputName = inputFileArg.getValue();
+    inputName_mc = inputFileMCArg.getValue();
     extension = plotNameArg.getValue() + extensionArg.getValue();
     plotName = plotNameArg.getValue();
     rmPU = rmPUArg.getValue();
@@ -140,10 +143,20 @@ int main (int argc, char** argv)
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
     return 1;
   }
-   
+
+  bool foundCorrespondingMCFile = false;
     
+  if (!isMC) {
+    if(!inputName_mc.empty()) {
+      foundCorrespondingMCFile = true;
+      std::cout << "Found MC file corresponding to data file for low statistics bins..." << std::endl;
+    } else {
+      std::cout << "WARNING! No MC file corresponding to data file for low statistics bins!" << std::endl;
+    }
+  }
     
   TFile *f=TFile::Open(inputName.c_str()); 
+  TFile *f_mc=TFile::Open(inputName_mc.c_str());
   	
 
 //*********************************************************************************************************
@@ -194,6 +207,14 @@ int main (int argc, char** argv)
 	vector<TH1F*> vMPF_RefObjPtBin;
 	vMPF_RefObjPtBin.resize(numberPtBins);
 
+	//MJB per recoilpt
+	vector<TH1F*> vMJB_mc_RefObjPtBin;
+	vMJB_mc_RefObjPtBin.resize(numberPtBins);
+
+	//MPF per recoilpt
+	vector<TH1F*> vMPF_mc_RefObjPtBin;
+	vMPF_mc_RefObjPtBin.resize(numberPtBins);
+
 	vector<TH1F*> vMJB_gen_RefObjPtBin;
 	vMJB_gen_RefObjPtBin.resize(numberPtBins);
 
@@ -203,6 +224,9 @@ int main (int argc, char** argv)
 
 	vector<TH1F*> vMPF_corr_RefObjPtBin;
 	vMPF_corr_RefObjPtBin.resize(numberPtBins);
+
+	vector<TH1F*> vMPF_corr_mc_RefObjPtBin;
+	vMPF_corr_mc_RefObjPtBin.resize(numberPtBins);
 
 	//leadingJetPt per recoilpt
 	vector<TH1F*> vLeadingJetPt_RefObjPtBin;
@@ -251,14 +275,23 @@ int main (int argc, char** argv)
 		ptBinName = myPtBinning.getName(j);
     vectorName = "MJB/PtBin/MJB_" + ptBinName;
     vMJB_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
+    if (!isMC && foundCorrespondingMCFile) {
+      vMJB_mc_RefObjPtBin[j] = (TH1F*)f_mc->Get(vectorName.c_str());
+    }
     vectorName = "MPF/PtBin/MPF_" + ptBinName;
     vMPF_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
+    if (!isMC && foundCorrespondingMCFile) {
+      vMPF_mc_RefObjPtBin[j] = (TH1F*)f_mc->Get(vectorName.c_str());
+    }
     vectorName = "MJB_gen/PtBin/MJB_gen_" + ptBinName;
     vMJB_gen_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
     vectorName = "MPF_gen/PtBin/MPF_gen_" + ptBinName;
     vMPF_gen_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
     vectorName = "MPF/PtBin/MPF_corr_" + ptBinName;
     vMPF_corr_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
+    if (!isMC && foundCorrespondingMCFile) {
+      vMPF_corr_mc_RefObjPtBin[j] = (TH1F*)f_mc->Get(vectorName.c_str());
+    }
     vectorName = "leadingJet/PtBin/LeadingJetPt_" + ptBinName;
     vLeadingJetPt_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
     vectorName = "recoil/PtBin/RecoilPt_" + ptBinName;
@@ -826,6 +859,11 @@ int main (int argc, char** argv)
 	for(int i=0; i<numberPtBins; i++) {
 		aMJB_RefObjPt_Mean[i] = vMJB_RefObjPtBin[i]->GetMean();
 		aMJB_RefObjPt_MeanError[i] = vMJB_RefObjPtBin[i]->GetMeanError();
+    if (!isMC && foundCorrespondingMCFile) {
+      if ( vMJB_RefObjPtBin[i]->GetEntries() < 10) {
+        aMJB_RefObjPt_MeanError[i] = vMJB_mc_RefObjPtBin[i]->GetRMS()/sqrt(vMJB_RefObjPtBin[i]->GetEntries());
+      }
+    }
 		aMJB_RefObjPt_RMS[i] = vMJB_RefObjPtBin[i]->GetRMS();
 		aMJB_RefObjPt_RMSError[i] = vMJB_RefObjPtBin[i]->GetRMSError();
 		aRefObjPtBins_Mean[i] = ( myPtBinning.getBinValueInf(i)+myPtBinning.getBinValueSup(i) )/2.;
@@ -946,6 +984,11 @@ int main (int argc, char** argv)
 	for(int i=0; i<numberPtBins; i++) {
 		aMPF_RefObjPt_Mean[i] = vMPF_RefObjPtBin[i]->GetMean();
 		aMPF_RefObjPt_MeanError[i] = vMPF_RefObjPtBin[i]->GetMeanError();
+    if (!isMC && foundCorrespondingMCFile) {
+      if ( vMPF_RefObjPtBin[i]->GetEntries() < 10) {
+        aMPF_RefObjPt_MeanError[i] = vMPF_mc_RefObjPtBin[i]->GetRMS()/sqrt(vMPF_RefObjPtBin[i]->GetEntries());
+      }
+    }
 		aMPF_RefObjPt_RMS[i] = vMPF_RefObjPtBin[i]->GetRMS();
 		aMPF_RefObjPt_RMSError[i] = vMPF_RefObjPtBin[i]->GetRMSError();
 	}
@@ -1017,6 +1060,11 @@ int main (int argc, char** argv)
 	for(int i=0; i<numberPtBins; i++) {
 		aMPF_corr_RefObjPt_Mean[i] = vMPF_corr_RefObjPtBin[i]->GetMean();
 		aMPF_corr_RefObjPt_MeanError[i] = vMPF_corr_RefObjPtBin[i]->GetMeanError();
+    if (!isMC && foundCorrespondingMCFile) {
+      if ( vMPF_corr_RefObjPtBin[i]->GetEntries() < 10) {
+        aMPF_corr_RefObjPt_MeanError[i] = vMPF_corr_mc_RefObjPtBin[i]->GetRMS()/sqrt(vMPF_corr_RefObjPtBin[i]->GetEntries());
+      }
+    }
 		aMPF_corr_RefObjPt_RMS[i] = vMPF_corr_RefObjPtBin[i]->GetRMS();
 		aMPF_corr_RefObjPt_RMSError[i] = vMPF_corr_RefObjPtBin[i]->GetRMSError();
 	}
