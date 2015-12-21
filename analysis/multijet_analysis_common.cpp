@@ -866,8 +866,10 @@ int main (int argc, char** argv)
     }
 		aMJB_RefObjPt_RMS[i] = vMJB_RefObjPtBin[i]->GetRMS();
 		aMJB_RefObjPt_RMSError[i] = vMJB_RefObjPtBin[i]->GetRMSError();
-		aRefObjPtBins_Mean[i] = ( myPtBinning.getBinValueInf(i)+myPtBinning.getBinValueSup(i) )/2.;
-		aRefObjPtBins_MeanError[i]=0.;
+		//aRefObjPtBins_Mean[i] = ( myPtBinning.getBinValueInf(i)+myPtBinning.getBinValueSup(i) )/2.;
+		aRefObjPtBins_Mean[i] = vRecoilPt_RefObjPtBin[i]->GetMean();
+		//aRefObjPtBins_MeanError[i]=0.;
+		aRefObjPtBins_MeanError[i] = vRecoilPt_RefObjPtBin[i]->GetMeanError();
 	}
 	
 	TCanvas *cMJB_RefObjPt = new TCanvas("cMJB_RefObjPt","cMJB_RefObjPt");
