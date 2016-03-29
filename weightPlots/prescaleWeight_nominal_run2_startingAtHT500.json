@@ -1,0 +1,15 @@
+{
+  "runC_JetHT": {
+    "HLT_PFJet260": 10.51671232,
+    "HLT_PFJet320": 5.249362376, 
+    "HLT_PFJet400": 1.149654866, 
+    "HLT_PFJet450": 1 
+  },
+  "runD_JetHT": {
+    "HLT_PFJet260": 11.42446248,
+    "HLT_PFJet320": 5.459431644,
+    "HLT_PFJet400": 2.486488723,
+    "HLT_PFJet450": 1
+  }
+}
+
