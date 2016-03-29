@@ -153,18 +153,20 @@ int main (int argc, char** argv)
   }
 
   bool foundCorrespondingMCFile = false;
+  TFile *f_mc=NULL;
     
   if (!isMC) {
     if(!inputName_mc.empty()) {
       foundCorrespondingMCFile = true;
       std::cout << "Found MC file corresponding to data file for low statistics bins..." << std::endl;
+      f_mc=TFile::Open(inputName_mc.c_str());
     } else {
       std::cout << "WARNING! No MC file corresponding to data file for low statistics bins!" << std::endl;
     }
   }
     
   TFile *f=TFile::Open(inputName.c_str()); 
-  TFile *f_mc=TFile::Open(inputName_mc.c_str());
+  TH1::SetDefaultSumw2(true);
   	
 
 //*********************************************************************************************************
