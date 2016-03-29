@@ -89,34 +89,31 @@ void ptBinning::fillLowPtBins()
 	mPtBins.push_back(std::make_pair(800., 1000.));
 	mPtBins.push_back(std::make_pair(1000., 1200.));
 	mPtBins.push_back(std::make_pair(1200., 1500.));
-	mPtBins.push_back(std::make_pair(1500., 2000.));
+	//mPtBins.push_back(std::make_pair(1500., 2000.));
+	mPtBins.push_back(std::make_pair(1500., 1700.));
+	mPtBins.push_back(std::make_pair(1700., 2000.));
 	mPtBins.push_back(std::make_pair(2000., 3000.));
 }
 
 void ptBinning::fillPtBins() 
 {
-/*  mPtBins.push_back(std::make_pair(150., 200.));*/
-  //mPtBins.push_back(std::make_pair(200., 250.));
-  //mPtBins.push_back(std::make_pair(250., 300.));
-  //mPtBins.push_back(std::make_pair(300., 360.));
-	//mPtBins.push_back(std::make_pair(360., 400.));
-	/*mPtBins.push_back(std::make_pair(400., 450.));*/
-  mPtBins.push_back(std::make_pair(210., 250.));
-  mPtBins.push_back(std::make_pair(250., 290.));
-  mPtBins.push_back(std::make_pair(290., 330.));
-  mPtBins.push_back(std::make_pair(330., 370.));
-	mPtBins.push_back(std::make_pair(370., 420.));
-	mPtBins.push_back(std::make_pair(420., 470.));
-	mPtBins.push_back(std::make_pair(470., 500.));
-	mPtBins.push_back(std::make_pair(500., 550.));
-	mPtBins.push_back(std::make_pair(550., 600.));
-	mPtBins.push_back(std::make_pair(600., 700.));
-	mPtBins.push_back(std::make_pair(700., 800.));
-	mPtBins.push_back(std::make_pair(800., 1000.));
-	mPtBins.push_back(std::make_pair(1000., 1200.));
-	mPtBins.push_back(std::make_pair(1200., 1500.));
-	mPtBins.push_back(std::make_pair(1500., 2000.));
-	mPtBins.push_back(std::make_pair(2000., 3000.));
+  // QCD_HT_300to500 sample not available: starting the analysis at HT = 500 so pt recoil ~350-400
+/*  mPtBins.push_back(std::make_pair(210., 290.));*/
+  /*mPtBins.push_back(std::make_pair(290., 370.));*/
+  mPtBins.push_back(std::make_pair(370., 470.));
+  mPtBins.push_back(std::make_pair(470., 550.));
+  mPtBins.push_back(std::make_pair(550., 610.));
+  mPtBins.push_back(std::make_pair(610., 700.));
+  mPtBins.push_back(std::make_pair(700., 800.));
+  mPtBins.push_back(std::make_pair(800., 900.));
+  mPtBins.push_back(std::make_pair(900., 1000.));
+  mPtBins.push_back(std::make_pair(1000., 1200.));
+  mPtBins.push_back(std::make_pair(1200., 1500.));
+  //mPtBins.push_back(std::make_pair(1500., 2000.));
+  mPtBins.push_back(std::make_pair(1500., 1700.));
+  mPtBins.push_back(std::make_pair(1700., 2000.));
+  mPtBins.push_back(std::make_pair(2000., 2500.));
+  mPtBins.push_back(std::make_pair(2500., 3000.));
 }
 
 
