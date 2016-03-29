@@ -115,9 +115,9 @@ void setTDRStyle() {
   tdrStyle->SetFrameBorderSize(0);
   tdrStyle->SetFrameFillColor(0);
   tdrStyle->SetFrameFillStyle(0);
-  //tdrStyle->SetFrameLineColor(1);
-  //tdrStyle->SetFrameLineStyle(1);
-  //tdrStyle->SetFrameLineWidth(1);
+  tdrStyle->SetFrameLineColor(0);
+  tdrStyle->SetFrameLineStyle(0);
+  tdrStyle->SetFrameLineWidth(0);
   
 // For the histo:
   // tdrStyle->SetHistFillColor(1);
@@ -586,6 +586,7 @@ TCanvas* tdrDiCanvas(const char* canvName, TH1 *hup, TH1 *hdw,
   hup->GetXaxis()->SetTitleOffset(1.0);
   hup->SetTitleSize(hup->GetTitleSize("Y") * H_ref / Hup, "Y");
   hup->SetLabelSize(hup->GetLabelSize("Y") * H_ref / Hup, "Y");
+  hup->SetLabelSize(0, "X");
 
   // Set tick lengths to match original
   hup->SetTickLength(hup->GetTickLength("Y") * Hup / H_ref, "Y");
@@ -700,6 +701,7 @@ TCanvas* tdrDiCanvas(const char* canvName, TMultiGraph *hup, TGraph *hdw,
   hup->GetXaxis()->SetTitleOffset(1.0);
   hup->GetYaxis()->SetTitleSize(hup->GetYaxis()->GetTitleSize() * H_ref / Hup);
   hup->GetYaxis()->SetLabelSize(hup->GetYaxis()->GetLabelSize() * H_ref / Hup);
+  hup->GetXaxis()->SetLabelSize(0);
 
   // Set tick lengths to match original
   hup->GetYaxis()->SetTickLength(hup->GetYaxis()->GetTickLength() * Hup / H_ref);
