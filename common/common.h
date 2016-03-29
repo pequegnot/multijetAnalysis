@@ -84,8 +84,13 @@ int getFlavourNumber () {
 
 
 float getLumi () {
-	return (876.16 + 4.411*pow(10.,3.) +  7.055*pow(10.,3.) + 7.369*pow(10.,3.));
-  //return 7.369*pow(10.,3.);
+	//return (876.16 + 4.411*pow(10.,3.) +  7.055*pow(10.,3.) + 7.369*pow(10.,3.)); // 8 TeV
+  return 2257.90; // 13 TeV 25 ns
+}
+
+float getLumi_13TeV_50ns () {
+  //return (876.16 + 4.411*pow(10.,3.) +  7.055*pow(10.,3.) + 7.369*pow(10.,3.)); // 8 TeV
+  return 1000.;
 }
 
 int getHistoNbinsx() {
