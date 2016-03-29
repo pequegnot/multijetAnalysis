@@ -61,9 +61,11 @@ int main (int argc, char** argv)
 	string outputName;
 	string inputName;
 	string inputName_mc;
+	string inputName_pt10;
 	bool rmPU = false;		
     bool useRecoilPtBin = true;
-    bool useRecoilPtHLTBin = false; 	
+    bool useRecoilPtHLTBin = false;
+    bool useRecoilPtBinFrom10File = false;
 
 
 //********************************************************************************************************* 	
@@ -83,6 +85,7 @@ int main (int argc, char** argv)
 
     TCLAP::ValueArg<std::string> inputFileArg("i", "input-file", "The input file", true, "", "string", cmd);
     TCLAP::ValueArg<std::string> inputFileMCArg("", "input-file-mc", "The corresponding mc input file", false, "", "string", cmd);
+    TCLAP::ValueArg<std::string> inputFilePt10Arg("", "input-file-pt10", "The corresponding input file with recoil built with jets of pt>10 GeV", false, "", "string", cmd);
     TCLAP::ValueArg<std::string> outputFileArg("o", "output-file", "output file", true, "", "string", cmd);
     TCLAP::ValueArg<std::string> plotNameArg("", "plotName", "plotName", false, "", "string", cmd);
     TCLAP::ValueArg<std::string> extensionArg("", "extension", "extension", false, ".pdf", "string", cmd);
@@ -103,6 +106,9 @@ int main (int argc, char** argv)
     TCLAP::SwitchArg rmPUArg("", "rmPU", "Do you want to remove PU jets?", false);
     cmd.add(rmPUArg);
 
+    TCLAP::SwitchArg recoilPtBinFrom10FileArg("", "recoilPtBinFrom10File", "For MPF, do you want to use recoil pt binning from file with recoil build with jets of pt>10 GeV?", false);
+    cmd.add(recoilPtBinFrom10FileArg);
+
     TCLAP::SwitchArg recoilPtBinArg("", "recoilPtBin", "Do you want to bin in recoil pt?", false);
     TCLAP::SwitchArg firstJetPtBinArg("", "firstJetPtBin", "Do you want to bin in 1st jet pt?", false);
     cmd.xorAdd(recoilPtBinArg, firstJetPtBinArg);
@@ -119,9 +125,11 @@ int main (int argc, char** argv)
     outputName = outputFileArg.getValue();
     inputName = inputFileArg.getValue();
     inputName_mc = inputFileMCArg.getValue();
+    inputName_pt10 = inputFilePt10Arg.getValue();
     extension = plotNameArg.getValue() + extensionArg.getValue();
     plotName = plotNameArg.getValue();
     rmPU = rmPUArg.getValue();
+    useRecoilPtBinFrom10File = recoilPtBinFrom10FileArg.getValue();
     useRecoilPtBin = recoilPtBinArg.getValue();
     useRecoilPtHLTBin = recoilPtHLTBinArg.getValue();
     
@@ -982,6 +990,112 @@ int main (int argc, char** argv)
 	float aMPF_RefObjPt_MeanError[numberPtBins];
 	float aMPF_RefObjPt_RMS[numberPtBins];
 	float aMPF_RefObjPt_RMSError[numberPtBins];
+
+  // take <MPF> and <MJB> from the pt>30 GeV pTrecoil bins, but taking <pTrecoil> from pT>10 GeV bins for MPF
+
+	float aRefObjPtBins_pt10_Mean[numberPtBins];
+	float aRefObjPtBins_pt10_MeanError[numberPtBins];
+
+  if(!useRecoilPtBinFrom10File) {
+    for(int i=0; i<numberPtBins; i++) {
+      aRefObjPtBins_pt10_Mean[i] = aRefObjPtBins_Mean[i];
+      aRefObjPtBins_pt10_MeanError[i] = aRefObjPtBins_MeanError[i];
+    }  
+  } else {
+    bool foundCorrespondingFilePt10 = false;
+
+    if(!inputName_pt10.empty()) {
+      foundCorrespondingFilePt10 = true;
+      std::cout << "Found file corresponding to recoil build with jets of pt>10 GeV for MPF..." << std::endl;
+    } else {
+      std::cout << "WARNING! No file corresponding to recoil build with jets of pt>10 GeV for MPF!" << std::endl;
+    }
+
+    TFile *f_pt10=TFile::Open(inputName_pt10.c_str());
+    //RecoilPt per recoilpt
+    vector<TH1F*> vRecoilPt_RefObjPtBin_pt10;
+    vRecoilPt_RefObjPtBin_pt10.resize(numberPtBins);
+    for(int i=0; i<numberPtBins; i++) {
+      ptBinName = myPtBinning.getName(i);
+      vectorName = "recoil/PtBin/RecoilPt_" + ptBinName;
+      vRecoilPt_RefObjPtBin_pt10[i] = (TH1F*)f_pt10->Get(vectorName.c_str());
+      if (vRecoilPt_RefObjPtBin_pt10[i]->GetEntries() != 0) {
+        aRefObjPtBins_pt10_Mean[i] = vRecoilPt_RefObjPtBin_pt10[i]->GetMean();
+        aRefObjPtBins_pt10_MeanError[i] = vRecoilPt_RefObjPtBin_pt10[i]->GetMeanError();
+      } else {
+        aRefObjPtBins_pt10_Mean[i] = ( myPtBinning.getBinValueInf(i)+myPtBinning.getBinValueSup(i) )/2.;
+        aRefObjPtBins_pt10_MeanError[i]=0.;
+      }
+      std::cout << "aRefObjPtBins_pt10_Mean[" << i << "] = " << aRefObjPtBins_pt10_Mean[i] << ";" << std::endl;
+      std::cout << "aRefObjPtBins_pt10_MeanError[" << i << "] = " << aRefObjPtBins_pt10_MeanError[i] << ";" << std::endl;
+    }
+    f_pt10->Close();
+    delete f_pt10;
+  }
+
+
+
+  // MC, recoil with pt>10 GeV
+/*aRefObjPtBins_pt10_Mean[0] = 252.013;*/
+//aRefObjPtBins_pt10_MeanError[0] = 0.0978411;
+//aRefObjPtBins_pt10_Mean[1] = 321.073;
+//aRefObjPtBins_pt10_MeanError[1] = 0.13993;
+//aRefObjPtBins_pt10_Mean[2] = 408.214;
+//aRefObjPtBins_pt10_MeanError[2] = 0.186919;
+//aRefObjPtBins_pt10_Mean[3] = 503.637;
+//aRefObjPtBins_pt10_MeanError[3] = 0.255315;
+//aRefObjPtBins_pt10_Mean[4] = 576.323;
+//aRefObjPtBins_pt10_MeanError[4] = 0.313399;
+//aRefObjPtBins_pt10_Mean[5] = 648.337;
+//aRefObjPtBins_pt10_MeanError[5] = 0.519465;
+//aRefObjPtBins_pt10_Mean[6] = 742.164;
+//aRefObjPtBins_pt10_MeanError[6] = 0.745105;
+//aRefObjPtBins_pt10_Mean[7] = 843.55;
+//aRefObjPtBins_pt10_MeanError[7] = 0.491264;
+//aRefObjPtBins_pt10_Mean[8] = 943.576;
+//aRefObjPtBins_pt10_MeanError[8] = 0.768502;
+//aRefObjPtBins_pt10_Mean[9] = 1077.15;
+//aRefObjPtBins_pt10_MeanError[9] = 1.49597;
+//aRefObjPtBins_pt10_Mean[10] = 1305.16;
+//aRefObjPtBins_pt10_MeanError[10] = 2.76811;
+//aRefObjPtBins_pt10_Mean[11] = 1641.01;
+//aRefObjPtBins_pt10_MeanError[11] = 10.4198;
+//aRefObjPtBins_pt10_Mean[12] = 2157.91;
+//aRefObjPtBins_pt10_MeanError[12] = 15.1143;
+//aRefObjPtBins_pt10_Mean[13] = 2648.1;
+/*aRefObjPtBins_pt10_MeanError[13] = 48.7645;*/
+
+
+  // data, recoil with pt>10 GeV
+/*aRefObjPtBins_pt10_Mean[0] = 237.89;*/
+//aRefObjPtBins_pt10_MeanError[0] = 0.471197;
+//aRefObjPtBins_pt10_Mean[1] = 320.101;
+//aRefObjPtBins_pt10_MeanError[1] = 0.408879;
+//aRefObjPtBins_pt10_Mean[2] = 407.892;
+//aRefObjPtBins_pt10_MeanError[2] = 0.304381;
+//aRefObjPtBins_pt10_Mean[3] = 502.62;
+//aRefObjPtBins_pt10_MeanError[3] = 0.366145;
+//aRefObjPtBins_pt10_Mean[4] = 576.874;
+//aRefObjPtBins_pt10_MeanError[4] = 0.337929;
+//aRefObjPtBins_pt10_Mean[5] = 648.224;
+//aRefObjPtBins_pt10_MeanError[5] = 0.391936;
+//aRefObjPtBins_pt10_Mean[6] = 743.382;
+//aRefObjPtBins_pt10_MeanError[6] = 0.64765;
+//aRefObjPtBins_pt10_Mean[7] = 844.611;
+//aRefObjPtBins_pt10_MeanError[7] = 1.02579;
+//aRefObjPtBins_pt10_Mean[8] = 944.43;
+//aRefObjPtBins_pt10_MeanError[8] = 1.60885;
+//aRefObjPtBins_pt10_Mean[9] = 1070.74;
+//aRefObjPtBins_pt10_MeanError[9] = 3.30558;
+//aRefObjPtBins_pt10_Mean[10] = 1301.13;
+//aRefObjPtBins_pt10_MeanError[10] = 8.03067;
+//aRefObjPtBins_pt10_Mean[11] = 1691.35;
+//aRefObjPtBins_pt10_MeanError[11] = 30.9797;
+//aRefObjPtBins_pt10_Mean[12] = 2250;
+//aRefObjPtBins_pt10_MeanError[12] = 0;
+//aRefObjPtBins_pt10_Mean[13] = 2750;
+/*aRefObjPtBins_pt10_MeanError[13] = 0;*/
+
 	
 	for(int i=0; i<numberPtBins; i++) {
 		aMPF_RefObjPt_Mean[i] = vMPF_RefObjPtBin[i]->GetMean();
@@ -998,7 +1112,7 @@ int main (int argc, char** argv)
 	TCanvas *cMPF_RefObjPt = new TCanvas("cMPF_RefObjPt","cMPF_RefObjPt");
 	cMPF_RefObjPt->cd();
 	
-	TGraphErrors *gMPF_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aMPF_RefObjPt_Mean, aRefObjPtBins_MeanError, aMPF_RefObjPt_MeanError);
+	TGraphErrors *gMPF_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_pt10_Mean, aMPF_RefObjPt_Mean, aRefObjPtBins_pt10_MeanError, aMPF_RefObjPt_MeanError);
 	gMPF_RefObjPt->SetName("MPF");
     if(useRecoilPtBin) {
 	  gMPF_RefObjPt->SetTitle("MPF as a function of p_{T}^{Recoil}");
@@ -1024,7 +1138,7 @@ int main (int argc, char** argv)
   TCanvas *cMPF_RMS_RefObjPt = new TCanvas("cMPF_RMS_RefObjPt","cMPF_RMS_RefObjPt");
 	cMPF_RMS_RefObjPt->cd();
 
-	TGraphErrors *gMPF_RMS_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aMPF_RefObjPt_RMS, aRefObjPtBins_MeanError, aMPF_RefObjPt_RMSError);
+	TGraphErrors *gMPF_RMS_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_pt10_Mean, aMPF_RefObjPt_RMS, aRefObjPtBins_pt10_MeanError, aMPF_RefObjPt_RMSError);
 	gMPF_RMS_RefObjPt->SetName("MPF RMS");
     if(useRecoilPtBin) {
 	  gMPF_RMS_RefObjPt->SetTitle("MPF RMS as a function of p_{T}^{Recoil}");
@@ -1074,7 +1188,7 @@ int main (int argc, char** argv)
 	TCanvas *cMPF_corr_RefObjPt = new TCanvas("cMPF_corr_RefObjPt","cMPF_corr_RefObjPt");
 	cMPF_corr_RefObjPt->cd();
 	
-	TGraphErrors *gMPF_corr_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aMPF_corr_RefObjPt_Mean, aRefObjPtBins_MeanError, aMPF_corr_RefObjPt_MeanError);
+	TGraphErrors *gMPF_corr_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_pt10_Mean, aMPF_corr_RefObjPt_Mean, aRefObjPtBins_pt10_MeanError, aMPF_corr_RefObjPt_MeanError);
 	gMPF_corr_RefObjPt->SetName("MPF corrected with PU");
     if(useRecoilPtBin) {
 	  gMPF_corr_RefObjPt->SetTitle("MPF corrected with PU as a function of p_{T}^{Recoil}");
@@ -1100,7 +1214,7 @@ int main (int argc, char** argv)
 	TCanvas *cMPF_RMS_corr_RefObjPt = new TCanvas("cMPF_RMS_corr_RefObjPt","cMPF_RMS_corr_RefObjPt");
 	cMPF_RMS_corr_RefObjPt->cd();
 
-	TGraphErrors *gMPF_RMS_corr_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aMPF_corr_RefObjPt_RMS, aRefObjPtBins_MeanError, aMPF_corr_RefObjPt_RMSError);
+	TGraphErrors *gMPF_RMS_corr_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_pt10_Mean, aMPF_corr_RefObjPt_RMS, aRefObjPtBins_pt10_MeanError, aMPF_corr_RefObjPt_RMSError);
 	gMPF_RMS_corr_RefObjPt->SetName("MPF RMS corrected with PU");
     if(useRecoilPtBin) {
 	  gMPF_RMS_corr_RefObjPt->SetTitle("MPF RMS corrected with PU as a function of p_{T}^{Recoil}");
