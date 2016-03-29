@@ -98,11 +98,13 @@ int getHistoNbinsx() {
 }
 
 double getHistoXlow() {
-	return 0.;
+	//return 0.;
+    return 0.7;
 }
 
 double getHistoXup() {
-	return 3.;
+	//return 3.;
+	return 1.3;
 }
 
 std::vector<TH1F*> buildPtVectorH1(ptBinning& aPtBinning,const std::string& aName,Int_t nbinsx,Double_t xlow,Double_t xup)
