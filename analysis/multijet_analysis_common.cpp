@@ -311,7 +311,7 @@ int main (int argc, char** argv)
 
   for(int j=0; j<myHLTPtBinning.getSize(); j++) {
     ptBinName = myHLTPtBinning.getName(j);
-    vectorName = "leadingJet/HLTPtBin/LeadingJetPt_" + ptBinName;
+    vectorName = "leadingJet/HLTPtBin/LeadingJetPt_perHLTTrigger_" + ptBinName;
     vLeadingJetPt_HLTRefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
 	}
 
@@ -404,10 +404,13 @@ int main (int argc, char** argv)
 	TH1F* hNjetsTotal =  (TH1F*)f->Get("variables/afterSel/hNjetsTotal");	
     TH1F* hJetsPt_afterSel = (TH1F*)f->Get("variables/afterSel/hJetsPt_afterSel");
     TH1F* hJetsEta_afterSel = (TH1F*)f->Get("variables/afterSel/hJetsEta_afterSel");
+    TH1F* hLeadingJetEta_afterSel = (TH1F*)f->Get("variables/afterSel/hLeadingJetEta_afterSel");
+    TH1F* hRecoilEta_afterSel = (TH1F*)f->Get("variables/afterSel/hRecoilEta_afterSel");
     TH1F* hJetsPhi_afterSel = (TH1F*)f->Get("variables/afterSel/hJetsPhi_afterSel");
 
 	TH1F* hMet_beforeSel = (TH1F*)f->Get("variables/beforeSel/hMet_beforeSel");
 	TH1F* hLeadingJetPt_beforeSel = (TH1F*)f->Get("variables/beforeSel/hLeadingJetPt_beforeSel");	
+	TH1F* hSecondJetPt_beforeSel = (TH1F*)f->Get("variables/beforeSel/hSecondJetPt_beforeSel");	
 	TH1F* hRecoilPt_beforeSel = (TH1F*)f->Get("variables/beforeSel/hRecoilPt_beforeSel");	
 	TH1F* hNpv_beforeSel = (TH1F*)f->Get("variables/beforeSel/hNpv_beforeSel");	
 	TH1F* hAlpha_beforeSel = (TH1F*)f->Get("variables/beforeSel/hAlpha_beforeSel");
@@ -416,11 +419,16 @@ int main (int argc, char** argv)
 	TH1F* hRecoilJetsPt_beforeSel = (TH1F*)f->Get("variables/beforeSel/hRecoilJetsPt_beforeSel");	
     TH1F* hJetsPt_beforeSel = (TH1F*)f->Get("variables/beforeSel/hJetsPt_beforeSel");
     TH1F* hJetsEta_beforeSel = (TH1F*)f->Get("variables/beforeSel/hJetsEta_beforeSel");
+    TH1F* hLeadingJetEta_beforeSel = (TH1F*)f->Get("variables/beforeSel/hLeadingJetEta_beforeSel");
+    TH1F* hRecoilEta_beforeSel = (TH1F*)f->Get("variables/beforeSel/hRecoilEta_beforeSel");
     TH1F* hJetsPhi_beforeSel = (TH1F*)f->Get("variables/beforeSel/hJetsPhi_beforeSel");
     TH1F* hNjets_ptSup30_etaInf5_beforeSel = (TH1F*)f->Get("variables/beforeSel/hNjets_ptSup30_etaInf5_beforeSel");
 		
 	TH1F* hMet_afterSel = (TH1F*)f->Get("variables/afterSel/hMet_afterSel");	
 	TH1F* hLeadingJetPt_afterSel = (TH1F*)f->Get("variables/afterSel/hLeadingJetPt_afterSel");		
+	TH1F* hLeadingJetMass_afterSel = (TH1F*)f->Get("variables/afterSel/hLeadingJetMass_afterSel");		
+	TH1F* hLeadingAndSecondJetsMass_afterSel = (TH1F*)f->Get("variables/afterSel/hLeadingAndSecondJetsMass_afterSel");		
+	TH1F* hSecondJetPt_afterSel = (TH1F*)f->Get("variables/afterSel/hSecondJetPt_afterSel");		
 	TH1F* hRecoilPt_afterSel = (TH1F*)f->Get("variables/afterSel/hRecoilPt_afterSel");	
 	TH1F* hNpv_afterSel = (TH1F*)f->Get("variables/afterSel/hNpv_afterSel");				
 	TH1F* hAlpha_afterSel = (TH1F*)f->Get("variables/afterSel/hAlpha_afterSel");	
@@ -876,10 +884,15 @@ int main (int argc, char** argv)
     }
 		aMJB_RefObjPt_RMS[i] = vMJB_RefObjPtBin[i]->GetRMS();
 		aMJB_RefObjPt_RMSError[i] = vMJB_RefObjPtBin[i]->GetRMSError();
-		//aRefObjPtBins_Mean[i] = ( myPtBinning.getBinValueInf(i)+myPtBinning.getBinValueSup(i) )/2.;
-		aRefObjPtBins_Mean[i] = vRecoilPt_RefObjPtBin[i]->GetMean();
-		//aRefObjPtBins_MeanError[i]=0.;
-		aRefObjPtBins_MeanError[i] = vRecoilPt_RefObjPtBin[i]->GetMeanError();
+    if (vRecoilPt_RefObjPtBin[i]->GetEntries() != 0) {
+      aRefObjPtBins_Mean[i] = vRecoilPt_RefObjPtBin[i]->GetMean();
+      aRefObjPtBins_MeanError[i] = vRecoilPt_RefObjPtBin[i]->GetMeanError();
+    } else {
+      aRefObjPtBins_Mean[i] = ( myPtBinning.getBinValueInf(i)+myPtBinning.getBinValueSup(i) )/2.;
+      aRefObjPtBins_MeanError[i]=0.;
+    }
+    std::cout << "aRefObjPtBins_Mean[" << i << "] = " << aRefObjPtBins_Mean[i] << ";" << std::endl;
+    std::cout << "aRefObjPtBins_MeanError[" << i << "] = " << aRefObjPtBins_MeanError[i] << ";" << std::endl;
 	}
 	
 	TCanvas *cMJB_RefObjPt = new TCanvas("cMJB_RefObjPt","cMJB_RefObjPt");
@@ -1245,6 +1258,46 @@ int main (int argc, char** argv)
 
   if (isMC){
 
+//************************************************************************************************************
+//
+//                                      MPF_gen as a function of ref obj pt
+//
+//************************************************************************************************************	
+
+	float aMPF_gen_RefObjPt_Mean[numberPtBins];
+	float aMPF_gen_RefObjPt_MeanError[numberPtBins];
+	
+	for(int i=0; i<numberPtBins; i++) {
+		aMPF_gen_RefObjPt_Mean[i] = vMPF_gen_RefObjPtBin[i]->GetMean();
+		aMPF_gen_RefObjPt_MeanError[i] = vMPF_gen_RefObjPtBin[i]->GetMeanError();
+	}
+	
+	TCanvas *cMPF_gen_RefObjPt = new TCanvas("cMPF_gen_RefObjPt","cMPF_gen_RefObjPt");
+	cMPF_gen_RefObjPt->cd();
+	
+	gMPF_gen_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_pt10_Mean, aMPF_gen_RefObjPt_Mean, aRefObjPtBins_pt10_MeanError, aMPF_gen_RefObjPt_MeanError);
+	gMPF_gen_RefObjPt->SetName("MPF_gen");
+    if(useRecoilPtBin) {
+	  gMPF_gen_RefObjPt->SetTitle("MPF_gen as a function of p_{T}^{Recoil}");
+	  gMPF_gen_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+    }
+    else {
+	  gMPF_gen_RefObjPt->SetTitle("MPF_gen as a function of p_{T}^{Leading Jet}");
+	  gMPF_gen_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Leading Jet} (GeV)");    
+    }
+	gMPF_gen_RefObjPt->GetYaxis()->SetTitle("MPF_gen");
+	gMPF_gen_RefObjPt->SetMarkerStyle(20);
+	gMPF_gen_RefObjPt->SetMarkerColor(plotColor);
+	gMPF_gen_RefObjPt->SetLineColor(plotColor);
+	//gMPF_gen_RefObjPt->SetMarkerSize(0.5);	
+	cMPF_gen_RefObjPt->cd();
+	//gMPF_gen_RefObjPt->SetLogx(1);
+	//gMPF_gen_RefObjPt->GetYaxis()->SetRangeUser(0.7,1.1);
+	gMPF_gen_RefObjPt->Draw("ape");
+	TGraph_style (gMPF_gen_RefObjPt);
+	saveName = "images/MPF_gen/cMPF_gen_RefObjPt" + typeName + extension;
+	cMPF_gen_RefObjPt->SaveAs(saveName.c_str());
+
 
 //************************************************************************************************************
 //
@@ -1287,45 +1340,7 @@ int main (int argc, char** argv)
 	cMJB_gen_RefObjPt->SaveAs(saveName.c_str());
 	
 
-//************************************************************************************************************
-//
-//                                      MPF_gen as a function of ref obj pt
-//
-//************************************************************************************************************	
 
-	float aMPF_gen_RefObjPt_Mean[numberPtBins];
-	float aMPF_gen_RefObjPt_MeanError[numberPtBins];
-	
-	for(int i=0; i<numberPtBins; i++) {
-		aMPF_gen_RefObjPt_Mean[i] = vMPF_gen_RefObjPtBin[i]->GetMean();
-		aMPF_gen_RefObjPt_MeanError[i] = vMPF_gen_RefObjPtBin[i]->GetMeanError();
-	}
-	
-	TCanvas *cMPF_gen_RefObjPt = new TCanvas("cMPF_gen_RefObjPt","cMPF_gen_RefObjPt");
-	cMPF_gen_RefObjPt->cd();
-	
-	gMPF_gen_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aMPF_gen_RefObjPt_Mean, aRefObjPtBins_MeanError, aMPF_gen_RefObjPt_MeanError);
-	gMPF_gen_RefObjPt->SetName("MPF_gen");
-    if(useRecoilPtBin) {
-	  gMPF_gen_RefObjPt->SetTitle("MPF_gen as a function of p_{T}^{Recoil}");
-	  gMPF_gen_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
-    }
-    else {
-	  gMPF_gen_RefObjPt->SetTitle("MPF_gen as a function of p_{T}^{Leading Jet}");
-	  gMPF_gen_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Leading Jet} (GeV)");    
-    }
-	gMPF_gen_RefObjPt->GetYaxis()->SetTitle("MPF_gen");
-	gMPF_gen_RefObjPt->SetMarkerStyle(20);
-	gMPF_gen_RefObjPt->SetMarkerColor(plotColor);
-	gMPF_gen_RefObjPt->SetLineColor(plotColor);
-	//gMPF_gen_RefObjPt->SetMarkerSize(0.5);	
-	cMPF_gen_RefObjPt->cd();
-	//gMPF_gen_RefObjPt->SetLogx(1);
-	//gMPF_gen_RefObjPt->GetYaxis()->SetRangeUser(0.7,1.1);
-	gMPF_gen_RefObjPt->Draw("ape");
-	TGraph_style (gMPF_gen_RefObjPt);
-	saveName = "images/MPF_gen/cMPF_gen_RefObjPt" + typeName + extension;
-	cMPF_gen_RefObjPt->SaveAs(saveName.c_str());
 
 
   } // end if isMC
@@ -1943,6 +1958,7 @@ int main (int argc, char** argv)
 	beforeSelDir->cd();
 	hMet_beforeSel->Write();
 	hLeadingJetPt_beforeSel->Write();
+	hSecondJetPt_beforeSel->Write();
 	hRecoilPt_beforeSel->Write();
 	hRecoilJetsPt_beforeSel->Write();
 	hNpv_beforeSel->Write();
@@ -1951,6 +1967,8 @@ int main (int argc, char** argv)
 	hA_beforeSel->Write();
   hJetsPt_beforeSel->Write();
   hJetsEta_beforeSel->Write();
+  hLeadingJetEta_beforeSel->Write();
+  hRecoilEta_beforeSel->Write();
   hJetsPhi_beforeSel->Write();
   hHT_beforeSel->Write();
   hNjets_ptSup30_etaInf5_beforeSel->Write();
@@ -1971,6 +1989,9 @@ int main (int argc, char** argv)
 	hNjetsTotal->Write();
 	hMet_afterSel->Write();
 	hLeadingJetPt_afterSel->Write();
+	hLeadingJetMass_afterSel->Write();
+	hLeadingAndSecondJetsMass_afterSel->Write();
+	hSecondJetPt_afterSel->Write();
 	hRecoilPt_afterSel->Write();
 	hRecoilJetsPt_afterSel->Write();
 	hNpv_afterSel->Write();
@@ -1986,6 +2007,8 @@ int main (int argc, char** argv)
 	hFracJetsPt->Write();
     hJetsPt_afterSel->Write();
     hJetsEta_afterSel->Write();
+    hLeadingJetEta_afterSel->Write();
+    hRecoilEta_afterSel->Write();
     hJetsPhi_afterSel->Write();
     hDeltaPhi_METRecoil_afterSel->Write();
     hDeltaPhi_METJet1_afterSel->Write();
@@ -2040,6 +2063,7 @@ int main (int argc, char** argv)
 	hFracJetsPt->Delete();	
 	hMet_beforeSel->Delete();
 	hLeadingJetPt_beforeSel->Delete();
+	hSecondJetPt_beforeSel->Delete();
 	hRecoilPt_beforeSel->Delete();
 	hNpv_beforeSel->Delete();
 	hAlpha_beforeSel->Delete();
@@ -2047,6 +2071,9 @@ int main (int argc, char** argv)
 	hA_beforeSel->Delete();	
 	hMet_afterSel->Delete();
 	hLeadingJetPt_afterSel->Delete();
+	delete hLeadingJetMass_afterSel;
+	delete hLeadingAndSecondJetsMass_afterSel;
+	hSecondJetPt_afterSel->Delete();
 	hRecoilPt_afterSel->Delete();
 	hNpv_afterSel->Delete();
 	hAlpha_afterSel->Delete();
