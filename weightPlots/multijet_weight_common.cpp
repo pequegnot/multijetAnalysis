@@ -68,7 +68,12 @@ void loadInputFiles(const std::string& filename, std::vector<std::string>& files
   while (getline(ifs, line))
     files.push_back(line);
 
-  ifs.close();
+float computeDeltaPhi(float phi1, float phi2) {
+	float deltaPhi = TMath::Abs((phi1) - (phi2));
+	if(deltaPhi>TMath::Pi()){
+		deltaPhi = 2*TMath::Pi()-deltaPhi;
+	}
+	return deltaPhi;
 }
 
 int main (int argc, char** argv) 
@@ -1161,11 +1166,25 @@ int main (int argc, char** argv)
                     DeltaPhi_METJet1 = 2*TMath::Pi()-DeltaPhi_METJet1;
                 }
 
-//*****************************************************************************************************
-//
-//                                      filling histogramms
-//
-//*****************************************************************************************************
+                //*****************************************************************************************************
+                //
+                //                  beta calculation 
+                //
+                //*****************************************************************************************************
+	
+                beta = -1;
+                int indexClosestJet = 0;
+                float phiClosestJet = ((TLorentzVector*)jets_recoil_4vector->At(0))->Phi();
+                beta = computeDeltaPhi(leadingjetphi, phiClosestJet);
+                for (int i = 1; i < nRecoilJets; i++) {
+                  TLorentzVector *jetP = ((TLorentzVector*)jets_recoil_4vector->At(i));
+                  float phiJet_tmp = jetP->Phi();
+                  float deltaPhi_tmp = computeDeltaPhi(leadingjetphi, phiJet_tmp);
+                  if(deltaPhi_tmp<beta) {
+                    indexClosestJet = i;
+                    beta = deltaPhi_tmp;
+                  }			
+                }
 
 
             hMet_beforeSel->Fill(metpt, weight);
@@ -1407,14 +1426,49 @@ int main (int argc, char** argv)
                               hNpuMediumjetTmp_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
                           }
 
-                        }
-                        else if(jet_puJetId[goodJetsIndex->at(i)] == 7) {
-                          hNpuTightjetTmp_Npv->Fill(n_vertices, weight);
-                          if(i == 0) {
-                            hNpuTightjetTmp_JetPt->Fill(leadingjetpt, weight);
-                          }
-                            else {
-                              hNpuTightjetTmp_JetPt->Fill(((TLorentzVector*)jets_recoil_4vector->At(i-1))->Pt(), weight);
+                    if(jet_PF_puJetFullId[i] == 7) {
+                        hTrueNotPuTightJetPt->Fill(jet_PF_pt, weight);
+                    }
+                    else {
+                        hOtherJetPt->Fill(jet_PF_pt, weight);
+                    }
+                }
+
+                if(binRefObjPt < 0) continue;
+
+                //angular selection
+                //if(alpha < 0.3 && beta > 1.0) {
+                //*****************************************************************************************************
+                //
+                //                  New beta cut: beta>1 for jets with e.g. (pT>30 GeV and pT>0.05*pTrecoil) 
+                //
+                //*****************************************************************************************************
+                if(alpha < 0.3 && ( ((TLorentzVector*)jets_recoil_4vector->At(indexClosestJet))->Pt() > 0.05*recoilpt && beta > 1.0 ) ) {
+
+                    //second jet selection
+                    if(A < 0.6) {
+
+                        //first jet selection
+                        if(fabs(leadingjet->Eta()) < 1.3) {
+
+
+                            hRecoilEta->Fill(fabs(recoileta), weight);
+                            hDeltaPhi_METRecoil_afterSel->Fill(DeltaPhi_METRecoil, weight);
+                            hDeltaPhi_METJet1_afterSel->Fill(DeltaPhi_METJet1, weight);
+                            hMJB_inclusive->Fill(MJB, weight);
+                            hHT_afterSel->Fill(HT,weight);
+                            hNjetsRecoil->Fill(jets_recoil_4vector->GetSize(), weight);
+                            hNjetsTotal->Fill(n_totJets, weight);
+                            hNjetsGood->Fill(n_goodJets, weight);
+                            vNjetsRecoil_RecoilPt[binRecoilPt]->Fill(jets_recoil_4vector->GetSize(), weight);
+                            ptRecoil_tmp = 0;
+                            for(int i=0; i<jets_recoil_4vector->GetSize(); i++) {
+                                nRecoilJets_068E ++;
+                                ptRecoil_tmp = ptRecoil_tmp + ((TLorentzVector*)jets_recoil_4vector->At(i))->Pt();
+                                if(ptRecoil_tmp >= 0.68 * recoilpt) {
+                                    vNjetsRecoil_068E_RecoilPt[binRecoilPt]->Fill(nRecoilJets_068E, weight);
+                                    break;
+                                }	
                             }
                         }*/
                       }
