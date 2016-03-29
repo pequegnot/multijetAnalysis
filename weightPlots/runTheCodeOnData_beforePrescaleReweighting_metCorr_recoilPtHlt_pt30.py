@@ -61,7 +61,7 @@ subprocess.call(args)
 
 #print("Merging run by run...") # only one file per run here
 #for run in inputs:
-    #args = ["hadd","-f", "output_rootfile/%s/data/MULTIJET_Data_JetHT_%s_merged_2015_woPU_pt30_eta50_notRmPUJets_beforePrescaleReweighting.root" % (d,run[0][3])]
+    #args = ["hadd","-f", "output_rootfile/%s/data/MULTIJET_Data_JetHT_%s_merged_2015_woPU_pt30_eta25_notRmPUJets_beforePrescaleReweighting.root" % (d,run[0][3])]
     #path = "output_rootfile/%s/data" % (d)
     #for output in run:
       #args.append(os.path.join(path,output[0]))
