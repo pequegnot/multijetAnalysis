@@ -514,14 +514,17 @@ void drawDataMcComparison(const string& canvasName, TH1 *hMc, TH1 *hData, const 
 
 
   if(withratio != 1) {
-    c1 = tdrCanvas("c1",hMc,2,0,kTRUE);
-    tdrDraw(hMc,"H", kNone,kNone, kSolid, getMcColor(), 1001, getMcColor());
+    c1 = tdrCanvas("c1",hMc,4,0,kTRUE);
+    tdrDraw(hMc,"hist", kNone,kNone, kSolid, 1, 1001, getMcColor());
     tdrDraw(hData,"P", kFullCircle, getDataColor());
+    TH1F* hMc_clone = (TH1F*)hMc->Clone();
+    hMc_clone->SetFillColor(kBlack);
+    hMc_clone->SetFillStyle(3001);
+    hMc_clone->DrawCopy("e2same");
     if(!inLinScale) {
       hData->SetMinimum(0.01);
       gPad-> SetLogy();
     }
-
     gPad->RedrawAxis();
     legend->Draw("same");
     c1->SaveAs(path.c_str());
@@ -2286,9 +2289,15 @@ int main (int argc, char** argv)
       vMJB_RefObjPt_mc_lumi[j]->Scale(getLumi());
       binName = myPtBinning.getName(j);
       myName = "MJB_{data}/MJB_{MC} for " + binName;
-      myXName = "MJB for " + binName;
+      //myXName = "MJB for " + binName;
+      std::stringstream PtBinningName ;
+      PtBinningName.str("");
+      PtBinningName << "MJB response (" << (int) myPtBinning.getBinValueInf(j) << " #leq p_{T,recoil} < " << (int) myPtBinning.getBinValueSup(j) << " GeV)";
+      myXName = PtBinningName.str();
       mySaveName = "images/MJBperRefObjPt/MJB_" + binName + "_lumi_inLogScale" + extension;
       drawDataMcComparison(myName.c_str(), vMJB_RefObjPt_mc_lumi[j], vMJB_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+      mySaveName =  "images/MJBperRefObjPt/MJB_" + binName + "_lumi_inLogScale_woRatio" + extension;
+      drawDataMcComparison(myName.c_str(), vMJB_RefObjPt_mc_lumi[j], vMJB_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), false, "", "r", 0);
     }
 
     //************************************************************************************************************
@@ -2303,9 +2312,15 @@ int main (int argc, char** argv)
       vMPF_RefObjPt_mc_lumi[j]->Scale(getLumi());
       binName = myPtBinning.getName(j);
       myName = "MPF_{data}/MPF_{MC} for " + binName;
-      myXName = "MPF for " + binName;
+      //myXName = "MPF for " + binName;
+      std::stringstream PtBinningName ;
+      PtBinningName.str("");
+      PtBinningName << "MPF response (" << (int) myPtBinning.getBinValueInf(j) << " #leq p_{T,recoil} < " << (int) myPtBinning.getBinValueSup(j) << " GeV)";
+      myXName = PtBinningName.str();
       mySaveName = "images/MPFperRefObjPt/MPF_" + binName + "_lumi_inLogScale" + extension;
       drawDataMcComparison(myName.c_str(), vMPF_RefObjPt_mc_lumi[j], vMPF_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+      mySaveName =  "images/MPFperRefObjPt/MPF_" + binName + "_lumi_inLogScale_woRatio" + extension;
+      drawDataMcComparison(myName.c_str(), vMPF_RefObjPt_mc_lumi[j], vMPF_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), false, "", "r", 0);
     }
 
     //************************************************************************************************************
@@ -3230,14 +3245,25 @@ int main (int argc, char** argv)
       for(int j=0; j<myPtBinning.getSize(); j++) {
         binName = myPtBinning.getName(j);
         myName = "MJB_{data}/MJB_{MC} for " + binName;
-        myXName = "MJB for " + binName;
+        //myXName = "MJB for " + binName;
+        std::stringstream PtBinningName ;
+        PtBinningName.str("");
+        PtBinningName << "MJB response (" << (int) myPtBinning.getBinValueInf(j) << " #leq p_{T,recoil} < " << (int) myPtBinning.getBinValueSup(j) << " GeV)";
+        myXName = PtBinningName.str();
         mySaveName = "images/MJBperRefObjPt/MJB_" + binName + "_lumi_inLinScale" + extension;
         drawDataMcComparison(myName.c_str(), vMJB_RefObjPt_mc_lumi[j], vMJB_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+        mySaveName =  "images/MJBperRefObjPt/MJB_" + binName + "_lumi_inLinScale_woRatio" + extension;
+        drawDataMcComparison(myName.c_str(), vMJB_RefObjPt_mc_lumi[j], vMJB_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale, "", "r", 0);
 
         myName = "MPF_{data}/MPF_{MC} for " + binName;
-        myXName = "MPF for " + binName;
+        //myXName = "MPF for " + binName;
+        PtBinningName.str("");
+        PtBinningName << "MPF response (" << (int) myPtBinning.getBinValueInf(j) << " #leq p_{T,recoil} < " << (int) myPtBinning.getBinValueSup(j) << " GeV)";
+        myXName = PtBinningName.str();
         mySaveName = "images/MPFperRefObjPt/MPF_" + binName + "_lumi_inLinScale" + extension;
         drawDataMcComparison(myName.c_str(), vMPF_RefObjPt_mc_lumi[j], vMPF_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+        mySaveName =  "images/MPFperRefObjPt/MPF_" + binName + "_lumi_inLinScale_woRatio" + extension;
+        drawDataMcComparison(myName.c_str(), vMPF_RefObjPt_mc_lumi[j], vMPF_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale, "", "r", 0);
 
         myName = "pT^{Leading Jet}_{data}/pT^{Leading Jet}_{MC} for " + binName;
         myXName = "pT^{Leading Jet} for " + binName + " [GeV/c]";
@@ -3317,9 +3343,15 @@ int main (int argc, char** argv)
 
       binName = myPtBinning.getName(j);
       myName = "MJB_{data}/MJB_{MC} for " + binName;
-      myXName = "MJB for " + binName;
+      //myXName = "MJB for " + binName;
+      std::stringstream PtBinningName ;
+      PtBinningName.str("");
+      PtBinningName << "MJB response (" << (int) myPtBinning.getBinValueInf(j) << " #leq p_{T,recoil} < " << (int) myPtBinning.getBinValueSup(j) << " GeV)";
+      myXName = PtBinningName.str();
       mySaveName = "images/MJBperRefObjPt/MJB_" + binName + "_shape_inLogScale" + extension;
       drawDataMcComparison(myName.c_str(), vMJB_RefObjPt_mc_lumi[j], vMJB_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+      mySaveName =  "images/MJBperRefObjPt/MJB_" + binName + "_shape_inLogScale_woRatio" + extension;
+      drawDataMcComparison(myName.c_str(), vMJB_RefObjPt_mc_lumi[j], vMJB_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), false, "", "r", 0);
     }
 
     //************************************************************************************************************
@@ -3340,9 +3372,15 @@ int main (int argc, char** argv)
 
       binName = myPtBinning.getName(j);
       myName = "MPF_{data}/MPF_{MC} for " + binName;
-      myXName = "MPF for " + binName;
+      //myXName = "MPF for " + binName;
+      std::stringstream PtBinningName ;
+      PtBinningName.str("");
+      PtBinningName << "MPF response (" << (int) myPtBinning.getBinValueInf(j) << " #leq p_{T,recoil} < " << (int) myPtBinning.getBinValueSup(j) << " GeV)";
+      myXName = PtBinningName.str();
       mySaveName = "images/MPFperRefObjPt/MPF_" + binName + "_shape_inLogScale" + extension;
       drawDataMcComparison(myName.c_str(), vMPF_RefObjPt_mc_lumi[j], vMPF_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str());
+      mySaveName =  "images/MPFperRefObjPt/MPF_" + binName + "_shape_inLogScale_woRatio" + extension;
+      drawDataMcComparison(myName.c_str(), vMPF_RefObjPt_mc_lumi[j], vMPF_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), false, "", "r", 0);
     }
 
     //************************************************************************************************************
@@ -4336,14 +4374,27 @@ int main (int argc, char** argv)
       for(int j=0; j<myPtBinning.getSize(); j++) {
         binName = myPtBinning.getName(j);
         myName = "MJB_{data}/MJB_{MC} for " + binName;
-        myXName = "MJB for " + binName;
+        //myXName = "MJB for " + binName;
+        std::stringstream PtBinningName ;
+        PtBinningName.str("");
+        PtBinningName << "MJB response (" << (int) myPtBinning.getBinValueInf(j) << " #leq p_{T,recoil} < " << (int) myPtBinning.getBinValueSup(j) << " GeV)";
+        myXName = PtBinningName.str();
         mySaveName = "images/MJBperRefObjPt/MJB_" + binName + "_shape_inLinScale" + extension;
         drawDataMcComparison(myName.c_str(), vMJB_RefObjPt_mc_shape[j], vMJB_RefObjPt_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+        mySaveName =  "images/MJBperRefObjPt/MJB_" + binName + "_shape_inLinScale_woRatio" + extension;
+        drawDataMcComparison(myName.c_str(), vMJB_RefObjPt_mc_lumi[j], vMJB_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale, "", "r", 0);
+
 
         myName = "MPF_{data}/MPF_{MC} for " + binName;
-        myXName = "MPF for " + binName;
+        //myXName = "MPF for " + binName;
+        PtBinningName.str("");
+        PtBinningName << "MPF response (" << (int) myPtBinning.getBinValueInf(j) << " #leq p_{T,recoil} < " << (int) myPtBinning.getBinValueSup(j) << " GeV)";
+        myXName = PtBinningName.str();
         mySaveName = "images/MPFperRefObjPt/MPF_" + binName + "_shape_inLinScale" + extension;
         drawDataMcComparison(myName.c_str(), vMPF_RefObjPt_mc_shape[j], vMPF_RefObjPt_data_shape[j], myXName.c_str(), mySaveName.c_str(), inLinScale);
+        mySaveName =  "images/MPFperRefObjPt/MPF_" + binName + "_shape_inLinScale_woRatio" + extension;
+        drawDataMcComparison(myName.c_str(), vMJB_RefObjPt_mc_lumi[j], vMJB_RefObjPt_data_lumi[j], myXName.c_str(), mySaveName.c_str(), inLinScale, "", "r", 0);
+
 
         myName = "pT^{Leading Jet}_{data}/pT^{Leading Jet}_{MC} for " + binName;
         myXName = "pT^{Leading Jet} for " + binName + " [GeV/c]";
