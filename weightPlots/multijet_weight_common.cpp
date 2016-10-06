@@ -945,6 +945,8 @@ int main (int argc, char** argv)
         if(ievt%10000 == 0) {
             cout<<"Event # "<<ievt<<", file ended at "<<(ievt*100.)/(nEvents*1.)<<" %"<<endl;
         } 
+        weight = 1.;
+        //cout << "weight: " << weight << endl;
 
         // 		if(ievt%100000 == 0) {
         // 			cout<<"Check n_jets_recoil: "<<endl;
@@ -1156,8 +1158,10 @@ int main (int argc, char** argv)
 
 
                 dropEvent = true;
-                //cout<<"leadingjetpt: "<<leadingjetpt<<endl;
-                //cout<<" HLT_vector->size(): "<< HLT_vector->size()<<endl;
+/*                cout<<"leadingjetpt: "<<leadingjetpt<<endl;*/
+                //cout<<"recoilpt: "<<recoilpt<<endl;
+                //cout<<"binHLTRefObjPt: "<<binHLTRefObjPt<<endl;
+                /*cout<<" HLT_vector->size(): "<< HLT_vector->size()<<endl;*/
 
                 for (int j = 0; j<myHLTPtBinning.getSize(); j++) {
                     if (binHLTRefObjPt == j && vHLTPrescaleFactor[j] != -1) {
@@ -1165,15 +1169,20 @@ int main (int argc, char** argv)
                         bool passTrigger = false;
                         bool passHigherPtTrigger = false;
                         for (int i = 0; i < HLT_vector->size(); i++) {
-                            if (TString(HLT_vector->at(i)).Contains(myHLTPtBinning.getHLTName(j))) {
-                                //std::cout << "HLTPath for HLTPrescale: " << myHLTPtBinning.getHLTName(j) << std::endl;
-                                passTrigger = true;
+                          if (TString(HLT_vector->at(i)).Contains(myHLTPtBinning.getHLTName(j))) {
+/*                            cout<<"leadingjetpt: "<<leadingjetpt<<endl;*/
+                            //cout<<"recoilpt: "<<recoilpt<<endl;
+                            //cout<<"binHLTRefObjPt: "<<binHLTRefObjPt<<endl;
+                            //cout<<" HLT_vector->size(): "<< HLT_vector->size()<<endl;
+                            /*std::cout << "HLTPath for HLTPrescale: " << myHLTPtBinning.getHLTName(j) << std::endl;*/
+                            passTrigger = true;
                                 break;
                             }
                         }	
 
                         if (passTrigger) {
                             weight = vHLTPrescaleFactor[j];
+                            //std::cout << "prescale weight: " << vHLTPrescaleFactor[j] << std::endl;
                             vHLTRefObjPt_HLTRefObjPtBin[j]->Fill(HLTRefObjPt, weight);
                             dropEvent = false;
                         }
@@ -1183,6 +1192,7 @@ int main (int argc, char** argv)
             }
             //cout<<"dropEvent: "<<dropEvent<<endl;
             //if(dropEvent) continue;
+            //cout<<"event weight after HLT prescale: " << weight << endl;
 
             hWeight->Fill(weight,1);
 

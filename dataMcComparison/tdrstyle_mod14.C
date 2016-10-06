@@ -135,7 +135,8 @@ void setTDRStyle() {
   tdrStyle->SetMarkerStyle(20);
   
 //For the fit/function:
-  tdrStyle->SetOptFit(1);
+  //tdrStyle->SetOptFit(1);
+  tdrStyle->SetOptFit(0);
   tdrStyle->SetFitFormat("5.4g");
   tdrStyle->SetFuncColor(2);
   tdrStyle->SetFuncStyle(1);
@@ -267,8 +268,8 @@ float extraOverCmsTextSize  = 0.76;
 
 
 TString lumi_13TeV = "2.26 fb^{-1}";
-TString lumi_8TeV  = "19.7 fb^{-1}";
 //TString lumi_8TeV  = "1 fb^{-1}";
+TString lumi_8TeV  = "19.7 fb^{-1}";
 TString lumi_7TeV  = "5.1 fb^{-1}";
 
 bool drawLogo      = false;
@@ -312,7 +313,7 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
 
   pad->cd();
 
-  TString lumiText;
+  TString lumiText = "";
   if( iPeriod==1 )
     {
       lumiText += lumi_7TeV;
@@ -510,7 +511,9 @@ TCanvas* tdrCanvas(const char* canvName, TH1 *h,
 
   assert(h);
   h->GetYaxis()->SetTitleOffset(square ? 1.25 : 1);
-  h->GetXaxis()->SetTitleOffset(square ? 1.0 : 0.9);
+  //h->GetXaxis()->SetTitleOffset(square ? 1.0 : 0.9);
+  h->GetXaxis()->SetTitleOffset(square ? 1.25 : 1);
+  h->SetLabelSize(0.045, "XYZ");
   h->Draw("AXIS");
 
   // writing the lumi information and the CMS "logo"
@@ -752,4 +755,5 @@ TCanvas* tdrDiCanvas(const char* canvName, TMultiGraph *hup, TGraph *hdw,
   
   return canv;
 }
+
 
