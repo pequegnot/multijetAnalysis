@@ -7,10 +7,10 @@ d = datetime.datetime.now().strftime("%d%b%y")
 inputs = [
         # QCD HT
 
-        ['MULTIJET_QCD_HT-100To250_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_%s.root', 'list/Systematics/MULTIJET_QCD_HT-100To250_%s_woPU_pt10_eta50_puJetIdT_type1fix_30Jun14.list', 50097518, 10360000],
-        ['MULTIJET_QCD_HT-250To500_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_%s.root', 'list/Systematics/MULTIJET_QCD_HT-250To500_%s_woPU_pt10_eta50_puJetIdT_type1fix_30Jun14.list', 27062078, 276000],
-        ['MULTIJET_MC_QCD_HT-500To1000_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_%s.root', 'list/Systematics/MULTIJET_QCD_HT-500To1000_%s_woPU_pt10_eta50_puJetIdT_type1fix_30Jun14.list', 30249292, 8426],
-        ['MULTIJET_MC_QCD_HT-1000ToInf_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_%s.root', 'list/Systematics/MULTIJET_QCD_HT-1000ToInf_%s_woPU_pt10_eta50_puJetIdT_type1fix_30Jun14.list', 13808863,204],
+        ['MULTIJET_QCD_HT-100To250_woPU_pt30_eta50_puJetIdT_recoilPtHLTBin_type1fix_%s.root', 'list/Systematics/MULTIJET_QCD_HT-100To250_%s_woPU_pt30_eta50_puJetIdT_type1fix.list', 50097518, 10360000],
+        ['MULTIJET_QCD_HT-250To500_woPU_pt30_eta50_puJetIdT_recoilPtHLTBin_type1fix_%s.root', 'list/Systematics/MULTIJET_QCD_HT-250To500_%s_woPU_pt30_eta50_puJetIdT_type1fix.list', 27062078, 276000],
+        ['MULTIJET_MC_QCD_HT-500To1000_woPU_pt30_eta50_puJetIdT_recoilPtHLTBin_type1fix_%s.root', 'list/Systematics/MULTIJET_QCD_HT-500To1000_%s_woPU_pt30_eta50_puJetIdT_type1fix.list', 30249292, 8426],
+        ['MULTIJET_MC_QCD_HT-1000ToInf_woPU_pt30_eta50_puJetIdT_recoilPtHLTBin_type1fix_%s.root', 'list/Systematics/MULTIJET_QCD_HT-1000ToInf_%s_woPU_pt30_eta50_puJetIdT_type1fix.list', 13808863,204],
 
         ]
 
@@ -48,7 +48,7 @@ subprocess.call(args)
 print("Merging ...")
 
 for syst in systs:
-    args = ["hadd","-f", "output_rootfile/%s/MC/Systematics/MULTIJET_MC_QCD-HT_merged_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_%s.root" % (d, syst)]
+    args = ["hadd","-f", "output_rootfile/%s/MC/Systematics/MULTIJET_MC_QCD-HT_merged_woPU_pt30_eta50_puJetIdT_recoilPtHLTBin_type1fix_%s.root" % (d, syst)]
     path = "output_rootfile/%s/MC/Systematics" % (d)
     for output in inputs:
         file = os.path.join(path, output[0] % syst)

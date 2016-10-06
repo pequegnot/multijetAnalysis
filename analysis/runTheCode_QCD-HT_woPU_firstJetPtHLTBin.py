@@ -5,9 +5,12 @@ import os, subprocess, datetime, tempfile
 d = datetime.datetime.now().strftime("%d%b%y")
 
 inputs = [
-    ['MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_firstJetPtHLTBin.root', '../weightPlots/output_rootfile/17Jun14/MC/MULTIJET_MC_QCD-HT_merged_woPU_pt30_eta50_puJetIdT_firstJetPtHLTBin.root', "isMC", "_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_firstJetPtHLTBin_QCD-HT", ".pdf"],
-    ['MULTIJET_Run2012ABCD-22Jan2013_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_firstJetPtHLTBin_afterPrescaleReweighting.root', '../weightPlots/output_rootfile/17Jun14/data/MULTIJET_Data_merged_2012_woPU_pt30_eta50_puJetIdT_firstJetPtHLTBin_afterPrescaleReweighting.root', "isData", "_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_firstJetPtHLTBin_afterPrescaleReweighting", ".pdf"],
+    #['MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_firstJetPtHLTBin.root', '../weightPlots/output_rootfile/17Jun14/MC/MULTIJET_MC_QCD-HT_merged_woPU_pt30_eta50_puJetIdT_firstJetPtHLTBin.root', "isMC", "_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_firstJetPtHLTBin_QCD-HT", ".pdf"],
+    #['MULTIJET_Run2012ABCD-22Jan2013_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_firstJetPtHLTBin_afterPrescaleReweighting.root', '../weightPlots/output_rootfile/17Jun14/data/MULTIJET_Data_merged_2012_woPU_pt30_eta50_puJetIdT_firstJetPtHLTBin_afterPrescaleReweighting.root', "isData", "_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_firstJetPtHLTBin_afterPrescaleReweighting", ".pdf"],
     
+     # Add MJB_gen using recoilpt reco (and no gen) binning
+    ['MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_firstJetPtHLTBin_type1fix.root', '../weightPlots/output_rootfile/23Jun16/MC/MULTIJET_MC_QCD-HT_merged_woPU_pt30_eta50_firstJetPtHLTBin_type1fix.root', "isMC", "_pt30_eta50_puJetIdT_firstJetPtHLTBin_type1fix_QCD-HT", ".pdf"],
+
     #['MULTIJET_MC_QCD-HT-500ToInf_analysis_woPU_pt35_eta50_puJetIdMT_HLTsel_woPtRecoilCut.root', '../weightPlots/output_rootfile/22Apr14/MC/MULTIJET_MC_QCD-HT_merged_woPU_pt35_eta50_puJetIdT_22Apr14.root', "isMC", "_pt35_eta50_puJetIdMT_HLTsel_woPtRecoilCut_QCD-HT", ".pdf"],
     #['MULTIJET_Run2012D-22Jan2013_analysis_woPU_pt35_eta50_puJetIdMT_HLTsel_woPtRecoilCut.root', '../weightPlots/output_rootfile/22Apr14/data/MULTIJET_Data_runD_merged_2012_22Apr14.root', "isData", "_pt35_eta50_puJetIdMT_HLTsel_woPtRecoilCut_runD", ".pdf"],
 

@@ -28,6 +28,8 @@ void HLTPtBinning::fillHLTPtBins(bool useRecoilPtBinHLTSel)
     //mPtBins.push_back(std::make_pair(280., 320.));
     //mPtBins.push_back(std::make_pair(320., 400.));
     /*mPtBins.push_back(std::make_pair(400., 3000.));*/
+    
+    //mPtBins.push_back(std::make_pair(250., 290.));
     mPtBins.push_back(std::make_pair(210., 290.));
     mPtBins.push_back(std::make_pair(290., 370.));
     mPtBins.push_back(std::make_pair(370., 470.));

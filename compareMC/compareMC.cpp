@@ -444,23 +444,24 @@ void drawComparisonResponse_4graphs(const string& canvasName, TMultiGraph *mgRes
 
 int main() 
 {
-	TString inname_data = "../analysis/output_rootfile/07Jul14/data/MULTIJET_Run2012ABCD-22Jan2013_analysis_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_afterPrescaleReweighting.root";
-	TString inname_mc_HT = "../analysis/output_rootfile/25Jul14/MC/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix.root";
-	TString inname_mc_HT_JECup = "../analysis/output_rootfile/25Jul14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_JECup.root";
-	TString inname_mc_HT_JECdown = "../analysis/output_rootfile/25Jul14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_JECdown.root";
-	TString inname_mc_HT_JERup = "../analysis/output_rootfile/25Jul14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_JERup.root";
-	TString inname_mc_HT_JERdown = "../analysis/output_rootfile/25Jul14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_JERdown.root";
-	TString inname_mc_HT_PUup = "../analysis/output_rootfile/25Jul14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_PUup.root";
-	TString inname_mc_HT_PUdown = "../analysis/output_rootfile/25Jul14/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_PUdown.root";
-	TString inname_mc_Pt_pythia = "../analysis/output_rootfile/25Jul14/MC/MULTIJET_MC_QCD-Pt-pythia-120To1400_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix.root";
-	TString inname_mc_Pt_herwig = "../analysis/output_rootfile/25Jul14/MC/MULTIJET_MC_QCD-Pt-herwig-120ToInf_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix.root";
-	TString inname_mc_Pt_flat = "../analysis/output_rootfile/25Jul14/MC/MULTIJET_MC_QCD-Flat-15to3000_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix.root";
+	TString inname_data = "../analysis/output_rootfile/11Jan15/data/MULTIJET_Run2012ABCD-22Jan2013_analysis_woPU_pt30_eta50_puJetIdT_recoilPtHLTBin_type1fix_afterPrescaleReweighting.root";
+	TString inname_mc_HT = "../analysis/output_rootfile/11Jan15/MC/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_recoilPtHLTBin_type1fix.root";
+	TString inname_mc_HT_JECup = "../analysis/output_rootfile/11Jan15/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_JECup.root";
+	TString inname_mc_HT_JECdown = "../analysis/output_rootfile/11Jan15/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_JECdown.root";
+	TString inname_mc_HT_JERup = "../analysis/output_rootfile/11Jan15/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_JERup.root";
+	TString inname_mc_HT_JERdown = "../analysis/output_rootfile/11Jan15/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_JERdown.root";
+	TString inname_mc_HT_PUup = "../analysis/output_rootfile/11Jan15/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_PUup.root";
+	TString inname_mc_HT_PUdown = "../analysis/output_rootfile/11Jan15/MC/Systematics/MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_PUdown.root";
+	TString inname_mc_Pt_pythia = "../analysis/output_rootfile/25Jul14/MC/MULTIJET_MC_QCD-Pt-pythia-120To1400_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix.root";
+	TString inname_mc_Pt_herwig = "../analysis/output_rootfile/25Jul14/MC/MULTIJET_MC_QCD-Pt-herwig-120ToInf_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix.root";
+	TString inname_mc_Pt_flat = "../analysis/output_rootfile/30Jun14/MC/MULTIJET_MC_QCD-Flat-15to3000_analysis_woPU_pt30_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix.root";
 	bool isLumiNorm = false;
 	bool isShapeNorm = false;
 	bool inLinScale = false;
 	bool rmPU = false;
 	
-	string extension = "_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf";	
+	//string extension = "_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf";	
+	string extension = "_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix_test02May16.pdf";	
 	
 	//gStyle->SetOptFit(111111);
 	
@@ -607,13 +608,13 @@ int main()
 	  mgMJB_RefObjPt_PU->SetTitle("MJB as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];MJB");
   }
 	
-	drawComparisonResponse("r1", mgMJB_RefObjPt_JEC, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_HT_JECup, gMJB_RefObjPt_mc_HT_JECdown, "nominal", "JECup", "JECdown", "images/MJB_RefObjPt_JEC_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
-	drawComparisonResponse("r2", mgMJB_RefObjPt_JER, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_HT_JERup, gMJB_RefObjPt_mc_HT_JERdown, "nominal", "JERup", "JERdown", "images/MJB_RefObjPt_JER_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
-	drawComparisonResponse("r3", mgMJB_RefObjPt_PU, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_HT_PUup, gMJB_RefObjPt_mc_HT_PUdown, "nominal", "PUup", "PUdown", "images/MJB_RefObjPt_PU_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
-	drawComparisonResponse("r4", mgMJB_RefObjPt_generator, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_Pt_herwig, gMJB_RefObjPt_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MJB_RefObjPt_generator_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
-	drawComparisonResponse_4graphs("r4_bis", mgMJB_RefObjPt_generator_plusFlat, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_Pt_herwig, gMJB_RefObjPt_mc_Pt_pythia, gMJB_RefObjPt_mc_Pt_flat, "HT", "Herwig", "Pythia", "Pt-flat", "images/MJB_RefObjPt_generator_plusFlat_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r1", mgMJB_RefObjPt_JEC, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_HT_JECup, gMJB_RefObjPt_mc_HT_JECdown, "nominal", "JECup", "JECdown", "images/MJB_RefObjPt_JEC_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r2", mgMJB_RefObjPt_JER, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_HT_JERup, gMJB_RefObjPt_mc_HT_JERdown, "nominal", "JERup", "JERdown", "images/MJB_RefObjPt_JER_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r3", mgMJB_RefObjPt_PU, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_HT_PUup, gMJB_RefObjPt_mc_HT_PUdown, "nominal", "PUup", "PUdown", "images/MJB_RefObjPt_PU_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r4", mgMJB_RefObjPt_generator, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_Pt_herwig, gMJB_RefObjPt_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MJB_RefObjPt_generator_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse_4graphs("r4_bis", mgMJB_RefObjPt_generator_plusFlat, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_Pt_herwig, gMJB_RefObjPt_mc_Pt_pythia, gMJB_RefObjPt_mc_Pt_flat, "HT", "Herwig", "Pythia", "Pt-flat", "images/MJB_RefObjPt_generator_plusFlat_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
 
-  drawComparisonResponse_withRatio("cGeneratorRatio", mgMJB_RefObjPt_generator, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_Pt_herwig, gMJB_RefObjPt_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MJB_RefObjPt_generator_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix_withRatio.pdf", numberPtBins, mc_Pt_herwig_color, mc_Pt_pythia_color);
+  drawComparisonResponse_withRatio("cGeneratorRatio", mgMJB_RefObjPt_generator, gMJB_RefObjPt_mc_HT, gMJB_RefObjPt_mc_Pt_herwig, gMJB_RefObjPt_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MJB_RefObjPt_generator_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix_withRatio.pdf", numberPtBins, mc_Pt_herwig_color, mc_Pt_pythia_color);
 
 //************************************************************************************************************
 //
@@ -748,12 +749,12 @@ int main()
   }
 	
 	
-	drawComparisonResponse("r1b", mgMJB_RefObjPt_resize_JEC, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_HT_JECup, gMJB_RefObjPt_resize_mc_HT_JECdown, "nominal", "JECup", "JECdown", "images/MJB_RefObjPt_resize_JEC_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
-	drawComparisonResponse("r2b", mgMJB_RefObjPt_resize_JER, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_HT_JERup, gMJB_RefObjPt_resize_mc_HT_JERdown, "nominal", "JERup", "JERdown", "images/MJB_RefObjPt_resize_JER_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
-	drawComparisonResponse("r3b", mgMJB_RefObjPt_resize_PU, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_HT_PUup, gMJB_RefObjPt_resize_mc_HT_PUdown, "nominal", "PUup", "PUdown", "images/MJB_RefObjPt_resize_PU_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
-	drawComparisonResponse("r4b", mgMJB_RefObjPt_resize_generator, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_Pt_herwig, gMJB_RefObjPt_resize_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MJB_RefObjPt_resize_generator_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r1b", mgMJB_RefObjPt_resize_JEC, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_HT_JECup, gMJB_RefObjPt_resize_mc_HT_JECdown, "nominal", "JECup", "JECdown", "images/MJB_RefObjPt_resize_JEC_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r2b", mgMJB_RefObjPt_resize_JER, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_HT_JERup, gMJB_RefObjPt_resize_mc_HT_JERdown, "nominal", "JERup", "JERdown", "images/MJB_RefObjPt_resize_JER_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r3b", mgMJB_RefObjPt_resize_PU, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_HT_PUup, gMJB_RefObjPt_resize_mc_HT_PUdown, "nominal", "PUup", "PUdown", "images/MJB_RefObjPt_resize_PU_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r4b", mgMJB_RefObjPt_resize_generator, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_Pt_herwig, gMJB_RefObjPt_resize_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MJB_RefObjPt_resize_generator_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
 
-drawComparisonResponse_withRatio("cGeneratorRatio2", mgMJB_RefObjPt_resize_generator, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_Pt_herwig, gMJB_RefObjPt_resize_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MJB_RefObjPt_resize_generator_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix_withRatio.pdf", numberPtBins-1, mc_Pt_herwig_color, mc_Pt_pythia_color);
+drawComparisonResponse_withRatio("cGeneratorRatio2", mgMJB_RefObjPt_resize_generator, gMJB_RefObjPt_resize_mc_HT, gMJB_RefObjPt_resize_mc_Pt_herwig, gMJB_RefObjPt_resize_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MJB_RefObjPt_resize_generator_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix_withRatio.pdf", numberPtBins-1, mc_Pt_herwig_color, mc_Pt_pythia_color);
 
 
 //******************************************************************************************************************************************
@@ -766,6 +767,10 @@ drawComparisonResponse_withRatio("cGeneratorRatio2", mgMJB_RefObjPt_resize_gener
   Double_t aMJBDeltaSystTot[numberPtBins];
 	Double_t aRefObjPtBins_Mean[numberPtBins];
 	Double_t aRefObjPtBins_MeanError[numberPtBins];
+  Double_t aMJBDeltaJEC_percent[numberPtBins];
+  Double_t aMJBDeltaJER_percent[numberPtBins];
+  Double_t aMJBDeltaPU_percent[numberPtBins];
+  Double_t aMJBDeltaSystTot_percent[numberPtBins];
 
   Double_t valueUp, valueDown;
   for (int i = 0; i < numberPtBins; i++) {
@@ -799,11 +804,22 @@ drawComparisonResponse_withRatio("cGeneratorRatio2", mgMJB_RefObjPt_resize_gener
 
     aMJBDeltaSystTot[i] = sqrt(aMJBDeltaJEC[i]*aMJBDeltaJEC[i] + aMJBDeltaJER[i]*aMJBDeltaJER[i] + aMJBDeltaPU[i]*aMJBDeltaPU[i]);
 
+     aMJBDeltaJEC_percent[i] = fabs(aMJBDeltaJEC[i]/aMJB_RefObjPt_mc_HT_Mean[i]*100.);
+     aMJBDeltaJER_percent[i] = fabs(aMJBDeltaJER[i]/aMJB_RefObjPt_mc_HT_Mean[i]*100.);
+     aMJBDeltaPU_percent[i] = fabs(aMJBDeltaPU[i]/aMJB_RefObjPt_mc_HT_Mean[i]*100.);
+     aMJBDeltaSystTot_percent[i] = fabs(aMJBDeltaSystTot[i]/aMJB_RefObjPt_mc_HT_Mean[i]*100.);
+
     std::cout << "Checking systematics value for bin " << i << std::endl;
     std::cout << "aMJBDeltaJEC[" << i << "]: " << aMJBDeltaJEC[i] << std::endl;
     std::cout << "aMJBDeltaJER[" << i << "]: " << aMJBDeltaJER[i] << std::endl;
     std::cout << "aMJBDeltaPU[" << i << "]: " << aMJBDeltaPU[i] << std::endl;
     std::cout << "aMJBDeltaSystTot[" << i << "]: " << aMJBDeltaSystTot[i] << std::endl << std::endl;
+
+    std::cout << "Checking systematics (in %) value for bin " << i << std::endl;
+    std::cout << "aMJBDeltaJEC[" << i << "]: " << aMJBDeltaJEC[i]/aMJB_RefObjPt_mc_HT_Mean[i]*100. << " %" << std::endl;
+    std::cout << "aMJBDeltaJER[" << i << "]: " << aMJBDeltaJER[i]/aMJB_RefObjPt_mc_HT_Mean[i]*100. << " %" << std::endl;
+    std::cout << "aMJBDeltaPU[" << i << "]: " << aMJBDeltaPU[i]/aMJB_RefObjPt_mc_HT_Mean[i]*100. << " %" << std::endl;
+    std::cout << "aMJBDeltaSystTot[" << i << "]: " << aMJBDeltaSystTot[i]/aMJB_RefObjPt_mc_HT_Mean[i]*100. << " %" << std::endl << std::endl;
 
   }
 
@@ -812,6 +828,11 @@ drawComparisonResponse_withRatio("cGeneratorRatio2", mgMJB_RefObjPt_resize_gener
   TGraphErrors *gMJB_PU = new TGraphErrors(numberPtBins, aRefObjPtBins_Mean, aY, aRefObjPtBins_MeanError, aMJBDeltaPU);
   TGraphErrors *gMJB_SystTot = new TGraphErrors(numberPtBins, aRefObjPtBins_Mean, aY, aRefObjPtBins_MeanError, aMJBDeltaSystTot);
 
+
+  TGraphErrors *gMJB_JEC_percent = new TGraphErrors(numberPtBins, aRefObjPtBins_Mean, aMJBDeltaJEC_percent, aRefObjPtBins_MeanError, aY);
+  TGraphErrors *gMJB_JER_percent = new TGraphErrors(numberPtBins, aRefObjPtBins_Mean, aMJBDeltaJER_percent, aRefObjPtBins_MeanError, aY);
+  TGraphErrors *gMJB_PU_percent = new TGraphErrors(numberPtBins, aRefObjPtBins_Mean, aMJBDeltaPU_percent, aRefObjPtBins_MeanError, aY);
+  TGraphErrors *gMJB_SystTot_percent = new TGraphErrors(numberPtBins, aRefObjPtBins_Mean, aMJBDeltaSystTot_percent, aRefObjPtBins_MeanError, aY);
 
 //************************************************************************************************************
 //
@@ -907,13 +928,13 @@ drawComparisonResponse_withRatio("cGeneratorRatio2", mgMJB_RefObjPt_resize_gener
 	  mgMPF_RefObjPt_PU->SetTitle("MPF as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];MPF");
   }
 	
-	drawComparisonResponse("r5", mgMPF_RefObjPt_JEC, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_HT_JECup, gMPF_RefObjPt_mc_HT_JECdown, "nominal", "JECup", "JECdown", "images/MPF_RefObjPt_JEC_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
-	drawComparisonResponse("r6", mgMPF_RefObjPt_JER, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_HT_JERup, gMPF_RefObjPt_mc_HT_JERdown, "nominal", "JERup", "JERdown", "images/MPF_RefObjPt_JER_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
-	drawComparisonResponse("r7", mgMPF_RefObjPt_PU, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_HT_PUup, gMPF_RefObjPt_mc_HT_PUdown, "nominal", "PUup", "PUdown", "images/MPF_RefObjPt_PU_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
-	drawComparisonResponse("r8", mgMPF_RefObjPt_generator, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_Pt_herwig, gMPF_RefObjPt_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MPF_RefObjPt_generator_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
-	drawComparisonResponse_4graphs("r8_bis", mgMPF_RefObjPt_generator, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_Pt_herwig, gMPF_RefObjPt_mc_Pt_pythia, gMPF_RefObjPt_mc_Pt_flat, "HT", "Herwig", "Pythia", "Pt-flat", "images/MPF_RefObjPt_generator_plusFlat_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r5", mgMPF_RefObjPt_JEC, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_HT_JECup, gMPF_RefObjPt_mc_HT_JECdown, "nominal", "JECup", "JECdown", "images/MPF_RefObjPt_JEC_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r6", mgMPF_RefObjPt_JER, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_HT_JERup, gMPF_RefObjPt_mc_HT_JERdown, "nominal", "JERup", "JERdown", "images/MPF_RefObjPt_JER_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r7", mgMPF_RefObjPt_PU, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_HT_PUup, gMPF_RefObjPt_mc_HT_PUdown, "nominal", "PUup", "PUdown", "images/MPF_RefObjPt_PU_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r8", mgMPF_RefObjPt_generator, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_Pt_herwig, gMPF_RefObjPt_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MPF_RefObjPt_generator_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse_4graphs("r8_bis", mgMPF_RefObjPt_generator, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_Pt_herwig, gMPF_RefObjPt_mc_Pt_pythia, gMPF_RefObjPt_mc_Pt_flat, "HT", "Herwig", "Pythia", "Pt-flat", "images/MPF_RefObjPt_generator_plusFlat_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
 
-drawComparisonResponse_withRatio("cGeneratorRatio3", mgMPF_RefObjPt_generator, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_Pt_herwig, gMPF_RefObjPt_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MPF_RefObjPt_generator_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix_withRatio.pdf", numberPtBins, mc_Pt_herwig_color, mc_Pt_pythia_color);
+drawComparisonResponse_withRatio("cGeneratorRatio3", mgMPF_RefObjPt_generator, gMPF_RefObjPt_mc_HT, gMPF_RefObjPt_mc_Pt_herwig, gMPF_RefObjPt_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MPF_RefObjPt_generator_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix_withRatio.pdf", numberPtBins, mc_Pt_herwig_color, mc_Pt_pythia_color);
 
 
 //************************************************************************************************************
@@ -1052,11 +1073,11 @@ drawComparisonResponse_withRatio("cGeneratorRatio3", mgMPF_RefObjPt_generator, g
 	  mgMPF_RefObjPt_resize_PU->SetTitle("MPF as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];MPF");
   }
 	
-	drawComparisonResponse("r5b", mgMPF_RefObjPt_resize_JEC, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_HT_JECup, gMPF_RefObjPt_resize_mc_HT_JECdown, "nominal", "JECup", "JECdown", "images/MPF_RefObjPt_resize_JEC_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
-	drawComparisonResponse("r6b", mgMPF_RefObjPt_resize_JER, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_HT_JERup, gMPF_RefObjPt_resize_mc_HT_JERdown, "nominal", "JERup", "JERdown", "images/MPF_RefObjPt_resize_JER_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
-	drawComparisonResponse("r7b", mgMPF_RefObjPt_resize_PU, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_HT_PUup, gMPF_RefObjPt_resize_mc_HT_PUdown, "nominal", "PUup", "PUdown", "images/MPF_RefObjPt_resize_PU_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
-	drawComparisonResponse("r8b", mgMPF_RefObjPt_resize_generator, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_Pt_herwig, gMPF_RefObjPt_resize_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MPF_RefObjPt_resize_generator_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
-  drawComparisonResponse_withRatio("cGeneratorRatio4", mgMPF_RefObjPt_resize_generator, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_Pt_herwig, gMPF_RefObjPt_resize_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MPF_RefObjPt_resize_generator_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix_withRatio.pdf", numberPtBins-1, mc_Pt_herwig_color, mc_Pt_pythia_color);
+	drawComparisonResponse("r5b", mgMPF_RefObjPt_resize_JEC, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_HT_JECup, gMPF_RefObjPt_resize_mc_HT_JECdown, "nominal", "JECup", "JECdown", "images/MPF_RefObjPt_resize_JEC_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r6b", mgMPF_RefObjPt_resize_JER, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_HT_JERup, gMPF_RefObjPt_resize_mc_HT_JERdown, "nominal", "JERup", "JERdown", "images/MPF_RefObjPt_resize_JER_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r7b", mgMPF_RefObjPt_resize_PU, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_HT_PUup, gMPF_RefObjPt_resize_mc_HT_PUdown, "nominal", "PUup", "PUdown", "images/MPF_RefObjPt_resize_PU_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+	drawComparisonResponse("r8b", mgMPF_RefObjPt_resize_generator, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_Pt_herwig, gMPF_RefObjPt_resize_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MPF_RefObjPt_resize_generator_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.pdf");
+  drawComparisonResponse_withRatio("cGeneratorRatio4", mgMPF_RefObjPt_resize_generator, gMPF_RefObjPt_resize_mc_HT, gMPF_RefObjPt_resize_mc_Pt_herwig, gMPF_RefObjPt_resize_mc_Pt_pythia, "HT", "Herwig", "Pythia", "images/MPF_RefObjPt_resize_generator_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix_withRatio.pdf", numberPtBins-1, mc_Pt_herwig_color, mc_Pt_pythia_color);
 
 
 //******************************************************************************************************************************************
@@ -1065,6 +1086,11 @@ drawComparisonResponse_withRatio("cGeneratorRatio3", mgMPF_RefObjPt_generator, g
   Double_t aMPFDeltaJER[numberPtBins];
   Double_t aMPFDeltaPU[numberPtBins];
   Double_t aMPFDeltaSystTot[numberPtBins];
+
+  Double_t aMPFDeltaJEC_percent[numberPtBins];
+  Double_t aMPFDeltaJER_percent[numberPtBins];
+  Double_t aMPFDeltaPU_percent[numberPtBins];
+  Double_t aMPFDeltaSystTot_percent[numberPtBins];
 
   for (int i = 0; i < numberPtBins; i++) {
     aY[i] = 0.;
@@ -1097,11 +1123,22 @@ drawComparisonResponse_withRatio("cGeneratorRatio3", mgMPF_RefObjPt_generator, g
 
     aMPFDeltaSystTot[i] = sqrt(aMPFDeltaJEC[i]*aMPFDeltaJEC[i] + aMPFDeltaJER[i]*aMPFDeltaJER[i] + aMPFDeltaPU[i]*aMPFDeltaPU[i]);
 
+     aMPFDeltaJEC_percent[i] = fabs(aMPFDeltaJEC[i]/aMPF_RefObjPt_mc_HT_Mean[i]*100.);
+     aMPFDeltaJER_percent[i] = fabs(aMPFDeltaJER[i]/aMPF_RefObjPt_mc_HT_Mean[i]*100.);
+     aMPFDeltaPU_percent[i] = fabs(aMPFDeltaPU[i]/aMPF_RefObjPt_mc_HT_Mean[i]*100.);
+     aMPFDeltaSystTot_percent[i] = fabs(aMPFDeltaSystTot[i]/aMPF_RefObjPt_mc_HT_Mean[i]*100.);
+
     std::cout << "Checking systematics value for bin " << i << std::endl;
     std::cout << "aMPFDeltaJEC[" << i << "]: " << aMPFDeltaJEC[i] << std::endl;
     std::cout << "aMPFDeltaJER[" << i << "]: " << aMPFDeltaJER[i] << std::endl;
     std::cout << "aMPFDeltaPU[" << i << "]: " << aMPFDeltaPU[i] << std::endl;
     std::cout << "aMPFDeltaSystTot[" << i << "]: " << aMPFDeltaSystTot[i] << std::endl << std::endl;
+
+    std::cout << "Checking systematics (in %) value for bin " << i << std::endl;
+    std::cout << "aMPFDeltaJEC[" << i << "]: " << aMPFDeltaJEC[i]/aMPF_RefObjPt_mc_HT_Mean[i]*100. << " %" << std::endl;
+    std::cout << "aMPFDeltaJER[" << i << "]: " << aMPFDeltaJER[i]/aMPF_RefObjPt_mc_HT_Mean[i]*100. << " %" << std::endl;
+    std::cout << "aMPFDeltaPU[" << i << "]: " << aMPFDeltaPU[i]/aMPF_RefObjPt_mc_HT_Mean[i]*100. << " %" << std::endl;
+    std::cout << "aMPFDeltaSystTot[" << i << "]: " << aMPFDeltaSystTot[i]/aMPF_RefObjPt_mc_HT_Mean[i]*100. << " %" << std::endl << std::endl;
 
   }
 
@@ -1110,6 +1147,12 @@ drawComparisonResponse_withRatio("cGeneratorRatio3", mgMPF_RefObjPt_generator, g
   TGraphErrors *gMPF_PU = new TGraphErrors(numberPtBins, aRefObjPtBins_Mean, aY, aRefObjPtBins_MeanError, aMPFDeltaPU);
   TGraphErrors *gMPF_SystTot = new TGraphErrors(numberPtBins, aRefObjPtBins_Mean, aY, aRefObjPtBins_MeanError, aMPFDeltaSystTot);
 
+
+  TGraphErrors *gMPF_JEC_percent = new TGraphErrors(numberPtBins, aRefObjPtBins_Mean, aMPFDeltaJEC_percent, aRefObjPtBins_MeanError, aY);
+  TGraphErrors *gMPF_JER_percent = new TGraphErrors(numberPtBins, aRefObjPtBins_Mean, aMPFDeltaJER_percent, aRefObjPtBins_MeanError, aY);
+  TGraphErrors *gMPF_PU_percent = new TGraphErrors(numberPtBins, aRefObjPtBins_Mean, aMPFDeltaPU_percent, aRefObjPtBins_MeanError, aY);
+  TGraphErrors *gMPF_SystTot_percent = new TGraphErrors(numberPtBins, aRefObjPtBins_Mean, aMPFDeltaSystTot_percent, aRefObjPtBins_MeanError, aY);
+
 //*********************************************************************************************************
 //
 //                                      Output file
@@ -1117,7 +1160,8 @@ drawComparisonResponse_withRatio("cGeneratorRatio3", mgMPF_RefObjPt_generator, g
 //*********************************************************************************************************
 
 	//create the output file and write into it
-  TFile *out = new TFile("output_rootfile/compareMC_woPU_pt10_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.root", "recreate");
+  //TFile *out = new TFile("output_rootfile/compareMC_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix.root", "recreate");
+  TFile *out = new TFile("output_rootfile/compareMC_woPU_pt30_eta50_puJetIdT_woPtRecoilCut_recoilPtHLTBin_type1fix_test02May16.root", "recreate");
 	
 	out->cd();	
 
@@ -1129,6 +1173,10 @@ drawComparisonResponse_withRatio("cGeneratorRatio3", mgMPF_RefObjPt_generator, g
   gMJB_JER->Write("gMJB_JER");
   gMJB_PU->Write("gMJB_PU");
   gMJB_SystTot->Write("gMJB_SystTot");
+  gMJB_JEC_percent->Write("gMJB_JEC_percent");
+  gMJB_JER_percent->Write("gMJB_JER_percent");
+  gMJB_PU_percent->Write("gMJB_PU_percent");
+  gMJB_SystTot_percent->Write("gMJB_SystTot_percent");
 	
 	TDirectory *mpfDir = out->mkdir("MPF","MPF");
 	mpfDir->cd();
@@ -1138,6 +1186,12 @@ drawComparisonResponse_withRatio("cGeneratorRatio3", mgMPF_RefObjPt_generator, g
   gMPF_JER->Write("gMPF_JER");
   gMPF_PU->Write("gMPF_PU");
   gMPF_SystTot->Write("gMPF_SystTot");
+  gMPF_SystTot->Write("gMPF_SystTot");
+  gMPF_JEC_percent->Write("gMPF_JEC_percent");
+  gMPF_JER_percent->Write("gMPF_JER_percent");
+  gMPF_PU_percent->Write("gMPF_PU_percent");
+  gMPF_SystTot_percent->Write("gMPF_SystTot_percent");
+
 
   out->Close();
 

@@ -5,7 +5,8 @@
 enum class PUProfile : uint8_t {
   S6,
   S7,
-  S10
+  S10,
+  Run2_25ns
 };
 
 enum class Systematic : uint8_t {
@@ -16,6 +17,8 @@ enum class Systematic : uint8_t {
 
 class PUReweighter {
   public:
+    // Default for Run1: PUProfile::S10
+    // Default for Run2: PUProfile::Run2_25ns
     PUReweighter(PUProfile profile = PUProfile::S10, Systematic syst = Systematic::NOMINAL);
     PUReweighter(const std::string& dataFileName, PUProfile profile = PUProfile::S10, Systematic syst = Systematic::NOMINAL);
 

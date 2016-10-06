@@ -215,7 +215,8 @@ int main (int argc, char** argv)
   //PUReweighter myPUReweighter_HLT_PFJet200("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet200.root");
   //PUReweighter myPUReweighter_HLT_PFJet260("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet260.root");
   //PUReweighter myPUReweighter_HLT_PFJet320("/gridgroup/cms/pequegnot/CMSSW/CMSSW_5_3_9_patch2/src/PatTopProduction/MyDataPileupHistogram_merged_Run2012ABCD_HLT_PFJet320.root");
-  
+
+  // Run1
   std::vector<PUReweighter*> myPUReweighter;
   for(int j=0; j<myHLTPtBinning.getSize(); j++) {
       std::string HLTPath = myHLTPtBinning.getHLTName(j); 
@@ -231,6 +232,12 @@ int main (int argc, char** argv)
       }
       myPUReweighter.push_back(new PUReweighter(fileName));
   }  
+
+  // Run2
+  //PUReweighter myPUReweighter("/gridgroup/cms/pequegnot/CMSSW/CMSSW_7_4_15/src/Extractors/MultijetExtractorAnalysis/test/MyDataPileupHistogram_JetHT_Run2015D-merged_25ns_miniAOD_json19Oct15_27Oct15.root");
+  //PUReweighter myPUReweighter("/gridgroup/cms/pequegnot/CMSSW/CMSSW_7_4_15/src/Extractors/MultijetExtractorAnalysis/test/MyDataPileupHistogram_JetHT_Run2015D-merged_25ns_miniAOD_json13Nov15_24Nov15.root");
+  
+
 
 //usefull variables
   Double_t xlow = getHistoXlow();
@@ -250,6 +257,7 @@ int main (int argc, char** argv)
   //MJB per pt bin
   vector<TH1F*> vMJB_RefObjPtBin = buildPtVectorH1(myPtBinning,"MJB",nbinsx,xlow,xup) ;
   vector<TH1F*> vMJB_gen_RefObjPtBin = buildPtVectorH1(myPtBinning,"MJB_gen",nbinsx,xlow,xup) ;
+  vector<TH1F*> vMJB_gen_RefObjPtRecoBin = buildPtVectorH1(myPtBinning,"MJB_gen_vs_recoilPtReco",nbinsx,xlow,xup) ;
 
   //ptLeadingJet per pt bin
   vector<TH1F*> vLeadingJetPt_RefObjPtBin;
@@ -293,7 +301,7 @@ int main (int argc, char** argv)
   vector<TH1F*> vHLTRefObjPt_HLTRefObjPtBin = buildBinnedDistriVectorH1(myHLTPtBinning,"HLTRefObjPt", 5);
 
   // leadingjetpt distribution for each HLT path trigged
-  vector<TH1F*> vLeadingJetPt_perHLTTrigger = buildPtVectorH1(myHLTPtBinning,"LeadingJetPt",190, 100, 2000) ;
+  vector<TH1F*> vLeadingJetPt_perHLTTrigger = buildPtVectorH1(myHLTPtBinning,"LeadingJetPt_perHLTTrigger",190, 100, 2000) ;
 
 
   //ptLeadingJet per HLT pt bin
@@ -304,11 +312,12 @@ int main (int argc, char** argv)
   vector<TH1F*> vNvtx_HLTRefObjPtBin = buildPtVectorH1(myHLTPtBinning,"Nvtx_HLTPtBin",70, 0, 70);
 	
   //RecoilPt per HLT pt bin
-  vector<TH1F*> vRecoilPt_HLTRefObjPtBin = buildBinnedDistriVectorH1(myHLTPtBinning,"RecoilPt", 5);;
+  vector<TH1F*> vRecoilPt_HLTRefObjPtBin = buildBinnedDistriVectorH1(myHLTPtBinning,"RecoilPt_HLTPtBin", 5);;
 	
   for(int j=0; j<myPtBinning.getSize(); j++) {
     vMJB_RefObjPtBin[j]->Sumw2(); 
     vMJB_gen_RefObjPtBin[j]->Sumw2();
+    vMJB_gen_RefObjPtRecoBin[j]->Sumw2();
     vMPF_RefObjPtBin[j]->Sumw2();
     vMPF_gen_RefObjPtBin[j]->Sumw2();
     vMPF_corr_RefObjPtBin[j]->Sumw2();
@@ -385,6 +394,10 @@ int main (int argc, char** argv)
 	TH1F* hWeight=new TH1F("hWeight","hWeight",1000,0,1000);
 	hWeight->SetXTitle("Event weight");
 	hWeight->Sumw2();
+
+	TH1F* hGenWeight=new TH1F("hGenWeight","hGenWeight",100,0,1);
+	hGenWeight->SetXTitle("Generator event weight");
+	hGenWeight->Sumw2();
 
 	TH1F* hRecoilEta=new TH1F("hRecoilEta","hRecoilEta",13,0,5.2);
 	hRecoilEta->SetXTitle("|#eta_{Recoil}|");
@@ -550,6 +563,22 @@ int main (int argc, char** argv)
 	hJetsPhi_afterSel->SetXTitle("#phi^{jet} [rad]");
 	hJetsPhi_afterSel->Sumw2();
 
+  TH1F* hLeadingJetEta_beforeSel=new TH1F("hLeadingJetEta_beforeSel","hLeadingJetEta_beforeSel",80,-4.,4.);
+	hLeadingJetEta_beforeSel->SetXTitle("#eta^{leading jet} [rad]");
+	hLeadingJetEta_beforeSel->Sumw2();
+
+  TH1F* hRecoilEta_afterSel=new TH1F("hRecoilEta_afterSel","hRecoilEta_afterSel",80,-4.,4.);
+	hRecoilEta_afterSel->SetXTitle("#eta^{leading jet} [rad]");
+	hRecoilEta_afterSel->Sumw2();
+
+  TH1F* hRecoilEta_beforeSel=new TH1F("hRecoilEta_beforeSel","hRecoilEta_beforeSel",80,-4.,4.);
+	hRecoilEta_beforeSel->SetXTitle("#eta^{leading jet} [rad]");
+	hRecoilEta_beforeSel->Sumw2();
+
+  TH1F* hLeadingJetEta_afterSel=new TH1F("hLeadingJetEta_afterSel","hLeadingJetEta_afterSel",80,-4.,4.);
+	hLeadingJetEta_afterSel->SetXTitle("#eta^{leading jet} [rad]");
+	hLeadingJetEta_afterSel->Sumw2();
+
     TH1F* hDeltaPhi_METRecoil_afterSel=new TH1F("hDeltaPhi_METRecoil_afterSel","hDeltaPhi_METRecoil_afterSel",40,0,4);
 	hDeltaPhi_METRecoil_afterSel->SetXTitle("|#Delta#phi (MET,Recoil)|");
 	hDeltaPhi_METRecoil_afterSel->Sumw2();
@@ -565,6 +594,14 @@ int main (int argc, char** argv)
 	TH1F* hLeadingJetPt_afterSel=new TH1F("hLeadingJetPt_afterSel","hLeadingJetPt_afterSel",150,0,3000);
 	hLeadingJetPt_afterSel->SetXTitle("p_{t}^{leading jet} [GeV/c]");
 	hLeadingJetPt_afterSel->Sumw2();
+
+	TH1F* hSecondJetPt_beforeSel=new TH1F("hSecondJetPt_beforeSel","hSecondJetPt_beforeSel",150,0,3000);
+	hSecondJetPt_beforeSel->SetXTitle("p_{t}^{second jet} [GeV/c]");
+	hSecondJetPt_beforeSel->Sumw2();
+	
+	TH1F* hSecondJetPt_afterSel=new TH1F("hSecondJetPt_afterSel","hSecondJetPt_afterSel",150,0,3000);
+	hSecondJetPt_afterSel->SetXTitle("p_{t}^{second jet} [GeV/c]");
+	hSecondJetPt_afterSel->Sumw2();
 	
 	
 	TH1F* hRecoilPt_beforeSel=new TH1F("hRecoilPt_beforeSel","hRecoilPt_beforeSel",150,0,3000);
@@ -648,7 +685,7 @@ int main (int argc, char** argv)
 	TChain* t_vertices = NULL;
 	TChain* t_event = NULL;
 	TChain* t_jet_PF = NULL;
-  TChain* t_HLT = NULL;
+    TChain* t_HLT = NULL;
 	loadChain(inputFiles, "Multijet", t_multijet);
 	loadChain(inputFiles, "Vertices", t_vertices);
 	loadChain(inputFiles, "event", t_event);
@@ -756,6 +793,26 @@ int main (int argc, char** argv)
 	//Event
 	float nTrueInteractions;
 	t_event->SetBranchAddress("nTrueInteractions",&nTrueInteractions);
+
+	float generator_weight;
+	t_event->SetBranchAddress("generator_weight",&generator_weight);
+
+	unsigned int run;
+	t_event->SetBranchAddress("run",&run);
+
+	unsigned int lumi;
+	t_event->SetBranchAddress("lumi",&lumi);
+
+/*    std::cout << "Fill generator weight..." << std::endl;*/
+    //for(unsigned int ievt=0; ievt<(int)t_event->GetEntries(); ievt++) {
+      //t_event->GetEntry(ievt);
+      //hGenWeight->Fill(generator_weight, generator_weight);
+    //}
+	//TFile *outgen = new TFile("genWeight.root", "recreate");
+	//outgen->cd();
+    //hGenWeight->Write();
+    //outgen->Close();
+    //std::cout << "Fill generator weight: done..." << std::endl;
 	
 	//jet_PF
 	TClonesArray* jet_PF_4vector = new TClonesArray("TLorentzVector");
@@ -1024,6 +1081,8 @@ int main (int argc, char** argv)
                 MJB_gen = leadingjetgenpt/recoilpt_gen;
             }
             binGenRecoilPt = myPtBinning.getPtBin(recoilpt_gen);
+            //std::cout << "recoilpt_gen: " << recoilpt_gen << std::endl;
+            //std::cout << "recoilpt: " << recoilpt << std::endl;
           }
           
           Rmpf = 1 + (recoilpx*metpx + recoilpy*metpy)/(pow(recoilpt,2));		
@@ -1053,14 +1112,17 @@ int main (int argc, char** argv)
                 //if ( HLTRefObjPt >= myHLTPtBinning.getBinValueInf(j) && HLTRefObjPt < myHLTPtBinning.getBinValueSup(j) ) {
                 if ( binHLTRefObjPt == j ) {
                    //std::cout << "HLTPath for PUReweighting: " << myHLTPtBinning.getHLTName(j) << std::endl;
-	               PUWeight = myPUReweighter[j]->weight(nTrueInteractions); 
+                 PUWeight = myPUReweighter[j]->weight(nTrueInteractions); 
                    dropEvent = false;
                 }
             }
 
-          //PUWeight = myPUReweighter.weight(nTrueInteractions);
+            //PUWeight = myPUReweighter.weight(nTrueInteractions);
             hNTrueInteractionsAfterPUReweighting->Fill(nTrueInteractions,PUWeight);
             weight = lumiWeight*PUWeight;
+
+            // generator weight
+            weight *= generator_weight;
           }
 
 //*****************************************************************************************************
@@ -1070,6 +1132,11 @@ int main (int argc, char** argv)
 //*****************************************************************************************************
 
           if (!isMC) {
+            //if (! (run == 251244 || run == 251251 || run == 251252)) {
+              //continue;
+            //}
+
+
             for (int j = 0; j<myHLTPtBinning.getSize(); j++) {
                 for (int i = 0; i < HLT_vector->size(); i++) {
                   if (TString(HLT_vector->at(i)).Contains(myHLTPtBinning.getHLTName(j))) {
@@ -1170,6 +1237,7 @@ int main (int argc, char** argv)
 
             hMet_beforeSel->Fill(metpt, weight);
             hLeadingJetPt_beforeSel->Fill(leadingjetpt, weight);
+            hSecondJetPt_beforeSel->Fill(secondjetpt, weight);
             hRecoilPt_beforeSel->Fill(recoilpt, weight);
             for(int i=0; i<jets_recoil_4vector->GetSize(); i++) {
               hRecoilJetsPt_beforeSel->Fill(((TLorentzVector*)jets_recoil_4vector->At(i))->Pt(), weight);
@@ -1178,12 +1246,14 @@ int main (int argc, char** argv)
               if(i == 0) {
                 hJetsPt_beforeSel->Fill(leadingjetpt, weight);
                 hJetsEta_beforeSel->Fill(leadingjet->Eta(), weight);
+                hLeadingJetEta_beforeSel->Fill(leadingjet->Eta(), weight);
                 hJetsPhi_beforeSel->Fill(leadingjet->Phi(), weight);
               }
               else {
                 TLorentzVector* jetP4 = (TLorentzVector*)jets_recoil_4vector->At(i-1); 
                 hJetsPt_beforeSel->Fill(jetP4->Pt(), weight);
                 hJetsEta_beforeSel->Fill(jetP4->Eta(), weight);
+                hRecoilEta_beforeSel->Fill(jetP4->Eta(), weight);
                 hJetsPhi_beforeSel->Fill(jetP4->Phi(), weight);
               }
             }
@@ -1246,7 +1316,7 @@ int main (int argc, char** argv)
 
               //second jet selection
               if(A < 0.6) {
-                if(secondjetpt < 750.) {							
+                //if(secondjetpt < 750.) { // removed for run II
 
                   //first jet selection
                   //if(leadingjetpt>360.) {
@@ -1317,6 +1387,7 @@ int main (int argc, char** argv)
 
                       hMet_afterSel->Fill(metpt, weight);
                       hLeadingJetPt_afterSel->Fill(leadingjetpt, weight);
+                      hSecondJetPt_afterSel->Fill(secondjetpt, weight);
                       hRecoilPt_afterSel->Fill(recoilpt, weight);
                     
                       recoilEtaMin = ((TLorentzVector*)jets_recoil_4vector->At(0))->Eta();
@@ -1359,6 +1430,7 @@ int main (int argc, char** argv)
                           jetsPt = jetsPt + leadingjetpt;
                           hJetsPt_afterSel->Fill(leadingjetpt, weight);
                           hJetsEta_afterSel->Fill(leadingjet->Eta(), weight);
+                          hLeadingJetEta_afterSel->Fill(leadingjet->Eta(), weight);
                           hJetsPhi_afterSel->Fill(leadingjet->Phi(), weight);
                         }
                         else {
@@ -1366,6 +1438,7 @@ int main (int argc, char** argv)
                           jetsPt = jetsPt + (jetP4)->Pt();
                           hJetsPt_afterSel->Fill(jetP4->Pt(), weight);
                           hJetsEta_afterSel->Fill(jetP4->Eta(), weight);
+                          hRecoilEta_afterSel->Fill(jetP4->Eta(), weight);
                           hJetsPhi_afterSel->Fill(jetP4->Phi(), weight);
                         }
                         
@@ -1424,6 +1497,7 @@ int main (int argc, char** argv)
                         if(isMC && (binGenPt < 0 || binGenRecoilPt < 0)) continue;
                         vMPF_gen_RefObjPtBin[binGenRecoilPt]->Fill(Rmpf_gen, weight);
                         vMJB_gen_RefObjPtBin[binGenRecoilPt]->Fill(MJB_gen, weight);
+                        vMJB_gen_RefObjPtRecoBin[binRecoilPt]->Fill(MJB_gen, weight);
                         if(*leadingjetgen != TLorentzVector(0.,0.,0.,0.)) {//check if a gen jet matches the reco jet
                           vPtRatio_GenPt[binGenPt]->Fill(recoilpt/leadingjetgenpt, weight);							
                           vRtrue_leadingJet_RefObjPtBin[binRefObjPt]->Fill(Rtrue, weight);
@@ -1445,13 +1519,14 @@ int main (int argc, char** argv)
                           recoilgenpt = recoilgenpt + ((TLorentzVector*)jetsgen_recoil_4vector->At(i))->Pt();
                         }
                         Rrecoil = recoilrecopt/recoilgenpt;
+                        //std::cout << "recoilgenpt: " << recoilgenpt << std::endl;
                         vRrecoil_RefObjPtBin[binRefObjPt]->Fill(Rrecoil, weight);									
                       }
 
                      //}
                    }      
                  }
-              }
+              //}
             }
 					//}
           }
@@ -1552,6 +1627,16 @@ int main (int argc, char** argv)
             vMJB_gen_RefObjPtBin[j]->Write();
         }
 
+        TDirectory *mjb_gen_vsReco_Dir = out->mkdir("MJB_gen_vs_recoilPtReco","MJB_gen_vs_recoilPtReco");
+        mjb_gen_vsReco_Dir->cd();
+        TDirectory *ptbin_gen_vsReco_Dir = mjb_gen_vsReco_Dir->mkdir("PtBin","PtBin");
+        ptbin_gen_vsReco_Dir->cd();
+        for(int j=0; j<myPtBinning.getSize(); j++) {
+            vMJB_gen_RefObjPtRecoBin[j]->Write();
+        }
+
+
+
         TDirectory *mpf_genDir = out->mkdir("MPF_gen","MPF_gen");
         mpf_genDir->cd();
         TDirectory *ptbinmpf_genDir = mpf_genDir->mkdir("PtBin","PtBin");
@@ -1622,6 +1707,7 @@ int main (int argc, char** argv)
   hHT_beforeSel->Write();
 	hMet_beforeSel->Write();
 	hLeadingJetPt_beforeSel->Write();
+	hSecondJetPt_beforeSel->Write();
 	hRecoilPt_beforeSel->Write();
 	hRecoilJetsPt_beforeSel->Write();
 	hNpv_beforeSel->Write();
@@ -1630,6 +1716,8 @@ int main (int argc, char** argv)
 	hA_beforeSel->Write();
   hJetsPt_beforeSel->Write();
   hJetsEta_beforeSel->Write();
+  hLeadingJetEta_beforeSel->Write();
+  hRecoilEta_beforeSel->Write();
   hJetsPhi_beforeSel->Write();
   hNjets_ptSup30_etaInf5_beforeSel->Write();
   hNjets_ptSup10_beforeSel->Write();
@@ -1641,6 +1729,7 @@ int main (int argc, char** argv)
 	hNjetsGood->Write();
 	hMet_afterSel->Write();
 	hLeadingJetPt_afterSel->Write();
+	hSecondJetPt_afterSel->Write();
 	hRecoilPt_afterSel->Write();
 	hRecoilJetsPt_afterSel->Write();
 	hNpv_afterSel->Write();
@@ -1665,6 +1754,8 @@ int main (int argc, char** argv)
 	hFracJetsPt->Write();
     hJetsPt_afterSel->Write();
     hJetsEta_afterSel->Write();
+    hLeadingJetEta_afterSel->Write();
+    hRecoilEta_afterSel->Write();
     hJetsPhi_afterSel->Write();
     hDeltaPhi_METRecoil_afterSel->Write();
     hDeltaPhi_METJet1_afterSel->Write();
@@ -1735,6 +1826,7 @@ int main (int argc, char** argv)
 	hFracJetsPt->Delete();	
 	hMet_beforeSel->Delete();
 	hLeadingJetPt_beforeSel->Delete();
+	hSecondJetPt_beforeSel->Delete();
 	hRecoilPt_beforeSel->Delete();
 	hNpv_beforeSel->Delete();
 	hAlpha_beforeSel->Delete();
@@ -1742,6 +1834,7 @@ int main (int argc, char** argv)
 	hA_beforeSel->Delete();	
 	hMet_afterSel->Delete();
 	hLeadingJetPt_afterSel->Delete();
+	hSecondJetPt_afterSel->Delete();
 	hRecoilPt_afterSel->Delete();
 	hNpv_afterSel->Delete();
 	hAlpha_afterSel->Delete();

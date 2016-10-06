@@ -2,16 +2,17 @@
 
 import os, subprocess, datetime, tempfile
 
-d = datetime.datetime.now().strftime("%d%b%y")
+#d = datetime.datetime.now().strftime("%d%b%y")
+d = "25Jul14"
 
 inputs = [
-    ['MULTIJET_MC_QCD-Pt-herwig-120ToInf_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix.root', '../weightPlots/output_rootfile/01Jul14/MC/MULTIJET_MC_QCD-Pt-herwig_merged_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix.root', "isMC", "_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_QCD-Pt-herwig", ".pdf"],
-    #['MULTIJET_Run2012ABCD-22Jan2013_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_afterPrescaleReweighting.root', '../weightPlots/output_rootfile/29Apr14/data/MULTIJET_Data_merged_2012_woPU_pt10_eta50_puJetIdT_afterPrecaleReweighting.root', "isData", "_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_afterPrescaleReweighting", ".pdf"],
+    ['MULTIJET_MC_QCD-Pt-herwig-120ToInf_analysis_woPU_pt20_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix.root', '../weightPlots/output_rootfile/24Jul14/MC/MULTIJET_MC_QCD-Pt-herwig_merged_woPU_pt20_eta50_puJetIdT_recoilPtHLTBin_type1fix.root', "isMC", "_pt20_eta50_puJetIdT_HLTsel_woPtRecoilCut_recoilPtHLTBin_type1fix_QCD-Pt-herwig", ".pdf"],
+    #['MULTIJET_Run2012ABCD-22Jan2013_analysis_woPU_pt20_eta50_puJetIdT_HLTsel_woPtRecoilCut_afterPrescaleReweighting.root', '../weightPlots/output_rootfile/29Apr14/data/MULTIJET_Data_merged_2012_woPU_pt20_eta50_puJetIdT_afterPrecaleReweighting.root', "isData", "_pt20_eta50_puJetIdT_HLTsel_woPtRecoilCut_afterPrescaleReweighting", ".pdf"],
 
-    #['MULTIJET_Run2012A-22Jan2013_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut.root', '../weightPlots/output_rootfile/21Apr14/data/MULTIJET_Jet_Run2012A-22Jan2013.root', "isData", "_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_runA", ".pdf"],
-    #['MULTIJET_Run2012B-22Jan2013_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut.root', '../weightPlots/output_rootfile/21Apr14/data/MULTIJET_Data_runB_merged_2012_21Apr14.root', "isData", "_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_runB", ".pdf"],
-    #['MULTIJET_Run2012C-22Jan2013_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut.root', '../weightPlots/output_rootfile/21Apr14/data/MULTIJET_Data_runC_merged_2012_21Apr14.root', "isData", "_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_runC", ".pdf"],
-    #['MULTIJET_Run2012D-22Jan2013_analysis_woPU_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut.root', '../weightPlots/output_rootfile/21Apr14/data/MULTIJET_Data_runD_merged_2012_21Apr14.root', "isData", "_pt10_eta50_puJetIdT_HLTsel_woPtRecoilCut_runD", ".pdf"],
+    #['MULTIJET_Run2012A-22Jan2013_analysis_woPU_pt20_eta50_puJetIdT_HLTsel_woPtRecoilCut.root', '../weightPlots/output_rootfile/21Apr14/data/MULTIJET_Jet_Run2012A-22Jan2013.root', "isData", "_pt20_eta50_puJetIdT_HLTsel_woPtRecoilCut_runA", ".pdf"],
+    #['MULTIJET_Run2012B-22Jan2013_analysis_woPU_pt20_eta50_puJetIdT_HLTsel_woPtRecoilCut.root', '../weightPlots/output_rootfile/21Apr14/data/MULTIJET_Data_runB_merged_2012_21Apr14.root', "isData", "_pt20_eta50_puJetIdT_HLTsel_woPtRecoilCut_runB", ".pdf"],
+    #['MULTIJET_Run2012C-22Jan2013_analysis_woPU_pt20_eta50_puJetIdT_HLTsel_woPtRecoilCut.root', '../weightPlots/output_rootfile/21Apr14/data/MULTIJET_Data_runC_merged_2012_21Apr14.root', "isData", "_pt20_eta50_puJetIdT_HLTsel_woPtRecoilCut_runC", ".pdf"],
+    #['MULTIJET_Run2012D-22Jan2013_analysis_woPU_pt20_eta50_puJetIdT_HLTsel_woPtRecoilCut.root', '../weightPlots/output_rootfile/21Apr14/data/MULTIJET_Data_runD_merged_2012_21Apr14.root', "isData", "_pt20_eta50_puJetIdT_HLTsel_woPtRecoilCut_runD", ".pdf"],
 
 
         ]

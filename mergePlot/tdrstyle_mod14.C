@@ -248,7 +248,8 @@ TString cmsText     = "CMS";
 float cmsTextFont   = 61;  // default is helvetic-bold
 
 bool writeExtraText = true;//false;
-TString extraText   = "Preliminary";
+//TString extraText   = "Preliminary";
+TString extraText   = "";
 TString extraText2   = ""; // For Simulation Preliminary on two lines
 float extraTextFont = 52;  // default is helvetica-italics
 

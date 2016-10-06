@@ -84,8 +84,16 @@ int getFlavourNumber () {
 
 
 float getLumi () {
-	return (876.16 + 4.411*pow(10.,3.) +  7.055*pow(10.,3.) + 7.369*pow(10.,3.));
+    return (876.16 + 4.411*pow(10.,3.) +  7.055*pow(10.,3.) + 7.369*pow(10.,3.)); // 8 TeV
+  //return 40.03; // 13 TeV
+  //return 16.1; // 13 TeV 25 ns
+  //return 225.57; // 13 TeV 25 ns
   //return 7.369*pow(10.,3.);
+}
+
+float getLumi_13TeV_50ns () {
+  //return (876.16 + 4.411*pow(10.,3.) +  7.055*pow(10.,3.) + 7.369*pow(10.,3.)); // 8 TeV
+  return 1000.;
 }
 
 int getHistoNbinsx() {
@@ -93,11 +101,12 @@ int getHistoNbinsx() {
 }
 
 double getHistoXlow() {
-	return 0.;
+	//return 0.;
+	return 0.3;
 }
 
 double getHistoXup() {
-	return 3.;
+	return 1.7;
 }
 
 std::vector<TH1F*> buildPtVectorH1(ptBinning& aPtBinning,const std::string& aName,Int_t nbinsx,Double_t xlow,Double_t xup)

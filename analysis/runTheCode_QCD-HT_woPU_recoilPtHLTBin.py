@@ -3,17 +3,17 @@
 import os, subprocess, datetime, tempfile
 
 d = datetime.datetime.now().strftime("%d%b%y")
-#d = "26Nov15"
+#d = "22Dec15"
 
 inputs = [
      # HT
-    ['MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_notRmPUJets_recoilPtHLTBin_type1fix.root', '../weightPlots/output_rootfile/19Dec15/MC/MULTIJET_MC_QCD-HT_merged_woPU_pt30_eta50_recoilPtHLTBin_type1fix.root', "isMC", "_pt30_eta50_puJetIdT_recoilPtHLTBin_type1fix_QCD-HT", ".pdf"],
-    ['MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_notRmPUJets_recoilPtHLTBin_type1fix.root', '../weightPlots/output_rootfile/19Dec15/MC/MULTIJET_MC_QCD-HT_merged_woPU_pt10_eta50_recoilPtHLTBin_type1fix.root', "isMC", "_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_QCD-HT", ".pdf"],
+    ['MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt30_eta50_notRmPUJets_recoilPtHLTBin_type1fix.root', '../weightPlots/output_rootfile/21Dec15/MC/MULTIJET_MC_QCD-HT_merged_woPU_pt30_eta50_recoilPtHLTBin_type1fix.root', "isMC", "_pt30_eta50_puJetIdT_recoilPtHLTBin_type1fix_QCD-HT", ".pdf"],
+    ['MULTIJET_MC_QCD-HT-100ToInf_analysis_woPU_pt10_eta50_notRmPUJets_recoilPtHLTBin_type1fix.root', '../weightPlots/output_rootfile/21Dec15/MC/MULTIJET_MC_QCD-HT_merged_woPU_pt10_eta50_recoilPtHLTBin_type1fix.root', "isMC", "_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_QCD-HT", ".pdf"],
 
     # Data
-    ['MULTIJET_data_JetHT_Run2015D-merged_miniAOD_woPU_pt30_eta50_notRmPUJets_beforePrescaleReweighting_json13Nov15.root', '../weightPlots/output_rootfile/19Dec15/data/MULTIJET_Data_JetHT_runD_merged_2015_woPU_pt30_eta50_notRmPUJets_beforePrescaleReweighting_json13Nov15.root', "isData", "_pt30_eta50_notRmPUJets_beforePrescaleReweighting_json13Nov15", ".pdf", "../weightPlots/output_rootfile/19Dec15/MC/MULTIJET_MC_QCD-HT_merged_woPU_pt30_eta50_recoilPtHLTBin_type1fix.root"],
+    ['MULTIJET_data_JetHT_Run2015D-merged_miniAOD_woPU_pt30_eta50_notRmPUJets_beforePrescaleReweighting_json13Nov15.root', '../weightPlots/output_rootfile/21Dec15/data/MULTIJET_Data_JetHT_runD_merged_2015_woPU_pt30_eta50_notRmPUJets_beforePrescaleReweighting_json13Nov15.root', "isData", "_pt30_eta50_notRmPUJets_beforePrescaleReweighting_json13Nov15", ".pdf", "../weightPlots/output_rootfile/21Dec15/MC/MULTIJET_MC_QCD-HT_merged_woPU_pt30_eta50_recoilPtHLTBin_type1fix.root"],
 
-    ['MULTIJET_data_JetHT_Run2015D-merged_miniAOD_woPU_pt10_eta50_notRmPUJets_beforePrescaleReweighting_json13Nov15.root', '../weightPlots/output_rootfile/19Dec15/data/MULTIJET_Data_JetHT_runD_merged_2015_woPU_pt10_eta50_notRmPUJets_beforePrescaleReweighting_json13Nov15.root', "isData", "_pt10_eta50_notRmPUJets_beforePrescaleReweighting_json13Nov15", ".pdf", "../weightPlots/output_rootfile/19Dec15/MC/MULTIJET_MC_QCD-HT_merged_woPU_pt10_eta50_recoilPtHLTBin_type1fix.root"],
+    ['MULTIJET_data_JetHT_Run2015D-merged_miniAOD_woPU_pt10_eta50_notRmPUJets_beforePrescaleReweighting_json13Nov15.root', '../weightPlots/output_rootfile/21Dec15/data/MULTIJET_Data_JetHT_runD_merged_2015_woPU_pt10_eta50_notRmPUJets_beforePrescaleReweighting_json13Nov15.root', "isData", "_pt10_eta50_notRmPUJets_beforePrescaleReweighting_json13Nov15", ".pdf", "../weightPlots/output_rootfile/21Dec15/MC/MULTIJET_MC_QCD-HT_merged_woPU_pt10_eta50_recoilPtHLTBin_type1fix.root"],
 
         ]
 
@@ -53,6 +53,6 @@ for input in inputs:
 tmpfile.flush()
 
 args = ["parallel", "-u", "-a", tmpfile.name, "-j", "20"]
-subprocess.call(args)
-#print args
+#subprocess.call(args)
+print args
 

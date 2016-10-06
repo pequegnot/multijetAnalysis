@@ -182,7 +182,8 @@ void applyStyle() {
     cmslabel->SetFillColor(kWhite);
     cmslabel->SetTextSize(0.038);
     cmslabel->SetTextFont(62);
-    cmslabel->AddText(Form("CMS Preliminary, #sqrt{s} = 8 TeV, L = 19.7 fb^{-1}"));
+    //cmslabel->AddText(Form("CMS Preliminary, #sqrt{s} = 8 TeV, L = 19.7 fb^{-1}"));
+    cmslabel->AddText(Form("CMS, #sqrt{s} = 8 TeV, L = 19.7 fb^{-1}"));
     return cmslabel;
 
   }
@@ -615,20 +616,20 @@ int main (int argc, char** argv)
 	mgMJB_RefObjPt->Add(gMJB_RefObjPt_mc,"p");
 	mgMJB_RefObjPt->Add(gMJB_RefObjPt_data,"pe");
   if(useRecoilPtBin) {
-	  mgMJB_RefObjPt->SetTitle("exp( #sum_{i}F_{i}log(f_{i}) ) as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];exp( #sum_{i}F_{i}log(f_{i}) )");
+	  mgMJB_RefObjPt->SetTitle("exp( #sum_{i}F_{i}log(f_{i}) ) as a function of p_{t}^{Recoil};p_{t}^{Recoil} (GeV);exp( #sum_{i}F_{i}log(f_{i}) )");
   }
   else {
-	  mgMJB_RefObjPt->SetTitle("exp( #sum_{i}F_{i}log(f_{i}) ) as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];exp( #sum_{i}F_{i}log(f_{i}) )");
+	  mgMJB_RefObjPt->SetTitle("exp( #sum_{i}F_{i}log(f_{i}) ) as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} (GeV);exp( #sum_{i}F_{i}log(f_{i}) )");
   }
 	
 	TGraphErrors *gMJB_RefObjPt_ratio = NULL;
   if(useRecoilPtBin) {
-    gMJB_RefObjPt_ratio = getDataMcResponseRatio(gMJB_RefObjPt_data,gMJB_RefObjPt_mc,numberPtBins, "p_{t}^{Recoil} [GeV/c]");
-	  gMJB_RefObjPt_ratio->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+    gMJB_RefObjPt_ratio = getDataMcResponseRatio(gMJB_RefObjPt_data,gMJB_RefObjPt_mc,numberPtBins, "p_{t}^{Recoil} (GeV)");
+	  gMJB_RefObjPt_ratio->GetXaxis()->SetTitle("p_{t}^{Recoil} (GeV)");
   }
   else {
-    gMJB_RefObjPt_ratio = getDataMcResponseRatio(gMJB_RefObjPt_data,gMJB_RefObjPt_mc,numberPtBins, "p_{t}^{Leading Jet} [GeV/c]");
-	  gMJB_RefObjPt_ratio->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");  
+    gMJB_RefObjPt_ratio = getDataMcResponseRatio(gMJB_RefObjPt_data,gMJB_RefObjPt_mc,numberPtBins, "p_{t}^{Leading Jet} (GeV)");
+	  gMJB_RefObjPt_ratio->GetXaxis()->SetTitle("p_{t}^{Leading Jet} (GeV)");  
   }
 	gMJB_RefObjPt_ratio->GetYaxis()->SetTitle("Data/MC");
 	gMJB_RefObjPt_ratio->SetName("Data/MC");
@@ -691,20 +692,20 @@ int main (int argc, char** argv)
 	mgMJB_RefObjPt_resize->Add(gMJB_RefObjPt_mc_resize_pointsOnly,"p");
 	mgMJB_RefObjPt_resize->Add(gMJB_RefObjPt_data_resize,"pe");
   if(useRecoilPtBin) {
-	  mgMJB_RefObjPt_resize->SetTitle("exp( #sum_{i}F_{i}log(f_{i}) ) as a function of p_{t}^{Recoil};p_{t}^{Recoil} [GeV/c];exp( #sum_{i}F_{i}log(f_{i}) )");
+	  mgMJB_RefObjPt_resize->SetTitle("exp( #sum_{i}F_{i}log(f_{i}) ) as a function of p_{t}^{Recoil};p_{t}^{Recoil} (GeV);exp( #sum_{i}F_{i}log(f_{i}) )");
   }
   else {
-    mgMJB_RefObjPt_resize->SetTitle("exp( #sum_{i}F_{i}log(f_{i}) ) as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} [GeV/c];exp( #sum_{i}F_{i}log(f_{i}) )");
+    mgMJB_RefObjPt_resize->SetTitle("exp( #sum_{i}F_{i}log(f_{i}) ) as a function of p_{t}^{Leading Jet};p_{t}^{Leading Jet} (GeV);exp( #sum_{i}F_{i}log(f_{i}) )");
   }
 	
 	TGraphErrors *gMJB_RefObjPt_ratio_resize = NULL;
   if(useRecoilPtBin) {
-    gMJB_RefObjPt_ratio_resize = getDataMcResponseRatio(gMJB_RefObjPt_data_resize,gMJB_RefObjPt_mc_resize,numberPtBins-1, "p_{t}^{Recoil} [GeV/c]");
-	  gMJB_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Recoil} [GeV/c]");
+    gMJB_RefObjPt_ratio_resize = getDataMcResponseRatio(gMJB_RefObjPt_data_resize,gMJB_RefObjPt_mc_resize,numberPtBins-1, "p_{t}^{Recoil} (GeV)");
+	  gMJB_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Recoil} (GeV)");
   }
   else {
-    gMJB_RefObjPt_ratio_resize = getDataMcResponseRatio(gMJB_RefObjPt_data_resize,gMJB_RefObjPt_mc_resize,numberPtBins-1, "p_{t}^{Leading Jet} [GeV/c]");
-	  gMJB_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Leading Jet} [GeV/c]");
+    gMJB_RefObjPt_ratio_resize = getDataMcResponseRatio(gMJB_RefObjPt_data_resize,gMJB_RefObjPt_mc_resize,numberPtBins-1, "p_{t}^{Leading Jet} (GeV)");
+	  gMJB_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{t}^{Leading Jet} (GeV)");
   }
 	gMJB_RefObjPt_ratio_resize->GetYaxis()->SetTitle("Data/MC");
 	gMJB_RefObjPt_ratio_resize->SetName("Data/MC");

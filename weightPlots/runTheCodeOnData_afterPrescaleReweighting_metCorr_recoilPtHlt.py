@@ -3,33 +3,34 @@
 import os, subprocess, datetime, tempfile, json
 
 d = datetime.datetime.now().strftime("%d%b%y")
-#d = "17Jun14"
+#d = "17Dec14" 
 
-with open('prescaleWeight_reweighted.json') as f:
+#with open('prescaleWeight_reweighted.json') as f:
+with open('prescaleWeight_reweighted_woPU_pt30_eta50_recoilPtHLTBin_puJetIdT_type1fix.json') as f:
      weights = json.load(f)
 
 inputs = [
         # RunA
         [
-            ['MULTIJET_Jet_Run2012A-22Jan2013_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_afterPrescaleReweighting.root', 'list/MULTIJET_Jet_Run2012A-22Jan2013_woPU_pt10_eta50_puJetIdT_type1fix_20Jun.list',  weights["runA_Jet"], 'runA']
+            ['MULTIJET_Jet_Run2012A-22Jan2013_woPU_pt30_eta50_recoilPtHLTBin_puJetIdT_type1fix_afterPrescaleReweighting.root', 'list/MULTIJET_Jet_Run2012A-22Jan2013_woPU_pt30_eta50_puJetIdT_type1fix.list',  weights["runA_Jet"], 'runA']
         ],
 
         # RunB
         [
-            ['MULTIJET_JetHT_Run2012B-22Jan2013_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_afterPrescaleReweighting.root', 'list/MULTIJET_JetHT_Run2012B-22Jan2013_woPU_pt10_eta50_puJetIdT_type1fix_20Jun.list', weights["runB_JetHT"], 'runB'],
-            ['MULTIJET_JetMon_Run2012B-22Jan2013_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_afterPrescaleReweighting.root', 'list/MULTIJET_JetMon_Run2012B-22Jan2013_woPU_pt10_eta50_puJetIdT_type1fix_20Jun.list',  weights["runB_JetMon"], 'runB']
+            ['MULTIJET_JetHT_Run2012B-22Jan2013_woPU_pt30_eta50_recoilPtHLTBin_puJetIdT_type1fix_afterPrescaleReweighting.root', 'list/MULTIJET_JetHT_Run2012B-22Jan2013_woPU_pt30_eta50_puJetIdT_type1fix.list', weights["runB_JetHT"], 'runB'],
+            ['MULTIJET_JetMon_Run2012B-22Jan2013_woPU_pt30_eta50_recoilPtHLTBin_puJetIdT_type1fix_afterPrescaleReweighting.root', 'list/MULTIJET_JetMon_Run2012B-22Jan2013_woPU_pt30_eta50_puJetIdT_type1fix.list',  weights["runB_JetMon"], 'runB']
         ],
 
         # RunC
         [
-            ['MULTIJET_JetHT_Run2012C-22Jan2013_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_afterPrescaleReweighting.root', 'list/MULTIJET_JetHT_Run2012C-22Jan2013_woPU_pt10_eta50_puJetIdT_type1fix_20Jun.list', weights["runC_JetHT"], 'runC'],
-            ['MULTIJET_JetMon_Run2012C-22Jan2013_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_afterPrescaleReweighting.root', 'list/MULTIJET_JetMon_Run2012C-22Jan2013_woPU_pt10_eta50_puJetIdT_type1fix_20Jun.list', weights["runC_JetMon"], 'runC']            
+            ['MULTIJET_JetHT_Run2012C-22Jan2013_woPU_pt30_eta50_recoilPtHLTBin_puJetIdT_type1fix_afterPrescaleReweighting.root', 'list/MULTIJET_JetHT_Run2012C-22Jan2013_woPU_pt30_eta50_puJetIdT_type1fix.list', weights["runC_JetHT"], 'runC'],
+            ['MULTIJET_JetMon_Run2012C-22Jan2013_woPU_pt30_eta50_recoilPtHLTBin_puJetIdT_type1fix_afterPrescaleReweighting.root', 'list/MULTIJET_JetMon_Run2012C-22Jan2013_woPU_pt30_eta50_puJetIdT_type1fix.list', weights["runC_JetMon"], 'runC']            
         ],
 
         # RunD
         [
-            ['MULTIJET_JetHT_Run2012D-22Jan2013_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_afterPrescaleReweighting.root', 'list/MULTIJET_JetHT_Run2012D-22Jan2013_woPU_pt10_eta50_puJetIdT_type1fix_20Jun.list', weights["runD_JetHT"], 'runD'],
-            ['MULTIJET_JetMon_Run2012D-22Jan2013_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_afterPrescaleReweighting.root', 'list/MULTIJET_JetMon_Run2012D-22Jan2013_woPU_pt10_eta50_puJetIdT_type1fix_20Jun.list', weights["runD_JetMon"], 'runD']
+            ['MULTIJET_JetHT_Run2012D-22Jan2013_woPU_pt30_eta50_recoilPtHLTBin_puJetIdT_type1fix_afterPrescaleReweighting.root', 'list/MULTIJET_JetHT_Run2012D-22Jan2013_woPU_pt30_eta50_puJetIdT_type1fix.list', weights["runD_JetHT"], 'runD'],
+            ['MULTIJET_JetMon_Run2012D-22Jan2013_woPU_pt30_eta50_recoilPtHLTBin_puJetIdT_type1fix_afterPrescaleReweighting.root', 'list/MULTIJET_JetMon_Run2012D-22Jan2013_woPU_pt30_eta50_puJetIdT_type1fix.list', weights["runD_JetMon"], 'runD']
         ]
         
     ]
@@ -73,7 +74,7 @@ subprocess.call(args)
 
 print("Merging run by run...")
 for run in inputs:
-    args = ["hadd","-f", "output_rootfile/%s/data/MULTIJET_Data_%s_merged_2012_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_afterPrescaleReweighting.root" % (d,run[0][3])]
+    args = ["hadd","-f", "output_rootfile/%s/data/MULTIJET_Data_%s_merged_2012_woPU_pt30_eta50_recoilPtHLTBin_puJetIdT_type1fix_afterPrescaleReweighting.root" % (d,run[0][3])]
     path = "output_rootfile/%s/data" % (d)
     for output in run:
       args.append(os.path.join(path,output[0]))
@@ -81,7 +82,7 @@ for run in inputs:
     #print args
 
 print("Merging ...")
-args = ["hadd","-f", "output_rootfile/%s/data/MULTIJET_Data_merged_2012_woPU_pt10_eta50_puJetIdT_recoilPtHLTBin_type1fix_afterPrescaleReweighting.root" % (d)]
+args = ["hadd","-f", "output_rootfile/%s/data/MULTIJET_Data_merged_2012_woPU_pt30_eta50_recoilPtHLTBin_puJetIdT_type1fix_afterPrescaleReweighting.root" % (d)]
 path = "output_rootfile/%s/data" % (d)
 for outputs in inputs:
     for output in outputs:

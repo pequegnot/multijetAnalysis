@@ -11,7 +11,8 @@ CFLAGS = -std=c++0x -D_REENTRANT -g -fPIC -w -I$(shell root-config --incdir) -I.
 LD = g++
 LDFLAGS = -g -w
 
-NAME = compareMC
+#NAME = compareMC
+NAME = compareMC_04May16
 ROOTLIBS = $(shell root-config --libs) 
 
 all: $(NAME)

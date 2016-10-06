@@ -465,13 +465,13 @@ int main (int argc, char** argv)
   mgMJB_RefObjPt->Add(gMJB_RefObjPt_mc_clone,"e3");
   mgMJB_RefObjPt->Add(gMJB_RefObjPt_mc,"p");
   mgMJB_RefObjPt->Add(gMJB_RefObjPt_data,"pe");
-  mgMJB_RefObjPt->SetTitle("MJB as a function of p_{T}^{Recoil};p_{T}^{Recoil} [GeV];Response");
+  mgMJB_RefObjPt->SetTitle("MJB as a function of p_{T, recoil};p_{T, recoil} (GeV);Response");
 
 
   TGraphErrors *gMJB_RefObjPt_ratio = NULL;
-  gMJB_RefObjPt_ratio = getDataMcResponseRatio(gMJB_RefObjPt_data,gMJB_RefObjPt_mc,numberPtBins, "p_{T}^{Recoil} [GeV]");
+  gMJB_RefObjPt_ratio = getDataMcResponseRatio(gMJB_RefObjPt_data,gMJB_RefObjPt_mc,numberPtBins, "p_{T, recoil} (GeV)");
   TGraph_style(gMJB_RefObjPt_ratio, MJBDataStyle, MJBColor_MC);
-  gMJB_RefObjPt_ratio->GetXaxis()->SetTitle("p_{T}^{Recoil} [GeV]");
+  gMJB_RefObjPt_ratio->GetXaxis()->SetTitle("p_{T, recoil} (GeV)");
   gMJB_RefObjPt_ratio->GetYaxis()->SetTitle("Data / MC");
   gMJB_RefObjPt_ratio->SetName("Data/MC");
   gMJB_RefObjPt_ratio->SetTitle("Data/MC");
@@ -525,12 +525,12 @@ int main (int argc, char** argv)
   mgMJB_RefObjPt_resize->Add(gMJB_RefObjPt_mc_clone_resize,"e3");
   mgMJB_RefObjPt_resize->Add(gMJB_RefObjPt_mc_resize_pointsOnly,"p");
   mgMJB_RefObjPt_resize->Add(gMJB_RefObjPt_data_resize,"pe");
-  mgMJB_RefObjPt_resize->SetTitle("MJB as a function of p_{T}^{Recoil};p_{T}^{Recoil} [GeV];Response");
+  mgMJB_RefObjPt_resize->SetTitle("MJB as a function of p_{T, recoil};p_{T, recoil} (GeV);Response");
 
   TGraphErrors *gMJB_RefObjPt_ratio_resize = NULL;
-  gMJB_RefObjPt_ratio_resize = getDataMcResponseRatio(gMJB_RefObjPt_data_resize,gMJB_RefObjPt_mc_resize,numberPtBins-3, "p_{T}^{Recoil} [GeV]");
+  gMJB_RefObjPt_ratio_resize = getDataMcResponseRatio(gMJB_RefObjPt_data_resize,gMJB_RefObjPt_mc_resize,numberPtBins-3, "p_{T, recoil} (GeV)");
   TGraph_style(gMJB_RefObjPt_ratio_resize, MJBDataStyle, MJBColor_MC);
-  gMJB_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{T}^{Recoil} [GeV]");
+  gMJB_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{T, recoil} (GeV)");
   gMJB_RefObjPt_ratio_resize->GetYaxis()->SetTitle("Data / MC");
   gMJB_RefObjPt_ratio_resize->SetName("Data/MC");
   gMJB_RefObjPt_ratio_resize->SetTitle("Data/MC");
@@ -578,11 +578,11 @@ int main (int argc, char** argv)
   mgMPF_RefObjPt->Add(gMPF_RefObjPt_mc_clone,"e3");
   mgMPF_RefObjPt->Add(gMPF_RefObjPt_mc,"p");
   mgMPF_RefObjPt->Add(gMPF_RefObjPt_data,"pe");
-  mgMPF_RefObjPt->SetTitle("MPF as a function of p_{T}^{Recoil};p_{T}^{Recoil} [GeV];Response");
+  mgMPF_RefObjPt->SetTitle("MPF as a function of p_{T, recoil};p_{T, recoil} (GeV);Response");
   TGraphErrors *gMPF_RefObjPt_ratio = NULL;
-  gMPF_RefObjPt_ratio = getDataMcResponseRatio(gMPF_RefObjPt_data,gMPF_RefObjPt_mc,numberPtBins, "p_{T}^{Recoil} [GeV]");
+  gMPF_RefObjPt_ratio = getDataMcResponseRatio(gMPF_RefObjPt_data,gMPF_RefObjPt_mc,numberPtBins, "p_{T, recoil} (GeV)");
   TGraph_style(gMPF_RefObjPt_ratio, MPFDataStyle, MPFColor_MC);
-  gMPF_RefObjPt_ratio->GetXaxis()->SetTitle("p_{T}^{Recoil} [GeV]");
+  gMPF_RefObjPt_ratio->GetXaxis()->SetTitle("p_{T, recoil} (GeV)");
   gMPF_RefObjPt_ratio->GetYaxis()->SetTitle("Data / MC");
   gMPF_RefObjPt_ratio->SetName("Data/MC");
   gMPF_RefObjPt_ratio->SetTitle("Data/MC");
@@ -634,12 +634,12 @@ int main (int argc, char** argv)
   mgMPF_RefObjPt_resize->Add(gMPF_RefObjPt_mc_clone_resize,"e3");
   mgMPF_RefObjPt_resize->Add(gMPF_RefObjPt_mc_resize_pointsOnly,"p");
   mgMPF_RefObjPt_resize->Add(gMPF_RefObjPt_data_resize,"pe");
-  mgMPF_RefObjPt_resize->SetTitle("MPF as a function of p_{T}^{Recoil};p_{T}^{Recoil} [GeV];Response");
+  mgMPF_RefObjPt_resize->SetTitle("MPF as a function of p_{T, recoil};p_{T, recoil} (GeV);Response");
 
   TGraphErrors *gMPF_RefObjPt_ratio_resize = NULL;
-  gMPF_RefObjPt_ratio_resize = getDataMcResponseRatio(gMPF_RefObjPt_data_resize,gMPF_RefObjPt_mc_resize,numberPtBins-3, "p_{T}^{Recoil} [GeV]");
+  gMPF_RefObjPt_ratio_resize = getDataMcResponseRatio(gMPF_RefObjPt_data_resize,gMPF_RefObjPt_mc_resize,numberPtBins-3, "p_{T, recoil} (GeV)");
   TGraph_style(gMPF_RefObjPt_ratio_resize, MPFDataStyle, MPFColor_MC);
-  gMPF_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{T}^{Recoil} [GeV]");
+  gMPF_RefObjPt_ratio_resize->GetXaxis()->SetTitle("p_{T, recoil} (GeV)");
   gMPF_RefObjPt_ratio_resize->GetYaxis()->SetTitle("Data / MC");
   gMPF_RefObjPt_ratio_resize->SetName("Data/MC");
   gMPF_RefObjPt_ratio_resize->SetTitle("Data/MC");
@@ -669,7 +669,7 @@ int main (int argc, char** argv)
   mgAll_RefObjPt_resize->Add(gMPF_RefObjPt_mc_resize_pointsOnly,"p");
   mgAll_RefObjPt_resize->Add(gMPF_RefObjPt_data_resize,"pe");
 
-  mgAll_RefObjPt_resize->SetTitle("Response as a function of p_{T}^{Recoil};p_{T}^{Recoil} [GeV];Response");
+  mgAll_RefObjPt_resize->SetTitle("Response as a function of p_{T, recoil};p_{T, recoil} (GeV);Response");
 
 
    mergePlotResponse("r5", mgAll_RefObjPt_resize, gMJB_RefObjPt_mc_resize, gMJB_RefObjPt_data_resize, gMJB_RefObjPt_ratio_resize, gMPF_RefObjPt_mc_resize, gMPF_RefObjPt_data_resize, gMPF_RefObjPt_ratio_resize, 0.92+0.0001, 1.02, "MJB", "MPF", myHistoName.c_str());
@@ -699,13 +699,13 @@ int main (int argc, char** argv)
   mgcExp_RefObjPt_mjb->Add(gcExp_RefObjPt_mc_mjb_clone,"e3");
   mgcExp_RefObjPt_mjb->Add(gcExp_RefObjPt_mc_mjb,"p");
   mgcExp_RefObjPt_mjb->Add(gcExp_RefObjPt_data_mjb,"pe");
-  mgcExp_RefObjPt_mjb->SetTitle("exp(#sum_{i}[F_{i} * log(f_{i})]) as a function of p_{T}^{Recoil};p_{T}^{Recoil} [GeV];C_{recoil}");
+  mgcExp_RefObjPt_mjb->SetTitle("exp(#sum_{i}[F_{i} * log(f_{i})]) as a function of p_{T, recoil};p_{T, recoil} (GeV);C_{recoil}");
 
 
   TGraphErrors *gcExp_RefObjPt_ratio_mjb = NULL;
-  gcExp_RefObjPt_ratio_mjb = getDataMcResponseRatio(gcExp_RefObjPt_data_mjb,gcExp_RefObjPt_mc_mjb,numberPtBins, "p_{T}^{Recoil} [GeV]");
+  gcExp_RefObjPt_ratio_mjb = getDataMcResponseRatio(gcExp_RefObjPt_data_mjb,gcExp_RefObjPt_mc_mjb,numberPtBins, "p_{T, recoil} (GeV)");
   TGraph_style(gcExp_RefObjPt_ratio_mjb, MJBDataStyle, MJBColor_MC);
-  gcExp_RefObjPt_ratio_mjb->GetXaxis()->SetTitle("p_{T}^{Recoil} [GeV]");
+  gcExp_RefObjPt_ratio_mjb->GetXaxis()->SetTitle("p_{T, recoil} (GeV)");
   gcExp_RefObjPt_ratio_mjb->GetYaxis()->SetTitle("Data / MC");
   gcExp_RefObjPt_ratio_mjb->SetName("Data / MC");
   gcExp_RefObjPt_ratio_mjb->SetTitle("Data / MC");
@@ -757,12 +757,12 @@ int main (int argc, char** argv)
   mgcExp_RefObjPt_mjb_resize->Add(gcExp_RefObjPt_mc_mjb_clone_resize,"e3");
   mgcExp_RefObjPt_mjb_resize->Add(gcExp_RefObjPt_mc_mjb_resize_pointsOnly,"p");
   mgcExp_RefObjPt_mjb_resize->Add(gcExp_RefObjPt_data_mjb_resize,"pe");
-  mgcExp_RefObjPt_mjb_resize->SetTitle("exp(#sum_{i}[F_{i} * log(f_{i})]) as a function of p_{T}^{Recoil};p_{T}^{Recoil} [GeV];C_{recoil}");
+  mgcExp_RefObjPt_mjb_resize->SetTitle("exp(#sum_{i}[F_{i} * log(f_{i})]) as a function of p_{T, recoil};p_{T, recoil} (GeV);C_{recoil}");
 
   TGraphErrors *gcExp_RefObjPt_ratio_mjb_resize = NULL;
-  gcExp_RefObjPt_ratio_mjb_resize = getDataMcResponseRatio(gcExp_RefObjPt_data_mjb_resize,gcExp_RefObjPt_mc_mjb_resize,numberPtBins-3, "p_{T}^{Recoil} [GeV]");
+  gcExp_RefObjPt_ratio_mjb_resize = getDataMcResponseRatio(gcExp_RefObjPt_data_mjb_resize,gcExp_RefObjPt_mc_mjb_resize,numberPtBins-3, "p_{T, recoil} (GeV)");
   TGraph_style(gcExp_RefObjPt_ratio_mjb_resize, MJBDataStyle, MJBColor_MC);
-  gcExp_RefObjPt_ratio_mjb_resize->GetXaxis()->SetTitle("p_{T}^{Recoil} [GeV]");
+  gcExp_RefObjPt_ratio_mjb_resize->GetXaxis()->SetTitle("p_{T, recoil} (GeV)");
   gcExp_RefObjPt_ratio_mjb_resize->GetYaxis()->SetTitle("Data / MC");
   gcExp_RefObjPt_ratio_mjb_resize->SetName("Data / MC");
   gcExp_RefObjPt_ratio_mjb_resize->SetTitle("Data / MC");
@@ -796,13 +796,13 @@ int main (int argc, char** argv)
   mgcExp_RefObjPt_mpf->Add(gcExp_RefObjPt_mc_mpf_clone,"e3");
   mgcExp_RefObjPt_mpf->Add(gcExp_RefObjPt_mc_mpf,"p");
   mgcExp_RefObjPt_mpf->Add(gcExp_RefObjPt_data_mpf,"pe");
-  mgcExp_RefObjPt_mpf->SetTitle("exp(#sum_{i}[F_{i} * log(f_{i})]) as a function of p_{T}^{Recoil};p_{T}^{Recoil} [GeV];C_{recoil}");
+  mgcExp_RefObjPt_mpf->SetTitle("exp(#sum_{i}[F_{i} * log(f_{i})]) as a function of p_{T, recoil};p_{T, recoil} (GeV);C_{recoil}");
 
 
   TGraphErrors *gcExp_RefObjPt_ratio_mpf = NULL;
-  gcExp_RefObjPt_ratio_mpf = getDataMcResponseRatio(gcExp_RefObjPt_data_mpf,gcExp_RefObjPt_mc_mpf,numberPtBins, "p_{T}^{Recoil} [GeV]");
+  gcExp_RefObjPt_ratio_mpf = getDataMcResponseRatio(gcExp_RefObjPt_data_mpf,gcExp_RefObjPt_mc_mpf,numberPtBins, "p_{T, recoil} (GeV)");
   TGraph_style(gcExp_RefObjPt_ratio_mpf, MPFDataStyle, MPFColor_MC);
-  gcExp_RefObjPt_ratio_mpf->GetXaxis()->SetTitle("p_{T}^{Recoil} [GeV]");
+  gcExp_RefObjPt_ratio_mpf->GetXaxis()->SetTitle("p_{T, recoil} (GeV)");
   gcExp_RefObjPt_ratio_mpf->GetYaxis()->SetTitle("Data / MC");
   gcExp_RefObjPt_ratio_mpf->SetName("Data / MC");
   gcExp_RefObjPt_ratio_mpf->SetTitle("Data / MC");
@@ -852,12 +852,12 @@ int main (int argc, char** argv)
   mgcExp_RefObjPt_mpf_resize->Add(gcExp_RefObjPt_mc_mpf_clone_resize,"e3");
   mgcExp_RefObjPt_mpf_resize->Add(gcExp_RefObjPt_mc_mpf_resize_pointsOnly,"p");
   mgcExp_RefObjPt_mpf_resize->Add(gcExp_RefObjPt_data_mpf_resize,"pe");
-  mgcExp_RefObjPt_mpf_resize->SetTitle("exp(#sum_{i}[F_{i} * log(f_{i})]) as a function of p_{T}^{Recoil};p_{T}^{Recoil} [GeV];C_{recoil}");
+  mgcExp_RefObjPt_mpf_resize->SetTitle("exp(#sum_{i}[F_{i} * log(f_{i})]) as a function of p_{T, recoil};p_{T, recoil} (GeV);C_{recoil}");
 
   TGraphErrors *gcExp_RefObjPt_ratio_mpf_resize = NULL;
-  gcExp_RefObjPt_ratio_mpf_resize = getDataMcResponseRatio(gcExp_RefObjPt_data_mpf_resize,gcExp_RefObjPt_mc_mpf_resize,numberPtBins-3, "p_{T}^{Recoil} [GeV]");
+  gcExp_RefObjPt_ratio_mpf_resize = getDataMcResponseRatio(gcExp_RefObjPt_data_mpf_resize,gcExp_RefObjPt_mc_mpf_resize,numberPtBins-3, "p_{T, recoil} (GeV)");
   TGraph_style(gcExp_RefObjPt_ratio_mpf_resize, MPFDataStyle, MPFColor_MC);
-  gcExp_RefObjPt_ratio_mpf_resize->GetXaxis()->SetTitle("p_{T}^{Recoil} [GeV]");
+  gcExp_RefObjPt_ratio_mpf_resize->GetXaxis()->SetTitle("p_{T, recoil} (GeV)");
   gcExp_RefObjPt_ratio_mpf_resize->GetYaxis()->SetTitle("Data / MC");
   gcExp_RefObjPt_ratio_mpf_resize->SetName("Data / MC");
   gcExp_RefObjPt_ratio_mpf_resize->SetTitle("Data / MC");
@@ -884,7 +884,7 @@ int main (int argc, char** argv)
   mgAll_crecoil_RefObjPt_resize->Add(gcExp_RefObjPt_mc_mpf_resize_pointsOnly,"p");
   mgAll_crecoil_RefObjPt_resize->Add(gcExp_RefObjPt_data_mpf_resize,"pe");
 
-  mgAll_crecoil_RefObjPt_resize->SetTitle("Crecoil as a function of p_{T}^{Recoil};p_{T}^{Recoil} [GeV];C_{recoil}");
+  mgAll_crecoil_RefObjPt_resize->SetTitle("Crecoil as a function of p_{T, recoil};p_{T, recoil} (GeV);C_{recoil}");
 
 
    mergePlotResponse("r5", mgAll_crecoil_RefObjPt_resize, gcExp_RefObjPt_mc_mjb_resize_pointsOnly, gcExp_RefObjPt_data_mjb_resize, gcExp_RefObjPt_ratio_mjb_resize, gcExp_RefObjPt_mc_mpf_resize_pointsOnly, gcExp_RefObjPt_data_mpf_resize, gcExp_RefObjPt_ratio_mpf_resize, 0.34+0.0001, 0.46, "p_{T} > 30 GeV", "p_{T} > 10 GeV", myHistoName.c_str());

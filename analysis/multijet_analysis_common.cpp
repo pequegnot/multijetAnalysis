@@ -218,6 +218,9 @@ int main (int argc, char** argv)
 	vector<TH1F*> vMJB_gen_RefObjPtBin;
 	vMJB_gen_RefObjPtBin.resize(numberPtBins);
 
+	vector<TH1F*> vMJB_gen_RefObjPtRecoBin;
+	vMJB_gen_RefObjPtRecoBin.resize(numberPtBins);
+
 	//MPF per recoilpt
 	vector<TH1F*> vMPF_gen_RefObjPtBin;
 	vMPF_gen_RefObjPtBin.resize(numberPtBins);
@@ -285,6 +288,8 @@ int main (int argc, char** argv)
     }
     vectorName = "MJB_gen/PtBin/MJB_gen_" + ptBinName;
     vMJB_gen_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
+    vectorName = "MJB_gen_vs_recoilPtReco/PtBin/MJB_gen_vs_recoilPtReco_" + ptBinName;
+    vMJB_gen_RefObjPtRecoBin[j] = (TH1F*)f->Get(vectorName.c_str());
     vectorName = "MPF_gen/PtBin/MPF_gen_" + ptBinName;
     vMPF_gen_RefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
     vectorName = "MPF/PtBin/MPF_corr_" + ptBinName;
@@ -301,7 +306,8 @@ int main (int argc, char** argv)
 
   for(int j=0; j<myHLTPtBinning.getSize(); j++) {
     ptBinName = myHLTPtBinning.getName(j);
-    vectorName = "leadingJet/HLTPtBin/LeadingJetPt_" + ptBinName;
+    //vectorName = "leadingJet/HLTPtBin/LeadingJetPt_perHLTTrigger_" + ptBinName;
+    vectorName = "leadingJet/HLTPtBin/LeadingJetPt_HLTPtBin_" + ptBinName;
     vLeadingJetPt_HLTRefObjPtBin[j] = (TH1F*)f->Get(vectorName.c_str());
 	}
 
@@ -394,10 +400,13 @@ int main (int argc, char** argv)
 	TH1F* hNjetsTotal =  (TH1F*)f->Get("variables/afterSel/hNjetsTotal");	
     TH1F* hJetsPt_afterSel = (TH1F*)f->Get("variables/afterSel/hJetsPt_afterSel");
     TH1F* hJetsEta_afterSel = (TH1F*)f->Get("variables/afterSel/hJetsEta_afterSel");
+    TH1F* hLeadingJetEta_afterSel = (TH1F*)f->Get("variables/afterSel/hLeadingJetEta_afterSel");
+    TH1F* hRecoilEta_afterSel = (TH1F*)f->Get("variables/afterSel/hRecoilEta_afterSel");
     TH1F* hJetsPhi_afterSel = (TH1F*)f->Get("variables/afterSel/hJetsPhi_afterSel");
 
 	TH1F* hMet_beforeSel = (TH1F*)f->Get("variables/beforeSel/hMet_beforeSel");
 	TH1F* hLeadingJetPt_beforeSel = (TH1F*)f->Get("variables/beforeSel/hLeadingJetPt_beforeSel");	
+	TH1F* hSecondJetPt_beforeSel = (TH1F*)f->Get("variables/beforeSel/hSecondJetPt_beforeSel");	
 	TH1F* hRecoilPt_beforeSel = (TH1F*)f->Get("variables/beforeSel/hRecoilPt_beforeSel");	
 	TH1F* hNpv_beforeSel = (TH1F*)f->Get("variables/beforeSel/hNpv_beforeSel");	
 	TH1F* hAlpha_beforeSel = (TH1F*)f->Get("variables/beforeSel/hAlpha_beforeSel");
@@ -406,11 +415,14 @@ int main (int argc, char** argv)
 	TH1F* hRecoilJetsPt_beforeSel = (TH1F*)f->Get("variables/beforeSel/hRecoilJetsPt_beforeSel");	
     TH1F* hJetsPt_beforeSel = (TH1F*)f->Get("variables/beforeSel/hJetsPt_beforeSel");
     TH1F* hJetsEta_beforeSel = (TH1F*)f->Get("variables/beforeSel/hJetsEta_beforeSel");
+    TH1F* hLeadingJetEta_beforeSel = (TH1F*)f->Get("variables/beforeSel/hLeadingJetEta_beforeSel");
+    TH1F* hRecoilEta_beforeSel = (TH1F*)f->Get("variables/beforeSel/hRecoilEta_beforeSel");
     TH1F* hJetsPhi_beforeSel = (TH1F*)f->Get("variables/beforeSel/hJetsPhi_beforeSel");
     TH1F* hNjets_ptSup30_etaInf5_beforeSel = (TH1F*)f->Get("variables/beforeSel/hNjets_ptSup30_etaInf5_beforeSel");
 		
 	TH1F* hMet_afterSel = (TH1F*)f->Get("variables/afterSel/hMet_afterSel");	
 	TH1F* hLeadingJetPt_afterSel = (TH1F*)f->Get("variables/afterSel/hLeadingJetPt_afterSel");		
+	TH1F* hSecondJetPt_afterSel = (TH1F*)f->Get("variables/afterSel/hSecondJetPt_afterSel");		
 	TH1F* hRecoilPt_afterSel = (TH1F*)f->Get("variables/afterSel/hRecoilPt_afterSel");	
 	TH1F* hNpv_afterSel = (TH1F*)f->Get("variables/afterSel/hNpv_afterSel");				
 	TH1F* hAlpha_afterSel = (TH1F*)f->Get("variables/afterSel/hAlpha_afterSel");	
@@ -855,21 +867,94 @@ int main (int argc, char** argv)
 	float aMJB_RefObjPt_RMSError[numberPtBins];
 	float aRefObjPtBins_Mean[numberPtBins];
 	float aRefObjPtBins_MeanError[numberPtBins];
+
+  // MC, recoil with pt>30 GeV
+/*  aRefObjPtBins_Mean[0] = 239.895;*/
+  //aRefObjPtBins_MeanError[0] = 0.243965;
+  //aRefObjPtBins_Mean[1] = 333.497;
+  //aRefObjPtBins_MeanError[1] = 0.205937;
+  //aRefObjPtBins_Mean[2] = 425.318;
+  //aRefObjPtBins_MeanError[2] = 0.309645;
+  //aRefObjPtBins_Mean[3] = 515.617;
+  //aRefObjPtBins_MeanError[3] = 0.420699;
+  //aRefObjPtBins_Mean[4] = 620.26;
+  //aRefObjPtBins_MeanError[4] = 0.842819;
+  //aRefObjPtBins_Mean[5] = 742.271;
+  //aRefObjPtBins_MeanError[5] = 0.969582;
+  //aRefObjPtBins_Mean[6] = 842.946;
+  //aRefObjPtBins_MeanError[6] = 0.984642;
+  //aRefObjPtBins_Mean[7] = 943.887;
+  //aRefObjPtBins_MeanError[7] = 1.28686;
+  //aRefObjPtBins_Mean[8] = 1078.12;
+  //aRefObjPtBins_MeanError[8] = 2.26068;
+  //aRefObjPtBins_Mean[9] = 1281.43;
+  //aRefObjPtBins_MeanError[9] = 5.67627;
+  //aRefObjPtBins_Mean[10] = 1597.82;
+  //aRefObjPtBins_MeanError[10] = 38.3766;
+  //aRefObjPtBins_Mean[11] = 0;
+  //aRefObjPtBins_MeanError[11] = 0;
+  //aRefObjPtBins_Mean[12] = 0;
+  /*aRefObjPtBins_MeanError[12] = 0;*/
+
+  // data, recoil with pt>30 GeV
+/*  aRefObjPtBins_Mean[0] = 240.62;*/
+  //aRefObjPtBins_MeanError[0] = 0.971106;
+  //aRefObjPtBins_Mean[1] = 332.716;
+  //aRefObjPtBins_MeanError[1] = 0.80631;
+  //aRefObjPtBins_Mean[2] = 425.941;
+  //aRefObjPtBins_MeanError[2] = 0.615129;
+  //aRefObjPtBins_Mean[3] = 515.517;
+  //aRefObjPtBins_MeanError[3] = 0.82347;
+  //aRefObjPtBins_Mean[4] = 618.149;
+  //aRefObjPtBins_MeanError[4] = 1.13497;
+  //aRefObjPtBins_Mean[5] = 737.957;
+  //aRefObjPtBins_MeanError[5] = 1.48795;
+  //aRefObjPtBins_Mean[6] = 842.283;
+  //aRefObjPtBins_MeanError[6] = 2.41851;
+  //aRefObjPtBins_Mean[7] = 948.768;
+  //aRefObjPtBins_MeanError[7] = 4.73199;
+  //aRefObjPtBins_Mean[8] = 1091.2;
+  //aRefObjPtBins_MeanError[8] = 10.6937;
+  //aRefObjPtBins_Mean[9] = 1305.31;
+  //aRefObjPtBins_MeanError[9] = 1.07935;
+  //aRefObjPtBins_Mean[10] = 1562.64;
+  //aRefObjPtBins_MeanError[10] = 0;
+  //aRefObjPtBins_Mean[11] = 0;
+  //aRefObjPtBins_MeanError[11] = 0;
+  //aRefObjPtBins_Mean[12] = 0;
+  /*aRefObjPtBins_MeanError[12] = 0;*/
+
+    // run II
 	
+ /* for(int i=0; i<numberPtBins; i++) {*/
+		//aMJB_RefObjPt_Mean[i] = vMJB_RefObjPtBin[i]->GetMean();
+		//aMJB_RefObjPt_MeanError[i] = vMJB_RefObjPtBin[i]->GetMeanError();
+    //if (!isMC && foundCorrespondingMCFile) {
+      //if ( vMJB_RefObjPtBin[i]->GetEntries() < 10) {
+        //aMJB_RefObjPt_MeanError[i] = vMJB_mc_RefObjPtBin[i]->GetRMS()/sqrt(vMJB_RefObjPtBin[i]->GetEntries());
+      //}
+    //}
+		//aMJB_RefObjPt_RMS[i] = vMJB_RefObjPtBin[i]->GetRMS();
+		//aMJB_RefObjPt_RMSError[i] = vMJB_RefObjPtBin[i]->GetRMSError();
+    //if (vRecoilPt_RefObjPtBin[i]->GetEntries() != 0) {
+      //aRefObjPtBins_Mean[i] = vRecoilPt_RefObjPtBin[i]->GetMean();
+      //aRefObjPtBins_MeanError[i] = vRecoilPt_RefObjPtBin[i]->GetMeanError();
+    //} else {
+      //aRefObjPtBins_Mean[i] = ( myPtBinning.getBinValueInf(i)+myPtBinning.getBinValueSup(i) )/2.;
+      //aRefObjPtBins_MeanError[i]=0.;
+    //}
+    ////std::cout << "aRefObjPtBins_Mean[" << i << "] = " << aRefObjPtBins_Mean[i] << ";" << std::endl;
+    ////std::cout << "aRefObjPtBins_MeanError[" << i << "] = " << aRefObjPtBins_MeanError[i] << ";" << std::endl;
+	/*}*/
+
+    // run I
 	for(int i=0; i<numberPtBins; i++) {
 		aMJB_RefObjPt_Mean[i] = vMJB_RefObjPtBin[i]->GetMean();
 		aMJB_RefObjPt_MeanError[i] = vMJB_RefObjPtBin[i]->GetMeanError();
-    if (!isMC && foundCorrespondingMCFile) {
-      if ( vMJB_RefObjPtBin[i]->GetEntries() < 10) {
-        aMJB_RefObjPt_MeanError[i] = vMJB_mc_RefObjPtBin[i]->GetRMS()/sqrt(vMJB_RefObjPtBin[i]->GetEntries());
-      }
-    }
 		aMJB_RefObjPt_RMS[i] = vMJB_RefObjPtBin[i]->GetRMS();
 		aMJB_RefObjPt_RMSError[i] = vMJB_RefObjPtBin[i]->GetRMSError();
-		//aRefObjPtBins_Mean[i] = ( myPtBinning.getBinValueInf(i)+myPtBinning.getBinValueSup(i) )/2.;
-		aRefObjPtBins_Mean[i] = vRecoilPt_RefObjPtBin[i]->GetMean();
-		//aRefObjPtBins_MeanError[i]=0.;
-		aRefObjPtBins_MeanError[i] = vRecoilPt_RefObjPtBin[i]->GetMeanError();
+		aRefObjPtBins_Mean[i] = ( myPtBinning.getBinValueInf(i)+myPtBinning.getBinValueSup(i) )/2.;
+		aRefObjPtBins_MeanError[i]=0.;
 	}
 	
 	TCanvas *cMJB_RefObjPt = new TCanvas("cMJB_RefObjPt","cMJB_RefObjPt");
@@ -982,15 +1067,85 @@ int main (int argc, char** argv)
 	float aMPF_RefObjPt_MeanError[numberPtBins];
 	float aMPF_RefObjPt_RMS[numberPtBins];
 	float aMPF_RefObjPt_RMSError[numberPtBins];
+
+  // MC, recoil with pt>10 GeV
+/*    aRefObjPtBins_Mean[0] = 236.285;*/
+    //aRefObjPtBins_MeanError[0] = 0.170239;
+    //aRefObjPtBins_Mean[1] = 319.373;
+    //aRefObjPtBins_MeanError[1] = 0.278474;
+    //aRefObjPtBins_Mean[2] = 406.962;
+    //aRefObjPtBins_MeanError[2] = 0.213;
+    //aRefObjPtBins_Mean[3] = 502.268;
+    //aRefObjPtBins_MeanError[3] = 0.322964;
+    //aRefObjPtBins_Mean[4] = 576.548;
+    //aRefObjPtBins_MeanError[4] = 0.38205;
+    //aRefObjPtBins_Mean[5] = 647.658;
+    //aRefObjPtBins_MeanError[5] = 0.660747;
+    //aRefObjPtBins_Mean[6] = 741.354;
+    //aRefObjPtBins_MeanError[6] = 0.897579;
+    //aRefObjPtBins_Mean[7] = 842.372;
+    //aRefObjPtBins_MeanError[7] = 0.907203;
+    //aRefObjPtBins_Mean[8] = 942.21;
+    //aRefObjPtBins_MeanError[8] = 1.11792;
+    //aRefObjPtBins_Mean[9] = 1074.44;
+    //aRefObjPtBins_MeanError[9] = 2.02154;
+    //aRefObjPtBins_Mean[10] = 1279.15;
+    //aRefObjPtBins_MeanError[10] = 4.91493;
+    //aRefObjPtBins_Mean[11] = 1582.05;
+    //aRefObjPtBins_MeanError[11] = 30.8063;
+    //aRefObjPtBins_Mean[12] = 2250;
+    //aRefObjPtBins_MeanError[12] = 0;
+    //aRefObjPtBins_Mean[13] = 2750;
+    /*aRefObjPtBins_MeanError[13] = 0;*/
+
+
+  // data, recoil with pt>10 GeV
+/*    aRefObjPtBins_Mean[0] = 236.984;*/
+    //aRefObjPtBins_MeanError[0] = 0.552525;
+    //aRefObjPtBins_Mean[1] = 319.999;
+    //aRefObjPtBins_MeanError[1] = 0.511625;
+    //aRefObjPtBins_Mean[2] = 406.069;
+    //aRefObjPtBins_MeanError[2] = 0.414594;
+    //aRefObjPtBins_Mean[3] = 501.473;
+    //aRefObjPtBins_MeanError[3] = 0.544537;
+    //aRefObjPtBins_Mean[4] = 575.341;
+    //aRefObjPtBins_MeanError[4] = 0.541795;
+    //aRefObjPtBins_Mean[5] = 647.24;
+    //aRefObjPtBins_MeanError[5] = 0.683926;
+    //aRefObjPtBins_Mean[6] = 740.395;
+    //aRefObjPtBins_MeanError[6] = 1.19235;
+    //aRefObjPtBins_Mean[7] = 841.835;
+    //aRefObjPtBins_MeanError[7] = 1.97109;
+    //aRefObjPtBins_Mean[8] = 945.252;
+    //aRefObjPtBins_MeanError[8] = 3.6828;
+    //aRefObjPtBins_Mean[9] = 1082.56;
+    //aRefObjPtBins_MeanError[9] = 9.33358;
+    //aRefObjPtBins_Mean[10] = 1269.33;
+    //aRefObjPtBins_MeanError[10] = 22.316;
+    //aRefObjPtBins_Mean[11] = 1586.22;
+    //aRefObjPtBins_MeanError[11] = 0;
+    //aRefObjPtBins_Mean[12] = 2250;
+    //aRefObjPtBins_MeanError[12] = 0;
+    //aRefObjPtBins_Mean[13] = 2750;
+    /*aRefObjPtBins_MeanError[13] = 0;*/
+
+
 	
+ /* for(int i=0; i<numberPtBins; i++) {*/
+		//aMPF_RefObjPt_Mean[i] = vMPF_RefObjPtBin[i]->GetMean();
+		//aMPF_RefObjPt_MeanError[i] = vMPF_RefObjPtBin[i]->GetMeanError();
+    //if (!isMC && foundCorrespondingMCFile) {
+      //if ( vMPF_RefObjPtBin[i]->GetEntries() < 10) {
+        //aMPF_RefObjPt_MeanError[i] = vMPF_mc_RefObjPtBin[i]->GetRMS()/sqrt(vMPF_RefObjPtBin[i]->GetEntries());
+      //}
+    //}
+		//aMPF_RefObjPt_RMS[i] = vMPF_RefObjPtBin[i]->GetRMS();
+		//aMPF_RefObjPt_RMSError[i] = vMPF_RefObjPtBin[i]->GetRMSError();
+	/*}*/
+
 	for(int i=0; i<numberPtBins; i++) {
 		aMPF_RefObjPt_Mean[i] = vMPF_RefObjPtBin[i]->GetMean();
 		aMPF_RefObjPt_MeanError[i] = vMPF_RefObjPtBin[i]->GetMeanError();
-    if (!isMC && foundCorrespondingMCFile) {
-      if ( vMPF_RefObjPtBin[i]->GetEntries() < 10) {
-        aMPF_RefObjPt_MeanError[i] = vMPF_mc_RefObjPtBin[i]->GetRMS()/sqrt(vMPF_RefObjPtBin[i]->GetEntries());
-      }
-    }
 		aMPF_RefObjPt_RMS[i] = vMPF_RefObjPtBin[i]->GetRMS();
 		aMPF_RefObjPt_RMSError[i] = vMPF_RefObjPtBin[i]->GetRMSError();
 	}
@@ -1062,11 +1217,11 @@ int main (int argc, char** argv)
 	for(int i=0; i<numberPtBins; i++) {
 		aMPF_corr_RefObjPt_Mean[i] = vMPF_corr_RefObjPtBin[i]->GetMean();
 		aMPF_corr_RefObjPt_MeanError[i] = vMPF_corr_RefObjPtBin[i]->GetMeanError();
-    if (!isMC && foundCorrespondingMCFile) {
-      if ( vMPF_corr_RefObjPtBin[i]->GetEntries() < 10) {
-        aMPF_corr_RefObjPt_MeanError[i] = vMPF_corr_mc_RefObjPtBin[i]->GetRMS()/sqrt(vMPF_corr_RefObjPtBin[i]->GetEntries());
-      }
-    }
+/*    if (!isMC && foundCorrespondingMCFile) {*/
+      //if ( vMPF_corr_RefObjPtBin[i]->GetEntries() < 10) {
+        //aMPF_corr_RefObjPt_MeanError[i] = vMPF_corr_mc_RefObjPtBin[i]->GetRMS()/sqrt(vMPF_corr_RefObjPtBin[i]->GetEntries());
+      //}
+    /*}*/
 		aMPF_corr_RefObjPt_RMS[i] = vMPF_corr_RefObjPtBin[i]->GetRMS();
 		aMPF_corr_RefObjPt_RMSError[i] = vMPF_corr_RefObjPtBin[i]->GetRMSError();
 	}
@@ -1125,6 +1280,8 @@ int main (int argc, char** argv)
 
 
   TGraphErrors *gMJB_gen_RefObjPt = NULL;
+  TGraphErrors *gMJB_gen_RefObjPtReco = NULL;
+  TGraphErrors *gRatio_MJBreco_MJBgen_RefObjPt = NULL;
   TGraphErrors *gMPF_gen_RefObjPt = NULL;
 
   if (isMC){
@@ -1169,7 +1326,89 @@ int main (int argc, char** argv)
 	TGraph_style (gMJB_gen_RefObjPt);
 	saveName = "images/MJB_gen/cMJB_gen_RefObjPt" + typeName + extension;
 	cMJB_gen_RefObjPt->SaveAs(saveName.c_str());
+
+//************************************************************************************************************
+//
+//                                      MJB_gen as a function of reference object pt
+//
+//************************************************************************************************************	
+
+	float aMJB_gen_RefObjPtReco_Mean[numberPtBins];
+	float aMJB_gen_RefObjPtReco_MeanError[numberPtBins];
 	
+	for(int i=0; i<numberPtBins; i++) {
+		aMJB_gen_RefObjPtReco_Mean[i] = vMJB_gen_RefObjPtRecoBin[i]->GetMean();
+		aMJB_gen_RefObjPtReco_MeanError[i] = vMJB_gen_RefObjPtRecoBin[i]->GetMeanError();
+	}
+	
+	TCanvas *cMJB_gen_RefObjPtReco = new TCanvas("cMJB_gen_RefObjPtReco","cMJB_gen_RefObjPtReco");
+	cMJB_gen_RefObjPtReco->cd();
+	
+	gMJB_gen_RefObjPtReco = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aMJB_gen_RefObjPtReco_Mean, aRefObjPtBins_MeanError, aMJB_gen_RefObjPtReco_MeanError);
+	gMJB_gen_RefObjPtReco->SetName("MJB_gen");
+    if(useRecoilPtBin) {
+	  gMJB_gen_RefObjPtReco->SetTitle("MJB_gen as a function of p_{T}^{Recoil}");
+	  gMJB_gen_RefObjPtReco->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+    }
+    else {
+	  gMJB_gen_RefObjPtReco->SetTitle("MJB_gen as a function of p_{T}^{Leading Jet}");
+	  gMJB_gen_RefObjPtReco->GetXaxis()->SetTitle("p_{T}^{Leading Jet} (GeV)");    
+    }
+	gMJB_gen_RefObjPtReco->GetYaxis()->SetTitle("MJB_gen");
+	gMJB_gen_RefObjPtReco->SetMarkerStyle(20);
+	gMJB_gen_RefObjPtReco->SetMarkerColor(plotColor);
+	gMJB_gen_RefObjPtReco->SetLineColor(plotColor);
+	//gMJB_gen_RefObjPtReco->SetMarkerSize(0.5);	
+	cMJB_gen_RefObjPtReco->cd();
+	//gMJB_gen_RefObjPtReco->SetLogx(1);
+	//gMJB_gen_RefObjPtReco->GetYaxis()->SetRangeUser(0.7,1.1);
+	gMJB_gen_RefObjPtReco->Draw("ape");
+	TGraph_style (gMJB_gen_RefObjPtReco);
+	saveName = "images/MJB_gen/cMJB_gen_RefObjPtReco" + typeName + extension;
+	cMJB_gen_RefObjPtReco->SaveAs(saveName.c_str());
+	
+
+//************************************************************************************************************
+//
+//                                      ratio MJB_reco/MJB_gen = MJB/PLI as a function of reference object pt
+//
+//************************************************************************************************************	
+
+	float aRatio_MJBreco_MJBgen_RefObjPt_Mean[numberPtBins];
+	float aRatio_MJBreco_MJBgen_RefObjPt_MeanError[numberPtBins];
+	
+	for(int i=0; i<numberPtBins; i++) {
+		aRatio_MJBreco_MJBgen_RefObjPt_Mean[i] = aMJB_RefObjPt_Mean[i]/aMJB_gen_RefObjPtReco_Mean[i];
+		aRatio_MJBreco_MJBgen_RefObjPt_MeanError[i] = sqrt(pow(aMJB_RefObjPt_MeanError[i]/aMJB_gen_RefObjPtReco_Mean[i], 2) + pow( aMJB_RefObjPt_Mean[i]*aMJB_gen_RefObjPtReco_MeanError[i]/(aMJB_gen_RefObjPtReco_Mean[i]*aMJB_gen_RefObjPtReco_Mean[i]) ,2));
+	}
+	
+	TCanvas *cRatio_MJBreco_MJBgen_RefObjPt = new TCanvas("cRatio_MJBreco_MJBgen_RefObjPt","cRatio_MJBreco_MJBgen_RefObjPt");
+	cRatio_MJBreco_MJBgen_RefObjPt->cd();
+	
+	gRatio_MJBreco_MJBgen_RefObjPt = new TGraphErrors(numberPtBins,aRefObjPtBins_Mean, aRatio_MJBreco_MJBgen_RefObjPt_Mean, aRefObjPtBins_MeanError, aRatio_MJBreco_MJBgen_RefObjPt_MeanError);
+	gRatio_MJBreco_MJBgen_RefObjPt->SetName("Ratio_MJBreco_MJBgen");
+    if(useRecoilPtBin) {
+	  gRatio_MJBreco_MJBgen_RefObjPt->SetTitle("MJB_reco/MJB_gen as a function of p_{T}^{Recoil}");
+	  gRatio_MJBreco_MJBgen_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Recoil} (GeV)");
+    }
+    else {
+	  gRatio_MJBreco_MJBgen_RefObjPt->SetTitle("MJB_reco/MJB_gen as a function of p_{T}^{Leading Jet}");
+	  gRatio_MJBreco_MJBgen_RefObjPt->GetXaxis()->SetTitle("p_{T}^{Leading Jet} (GeV)");    
+    }
+	gRatio_MJBreco_MJBgen_RefObjPt->GetYaxis()->SetTitle("Ratio_MJBreco_MJBgen");
+	gRatio_MJBreco_MJBgen_RefObjPt->SetMarkerStyle(20);
+	gRatio_MJBreco_MJBgen_RefObjPt->SetMarkerColor(plotColor);
+	gRatio_MJBreco_MJBgen_RefObjPt->SetLineColor(plotColor);
+	//gRatio_MJBreco_MJBgen_RefObjPt->SetMarkerSize(0.5);	
+	cRatio_MJBreco_MJBgen_RefObjPt->cd();
+	//gRatio_MJBreco_MJBgen_RefObjPt->SetLogx(1);
+	//gRatio_MJBreco_MJBgen_RefObjPt->GetYaxis()->SetRangeUser(0.7,1.1);
+	gRatio_MJBreco_MJBgen_RefObjPt->Draw("ape");
+	TGraph_style (gRatio_MJBreco_MJBgen_RefObjPt);
+	saveName = "images/MJB_gen/cRatio_MJBreco_MJBgen_RefObjPt" + typeName + extension;
+	cRatio_MJBreco_MJBgen_RefObjPt->SaveAs(saveName.c_str());
+	
+
 
 //************************************************************************************************************
 //
@@ -1761,6 +2000,16 @@ int main (int argc, char** argv)
             vMJB_gen_RefObjPtBin[j]->Write();
         }
 
+        TDirectory *mjb_gen_vsReco_Dir = out->mkdir("MJB_gen_vs_recoilPtReco","MJB_gen_vs_recoilPtReco");
+        mjb_gen_vsReco_Dir->cd();
+        TDirectory *ptbin_gen_vsReco_Dir = mjb_gen_vsReco_Dir->mkdir("PtBin","PtBin");
+        ptbin_gen_vsReco_Dir->cd();
+        gMJB_gen_RefObjPtReco->Write("gMJB_gen_RefObjPtReco");
+        gRatio_MJBreco_MJBgen_RefObjPt->Write("gRatio_MJBreco_MJBgen_RefObjPt");
+        for(int j=0; j<myPtBinning.getSize(); j++) {
+            vMJB_gen_RefObjPtRecoBin[j]->Write();
+        }
+
         TDirectory *mpf_genDir = out->mkdir("MPF_gen","MPF_gen");
         mpf_genDir->cd();
         TDirectory *ptbinmpf_genDir = mpf_genDir->mkdir("PtBin","PtBin");
@@ -1827,6 +2076,7 @@ int main (int argc, char** argv)
 	beforeSelDir->cd();
 	hMet_beforeSel->Write();
 	hLeadingJetPt_beforeSel->Write();
+	hSecondJetPt_beforeSel->Write();
 	hRecoilPt_beforeSel->Write();
 	hRecoilJetsPt_beforeSel->Write();
 	hNpv_beforeSel->Write();
@@ -1835,6 +2085,8 @@ int main (int argc, char** argv)
 	hA_beforeSel->Write();
   hJetsPt_beforeSel->Write();
   hJetsEta_beforeSel->Write();
+  hLeadingJetEta_beforeSel->Write();
+  hRecoilEta_beforeSel->Write();
   hJetsPhi_beforeSel->Write();
   hHT_beforeSel->Write();
   hNjets_ptSup30_etaInf5_beforeSel->Write();
@@ -1855,6 +2107,7 @@ int main (int argc, char** argv)
 	hNjetsTotal->Write();
 	hMet_afterSel->Write();
 	hLeadingJetPt_afterSel->Write();
+	hSecondJetPt_afterSel->Write();
 	hRecoilPt_afterSel->Write();
 	hRecoilJetsPt_afterSel->Write();
 	hNpv_afterSel->Write();
@@ -1870,6 +2123,8 @@ int main (int argc, char** argv)
 	hFracJetsPt->Write();
     hJetsPt_afterSel->Write();
     hJetsEta_afterSel->Write();
+    hLeadingJetEta_afterSel->Write();
+    hRecoilEta_afterSel->Write();
     hJetsPhi_afterSel->Write();
     hDeltaPhi_METRecoil_afterSel->Write();
     hDeltaPhi_METJet1_afterSel->Write();
@@ -1924,6 +2179,7 @@ int main (int argc, char** argv)
 	hFracJetsPt->Delete();	
 	hMet_beforeSel->Delete();
 	hLeadingJetPt_beforeSel->Delete();
+	hSecondJetPt_beforeSel->Delete();
 	hRecoilPt_beforeSel->Delete();
 	hNpv_beforeSel->Delete();
 	hAlpha_beforeSel->Delete();
@@ -1931,6 +2187,7 @@ int main (int argc, char** argv)
 	hA_beforeSel->Delete();	
 	hMet_afterSel->Delete();
 	hLeadingJetPt_afterSel->Delete();
+	hSecondJetPt_afterSel->Delete();
 	hRecoilPt_afterSel->Delete();
 	hNpv_afterSel->Delete();
 	hAlpha_afterSel->Delete();
